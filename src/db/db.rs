@@ -174,27 +174,6 @@ impl Database {
     }
 }
 
-impl User {
-    pub fn is_valid(&self) -> bool {
-        !self.account.trim().is_empty()
-            && !self.forename.trim().is_empty()
-            && !self.surname.trim().is_empty()
-    }
-}
-
-impl FromRow for User {
-    fn from_row(row: &rusqlite::Row) -> rusqlite::Result<User> {
-        Ok(User {
-            account: row.get("account")?,
-            forename: row.get("forename")?,
-            surname: row.get("surname")?,
-            role: row.get("role")?,
-            criminal: row.get("criminal")?,
-            data: row.get("data")?,
-        })
-    }
-}
-
 pub fn create(db: &Database) -> Result<()> {
     const CREATE_TABLES: &str = "\
     create table user ( \

@@ -3,6 +3,27 @@ use crate::db::db::{User, Database, Error, DBIter, FromRow};
 type Result<T> = std::result::Result<T, Error>;
 
 
+impl User {
+    pub fn is_valid(&self) -> bool {
+        !self.account.trim().is_empty()
+            && !self.forename.trim().is_empty()
+            && !self.surname.trim().is_empty()
+    }
+}
+
+impl FromRow for User {
+    fn from_row(row: &rusqlite::Row) -> rusqlite::Result<User> {
+        Ok(User {
+            account: row.get("account")?,
+            forename: row.get("forename")?,
+            surname: row.get("surname")?,
+            role: row.get("role")?,
+            criminal: row.get("criminal")?,
+            data: row.get("data")?,
+        })
+    }
+}
+
 /// Returns the user with the given `id`.
 pub fn fetch(db: &Database, id: &str) -> Result<User> {
     Ok(db.con.query_row(
@@ -28,7 +49,7 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<User>> {
         forename, \
         surname, \
         role, \
-        criminal \
+        criminal, \
         data \
         \
         from user \
