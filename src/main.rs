@@ -27,11 +27,11 @@ fn main() -> Result<()> {
     db::user::add(&db, &you).unwrap();
     db::user::add(&db, &me).unwrap();
 
-    println!("{:?}", db::user::search(&db, "La").unwrap());
+    println!("All sorted by 'La':{:?}", db::user::search(&db, "La").unwrap());
 
     db::user::delete(&db, &you.account).unwrap();
 
-    println!("{:?}", db::user::search(&db, "La").unwrap());
+    println!("Deleted account:lars.wrenger: {:?}", db::user::search(&db, "La").unwrap());
 
     Ok(())
 }
