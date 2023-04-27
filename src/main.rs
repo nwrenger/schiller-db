@@ -15,9 +15,20 @@ fn main() -> Result<()> {
         criminal: false,
         data: None,
     };
-    api::user::add(&db, &me).unwrap();
 
-    println!("{:?}", db);
+    let you = User {
+        account: "lars.wrenger".into(),
+        forename: "Lars".into(),
+        surname: "Wrenger".into(),
+        role: "".into(),
+        criminal: false,
+        data: None,
+    };
+
+    api::user::add(&db, &me).unwrap();
+    api::user::add(&db, &you).unwrap();
+
+    println!("{:?}", api::user::search(&db, "Nils").unwrap());
 
     Ok(())
 }
