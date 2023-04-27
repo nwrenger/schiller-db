@@ -177,6 +177,7 @@ pub fn create(db: &Database) -> Result<()> {
     \
     create table presence ( \
         date text not null, \
+        presenter text not null default '', \
         present bool not null default false);
     ";
 
