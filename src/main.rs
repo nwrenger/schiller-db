@@ -1,12 +1,11 @@
 pub mod db;
-pub mod api;
 
-use db::db::{User, Database};
+use db::project::{User, Database};
 use rusqlite::Result;
 
 fn main() -> Result<()> {
     let db = Database::memory().unwrap();
-    db::db::create(&db).unwrap();
+    db::project::create(&db).unwrap();
     let me = User {
         account: "nils.wrenger".into(),
         forename: "Nils".into(),
@@ -25,10 +24,14 @@ fn main() -> Result<()> {
         data: None,
     };
 
-    api::user::add(&db, &me).unwrap();
-    api::user::add(&db, &you).unwrap();
+    db::user::add(&db, &you).unwrap();
+    db::user::add(&db, &me).unwrap();
 
-    println!("{:?}", api::user::search(&db, "Nils").unwrap());
+    println!("{:?}", db::user::search(&db, "La").unwrap());
+
+    db::user::delete(&db, &you.account).unwrap();
+
+    println!("{:?}", db::user::search(&db, "La").unwrap());
 
     Ok(())
 }

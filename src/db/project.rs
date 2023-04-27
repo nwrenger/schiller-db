@@ -34,16 +34,7 @@ pub enum Error {
     InvalidFormat,
     NothingFound,
     // Specific errors
-    InvalidBook,
-    InvalidISBN,
     InvalidUser,
-    // Lending errors
-    LendingUserMayNotBorrow,
-    LendingBookNotBorrowable,
-    LendingBookAlreadyBorrowed,
-    LendingBookAlreadyBorrowedByUser,
-    LendingBookNotBorrowed,
-    LendingBookAlreadyReserved,
     // Migration
     UnsupportedProjectVersion,
 }

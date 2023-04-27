@@ -1,4 +1,4 @@
-use crate::db::db::{User, Database, Error, DBIter, FromRow};
+use crate::db::project::{User, Database, Error, DBIter, FromRow};
 
 type Result<T> = std::result::Result<T, Error>;
 
@@ -125,8 +125,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 
     //remove from presence
     transaction.execute(
-        "update medium set presence='' \
-        where reservation not in (select account from user);",
+        "update presence set present='' \
+        where present not in (select account from user);",
         [],
     )?;
     transaction.commit()?;
