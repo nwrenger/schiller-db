@@ -9,11 +9,12 @@ use db::project::{Database, Presence, User};
 fn main() {
     let db: Database = match Database::open(Cow::from(Path::new("./my.db"))) {
         Ok(_) => Database::open(Cow::from(Path::new("./my.db"))).unwrap().0,
-        _ => Database::create(Cow::from(Path::new("./my.db"))).unwrap(),
+        Err(_) => {
+            let db = Database::create(Cow::from(Path::new("./my.db"))).unwrap();
+            db::project::create(&db).unwrap();
+            db
+        }
     };
-    if !Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
-        db::project::create(&db).unwrap();
-    }
     let me = User {
         account: "nils.wrenger".into(),
         forename: "Nils".into(),
@@ -65,9 +66,9 @@ fn main() {
         data: None,
     };
 
-
     if Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
         db::presence::delete(&db, &presence.presenter, presence.date).unwrap();
+        db::presence::delete(&db, &lars_presence.presenter, lars_presence.date).unwrap();
         db::presence::delete(&db, &lars_presence.presenter, lars_presence.date).unwrap();
         db::user::delete(&db, &you.account).unwrap();
         db::user::delete(&db, &me.account).unwrap();
@@ -97,6 +98,5 @@ fn main() {
     .unwrap();
 
     db::presence::delete(&db, &other_presence.presenter, other_presence.date).unwrap();
-
     db::user::update(&db, &me.account, &new_me).unwrap();
 }

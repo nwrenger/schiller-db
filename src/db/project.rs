@@ -193,7 +193,8 @@ pub fn create(db: &Database) -> Result<()> {
     create table presence ( \
         date text not null, \
         presenter text not null default '', \
-        data text default none); \
+        data text default none, \
+        primary key (date, presenter)); \
     ";
 
     let transaction = db.transaction()?;

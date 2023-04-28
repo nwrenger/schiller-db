@@ -7,7 +7,7 @@ type Result<T> = std::result::Result<T, Error>;
 //maybe used for later
 impl Presence {
     pub fn is_valid(&self) -> bool {
-        if self.date != None {
+        if self.date != None || !self.presenter.trim().is_empty() {
             self.date.unwrap();
             true
         } else {
@@ -65,7 +65,11 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
     }
     db.con.execute(
         "INSERT INTO presence VALUES (?, ?, ?)",
-        rusqlite::params![presence.date.unwrap(), presence.presenter.trim(), presence.data],
+        rusqlite::params![
+            presence.date.unwrap(),
+            presence.presenter.trim(),
+            presence.data
+        ],
     )?;
     Ok(())
 }
@@ -117,10 +121,7 @@ pub fn delete(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<(
     // remove date and presenters
     transaction.execute(
         "delete from presence where presenter=? and date=?",
-        rusqlite::params![
-            account,
-            date.unwrap(),
-        ],
+        rusqlite::params![account, date.unwrap(),],
     )?;
     transaction.commit()?;
     Ok(())
