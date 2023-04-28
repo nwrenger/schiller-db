@@ -46,9 +46,9 @@ pub enum Error {
     SQL,
     Network,
     InvalidFormat,
-    InvalidDate,
     NothingFound,
     // Specific errors
+    InvalidDate,
     InvalidUser,
     // Migration
     UnsupportedProjectVersion,
