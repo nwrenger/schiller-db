@@ -83,16 +83,5 @@ fn main() {
         db::presence::search(&db, "").unwrap()
     );
 
-    db::presence::delete(&db, NaiveDate::from_ymd_opt(2023, 4, 2)).unwrap();
     db::user::update(&db, &me.account, &new_me).unwrap();
-    db::user::delete(&db, &me.account).unwrap();
-
-    println!(
-        "Deleted account:nils.wrenger: {:#?}",
-        db::user::search(&db, "").unwrap()
-    );
-    println!(
-        "Deleted Date: {:#?}",
-        db::presence::search(&db, "").unwrap()
-    )
 }
