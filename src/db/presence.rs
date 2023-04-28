@@ -45,7 +45,7 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Presence>> {
         from presence \
         where date like '%'||?1||'%' \
         or presenter like '%'||?1||'%' \
-        order by date",
+        order by presenter",
     )?;
     let rows = stmt.query([text.trim()])?;
     DBIter::new(rows).collect()
@@ -69,21 +69,21 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
 
 /// Updates the presences.
 /// This includes all its presenters and dates.
-pub fn update(db: &Database, previous_presence: &Presence, presence: &Presence) -> Result<()> {
+pub fn update(db: &Database, previous_presence: &str, presence: &Presence) -> Result<()> {
     if !presence.is_valid() {
         return Err(Error::InvalidDate);
     }
-    if !previous_presence.is_valid() {
-        return Err(Error::InvalidDate);
+    if previous_presence.is_empty() {
+        return Err(Error::InvalidUser);
     }
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update presence set date=?, presenter=? where date=?",
+        "update presence set date=?, presenter=? where presenter=?",
         rusqlite::params![
             presence.date.unwrap(),
             presence.presenter,
-            previous_presence.date.unwrap(),
+            previous_presence,
         ],
     )?;
 
