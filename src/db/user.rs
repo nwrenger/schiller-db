@@ -90,7 +90,7 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
     let transaction = db.transaction()?;
     // update user
     transaction.execute(
-        "update user set account=?, forename=?, surname=?, role=?, may_borrow=? where account=?",
+        "update user set account=?, forename=?, surname=?, role=?, criminal=?, data=? where account=?",
         rusqlite::params![
             user.account.trim(),
             user.forename.trim(),
@@ -104,7 +104,7 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
 
     // update presence
     transaction.execute(
-        "update medium set presence=? where presence=?",
+        "update presence set presenter=? where presenter=?",
         [user.account.trim(), previous_account],
     )?;
 
