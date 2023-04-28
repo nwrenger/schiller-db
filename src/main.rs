@@ -1,12 +1,19 @@
 pub mod db;
 
+use std::{borrow::Cow, path::Path};
+
 use chrono::NaiveDate;
 
 use db::project::{Database, Presence, User};
 
 fn main() {
-    let db = Database::memory().unwrap();
-    db::project::create(&db).unwrap();
+    let db: Database = match Database::open(Cow::from(Path::new("./my.db"))) {
+        Ok(_) => Database::open(Cow::from(Path::new("./my.db"))).unwrap().0,
+        _ => Database::create(Cow::from(Path::new("./my.db"))).unwrap(),
+    };
+    if !Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
+        db::project::create(&db).unwrap();
+    }
     let me = User {
         account: "nils.wrenger".into(),
         forename: "Nils".into(),
@@ -48,6 +55,13 @@ fn main() {
         date: NaiveDate::from_ymd_opt(2023, 4, 2),
         presenter: me.account.clone(),
     };
+
+    if Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
+        db::presence::delete(&db, presence.date).unwrap();
+        db::presence::delete(&db, lars_presence.date).unwrap();
+        db::user::delete(&db, &you.account).unwrap();
+        db::user::delete(&db, &me.account).unwrap();
+    }
 
     db::presence::add(&db, &presence).unwrap();
     db::presence::add(&db, &lars_presence).unwrap();
