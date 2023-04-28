@@ -26,6 +26,7 @@ pub struct User {
 pub struct Presence {
     pub(crate) date: Option<NaiveDate>,
     pub(crate) presenter: String,
+    pub(crate) data: Option<String>,
 }
 
 macro_rules! error {
@@ -191,7 +192,8 @@ pub fn create(db: &Database) -> Result<()> {
     \
     create table presence ( \
         date text not null, \
-        presenter text not null default ''); \
+        presenter text not null default '', \
+        data text default none); \
     ";
 
     let transaction = db.transaction()?;
