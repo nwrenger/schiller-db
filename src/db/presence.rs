@@ -1,4 +1,4 @@
-use crate::db::project::{Presence, Database, Error, DBIter, FromRow};
+use crate::db::project::{DBIter, Database, Error, FromRow, Presence};
 
 use chrono::NaiveDate;
 
@@ -18,7 +18,10 @@ impl Presence {
 
 impl FromRow for Presence {
     fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Presence> {
-        Ok(Presence { date: row.get("date")?, presenter: row.get("presenter")?, })
+        Ok(Presence {
+            date: row.get("date")?,
+            presenter: row.get("presenter")?,
+        })
     }
 }
 
@@ -58,14 +61,10 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
     }
     db.con.execute(
         "INSERT INTO presence VALUES (?, ?)",
-        rusqlite::params![
-            presence.date.unwrap(),
-            presence.presenter,
-        ],
+        rusqlite::params![presence.date.unwrap(), presence.presenter,],
     )?;
     Ok(())
 }
-
 
 /// Updates the presences.
 /// This includes all its presenters and dates.

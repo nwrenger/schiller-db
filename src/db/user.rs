@@ -1,7 +1,6 @@
-use crate::db::project::{User, Database, Error, DBIter, FromRow};
+use crate::db::project::{DBIter, Database, Error, FromRow, User};
 
 type Result<T> = std::result::Result<T, Error>;
-
 
 impl User {
     pub fn is_valid(&self) -> bool {
@@ -124,10 +123,7 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     transaction.execute("delete from user where account=?", [account])?;
 
     //remove from presence
-    transaction.execute(
-        "delete from presence where presenter=?",
-        [account],
-    )?;
+    transaction.execute("delete from presence where presenter=?", [account])?;
     transaction.commit()?;
     Ok(())
 }

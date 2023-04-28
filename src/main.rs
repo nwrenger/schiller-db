@@ -2,7 +2,7 @@ pub mod db;
 
 use chrono::NaiveDate;
 
-use db::project::{User, Presence, Database};
+use db::project::{Database, Presence, User};
 
 fn main() {
     let db = Database::memory().unwrap();
@@ -54,17 +54,31 @@ fn main() {
     db::user::add(&db, &you).unwrap();
     db::user::add(&db, &me).unwrap();
 
-    println!("All sorted by 'La':{:#?}", db::user::search(&db, "La").unwrap());
-    println!("All sorted by 'La':{:#?}", db::presence::search(&db, "wre").unwrap());
+    println!(
+        "All sorted by 'La':{:#?}",
+        db::user::search(&db, "La").unwrap()
+    );
+    println!(
+        "All sorted by 'La':{:#?}",
+        db::presence::search(&db, "wre").unwrap()
+    );
 
     db::presence::update(&db, &me.account, &new_presence).unwrap();
-    println!("Updated nils.wrenger, sorted by '':{:#?}", db::presence::search(&db, "").unwrap());
-    
+    println!(
+        "Updated nils.wrenger, sorted by '':{:#?}",
+        db::presence::search(&db, "").unwrap()
+    );
+
     db::presence::delete(&db, NaiveDate::from_ymd_opt(2023, 4, 2)).unwrap();
     db::user::update(&db, &me.account, &new_me).unwrap();
     db::user::delete(&db, &me.account).unwrap();
 
-    println!("Deleted account:nils.wrenger: {:#?}", db::user::search(&db, "").unwrap());
-    println!("Deleted Date: {:#?}", db::presence::search(&db, "").unwrap())
-
+    println!(
+        "Deleted account:nils.wrenger: {:#?}",
+        db::user::search(&db, "").unwrap()
+    );
+    println!(
+        "Deleted Date: {:#?}",
+        db::presence::search(&db, "").unwrap()
+    )
 }

@@ -1,4 +1,9 @@
-use std::{path::{PathBuf, Path}, fmt, borrow::Cow, ptr::addr_of};
+use std::{
+    borrow::Cow,
+    fmt,
+    path::{Path, PathBuf},
+    ptr::addr_of,
+};
 
 use chrono::NaiveDate;
 
