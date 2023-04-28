@@ -1,5 +1,7 @@
 use std::{path::{PathBuf, Path}, fmt, borrow::Cow, ptr::addr_of};
 
+use chrono::NaiveDate;
+
 use rusqlite::Connection;
 
 /// Data object for a user.
@@ -14,6 +16,12 @@ pub struct User {
     pub(crate) data: Option<String>,
 }
 
+#[derive(Debug, Clone)]
+#[cfg_attr(test, derive(PartialEq, Default))]
+pub struct Presence {
+    pub(crate) date: Option<NaiveDate>,
+    pub(crate) presenter: String,
+}
 
 macro_rules! error {
     ($($args:tt)*) => {
@@ -32,6 +40,7 @@ pub enum Error {
     SQL,
     Network,
     InvalidFormat,
+    InvalidDate,
     NothingFound,
     // Specific errors
     InvalidUser,
@@ -177,8 +186,7 @@ pub fn create(db: &Database) -> Result<()> {
     \
     create table presence ( \
         date text not null, \
-        presenter text not null default '', \
-        present bool not null default false);
+        presenter text not null default ''); \
     ";
 
     let transaction = db.transaction()?;

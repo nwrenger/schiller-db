@@ -125,9 +125,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 
     //remove from presence
     transaction.execute(
-        "update presence set present='' \
-        where present not in (select account from user);",
-        [],
+        "delete from presence where presenter=?",
+        [account],
     )?;
     transaction.commit()?;
     Ok(())
