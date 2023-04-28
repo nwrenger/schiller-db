@@ -187,7 +187,7 @@ pub fn create(db: &Database) -> Result<()> {
         forename text not null, \
         surname text not null, \
         role text not null, \
-        criminal bool not null default false, \
+        criminal integer not null default 0, \
         data text default none); \
     \
     create table presence ( \
