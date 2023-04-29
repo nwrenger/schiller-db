@@ -70,7 +70,6 @@ fn main() {
     if Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
         db::presence::delete(&db, &presence.presenter, presence.date).unwrap();
         db::presence::delete(&db, &lars_presence.presenter, lars_presence.date).unwrap();
-        db::presence::delete(&db, &lars_presence.presenter, lars_presence.date).unwrap();
         db::user::delete(&db, &you.account).unwrap();
         db::user::delete(&db, &me.account).unwrap();
     }
