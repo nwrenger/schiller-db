@@ -31,7 +31,7 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
         forename, \
         surname, \
         role, \
-        criminal \
+        criminal, \
         data \
         from user \
         where account=?",
