@@ -7,10 +7,11 @@ use chrono::NaiveDate;
 use db::project::{Database, Presence, User};
 
 fn main() {
-    let db: Database = match Database::open(Cow::from(Path::new("./my.db"))) {
-        Ok(_) => Database::open(Cow::from(Path::new("./my.db"))).unwrap().0,
+    let path = Path::new("./my.db");
+    let db: Database = match Database::open(Cow::from(path)) {
+        Ok(_) => Database::open(Cow::from(path)).unwrap().0,
         Err(_) => {
-            let db = Database::create(Cow::from(Path::new("./my.db"))).unwrap();
+            let db = Database::create(Cow::from(path)).unwrap();
             db::project::create(&db).unwrap();
             db
         }
@@ -70,15 +71,15 @@ fn main() {
     if Database::open(Cow::from(Path::new("./my.db"))).unwrap().1 {
         db::presence::delete(&db, &presence.presenter, presence.date).unwrap();
         db::presence::delete(&db, &lars_presence.presenter, lars_presence.date).unwrap();
-        db::user::delete(&db, &you.account).unwrap();
         db::user::delete(&db, &me.account).unwrap();
+        db::user::delete(&db, &you.account).unwrap();
     }
 
     db::presence::add(&db, &presence).unwrap();
     db::presence::add(&db, &other_presence).unwrap();
     db::presence::add(&db, &lars_presence).unwrap();
-    db::user::add(&db, &you).unwrap();
     db::user::add(&db, &me).unwrap();
+    db::user::add(&db, &you).unwrap();
 
     println!(
         "All sorted by 'La':{:#?}",
