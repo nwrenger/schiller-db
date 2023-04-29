@@ -98,6 +98,18 @@ fn main() {
     )
     .unwrap();
 
+
+    println!(
+        "Fetching user nils.wrenger:\n{:#?}",
+        db::user::fetch(&db, "nils.wrenger").unwrap()
+    );
+
+    println!(
+        "Fetching presence 2023-04-02 and nils.wrenger:\n{:#?}",
+        db::presence::fetch(&db, "nils.wrenger", NaiveDate::from_ymd_opt(2023, 4, 2)).unwrap()
+    );
+
+
     db::presence::delete(&db, &other_presence.presenter, other_presence.date).unwrap();
     db::user::update(&db, &me.account, &new_me).unwrap();
 }
