@@ -15,6 +15,7 @@ fn main() {
             db
         }
     };
+
     let me = User {
         account: "nils.wrenger".into(),
         forename: "Nils".into(),
