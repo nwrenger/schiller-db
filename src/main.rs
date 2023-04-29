@@ -110,4 +110,6 @@ fn main() {
 
     db::presence::delete(&db, &other_presence.presenter, other_presence.date).unwrap();
     db::user::update(&db, &me.account, &new_me).unwrap();
+
+    println!("Stats:\n {:#?}", db::stats::fetch(&db).unwrap());
 }
