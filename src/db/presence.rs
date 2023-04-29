@@ -26,16 +26,23 @@ impl FromRow for Presence {
     }
 }
 
-/// Returns the presence with the given `id`.
-pub fn fetch(db: &Database, id: &str) -> Result<Presence> {
+/// Returns the presence with the given `date` and `account`.
+pub fn fetch(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<Presence> {
+    let account = account.trim();
+    if account.is_empty() {
+        return Err(Error::InvalidUser);
+    }
+    if date.is_none() {
+        return Err(Error::InvalidDate);
+    }
     Ok(db.con.query_row(
         "select \
         date, \
         presenter, \
         data \
         from presence \
-        where date=?",
-        [id],
+        where date=? and presenter=?",
+        rusqlite::params![date.unwrap(), account],
         Presence::from_row,
     )?)
 }
