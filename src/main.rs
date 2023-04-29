@@ -44,26 +44,26 @@ fn main() {
     };
 
     let presence = Presence {
-        date: NaiveDate::from_ymd_opt(2023, 4, 29),
         presenter: me.account.clone(),
+        date: NaiveDate::from_ymd_opt(2023, 4, 29),
         data: None,
     };
 
     let other_presence = Presence {
-        date: NaiveDate::from_ymd_opt(2023, 4, 30),
         presenter: me.account.clone(),
+        date: NaiveDate::from_ymd_opt(2023, 4, 30),
         data: Some("war 5 Min zu Spät".into()),
     };
 
     let new_presence = Presence {
-        date: NaiveDate::from_ymd_opt(2023, 4, 2),
         presenter: me.account.clone(),
+        date: NaiveDate::from_ymd_opt(2023, 4, 2),
         data: Some("Oh doch eher 10 Min".into()),
     };
 
     let lars_presence = Presence {
-        date: NaiveDate::from_ymd_opt(2023, 4, 2),
         presenter: you.account.clone(),
+        date: NaiveDate::from_ymd_opt(2023, 4, 2),
         data: None,
     };
 
@@ -98,7 +98,6 @@ fn main() {
     )
     .unwrap();
 
-
     println!(
         "Fetching user nils.wrenger:\n{:#?}",
         db::user::fetch(&db, "nils.wrenger").unwrap()
@@ -108,7 +107,6 @@ fn main() {
         "Fetching presence 2023-04-02 and nils.wrenger:\n{:#?}",
         db::presence::fetch(&db, "nils.wrenger", NaiveDate::from_ymd_opt(2023, 4, 2)).unwrap()
     );
-
 
     db::presence::delete(&db, &other_presence.presenter, other_presence.date).unwrap();
     db::user::update(&db, &me.account, &new_me).unwrap();

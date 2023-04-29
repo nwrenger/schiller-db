@@ -7,8 +7,7 @@ type Result<T> = std::result::Result<T, Error>;
 //maybe used for later
 impl Presence {
     pub fn is_valid(&self) -> bool {
-        if self.date != None || !self.presenter.trim().is_empty() {
-            self.date.unwrap();
+        if !self.presenter.trim().is_empty() || self.date != None {
             true
         } else {
             false
@@ -19,30 +18,26 @@ impl Presence {
 impl FromRow for Presence {
     fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Presence> {
         Ok(Presence {
-            date: row.get("date")?,
             presenter: row.get("presenter")?,
+            date: row.get("date")?,
             data: row.get("data")?,
         })
     }
 }
 
-/// Returns the presence with the given `date` and `account`.
+/// Returns the presence with the given `account` and `date`.
 pub fn fetch(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<Presence> {
-    let account = account.trim();
-    if account.is_empty() {
-        return Err(Error::InvalidUser);
-    }
     if date.is_none() {
         return Err(Error::InvalidDate);
     }
     Ok(db.con.query_row(
         "select \
-        date, \
         presenter, \
+        date, \
         data \
         from presence \
-        where date=? and presenter=?",
-        rusqlite::params![date.unwrap(), account],
+        where presenter=? and date=?",
+        rusqlite::params![account, date.unwrap()],
         Presence::from_row,
     )?)
 }
@@ -51,13 +46,13 @@ pub fn fetch(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<Pr
 pub fn search(db: &Database, text: &str) -> Result<Vec<Presence>> {
     let mut stmt = db.con.prepare(
         "select \
-        date, \
         presenter, \
+        date, \
         data \
         \
         from presence \
-        where date like '%'||?1||'%' \
-        or presenter like '%'||?1||'%' \
+        where presenter like '%'||?1||'%' \
+        or date like '%'||?1||'%' \
         or data like '%'||?1||'%' \
         order by presenter",
     )?;
@@ -73,9 +68,9 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
     db.con.execute(
         "INSERT INTO presence VALUES (?, ?, ?)",
         rusqlite::params![
-            presence.date.unwrap(),
             presence.presenter.trim(),
-            presence.data
+            presence.date.unwrap(),
+            presence.data,
         ],
     )?;
     Ok(())
@@ -100,13 +95,13 @@ pub fn update(
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update presence set date=?, presenter=?, data=? where date=? and presenter=?",
+        "update presence set presenter=?, date=?, data=? where presenter=? and date=?",
         rusqlite::params![
-            presence.date.unwrap(),
             presence.presenter.trim(),
+            presence.date.unwrap(),
             presence.data,
-            previous_date.unwrap(),
             previous_account,
+            previous_date.unwrap(),
         ],
     )?;
 

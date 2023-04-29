@@ -24,8 +24,8 @@ pub struct User {
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
-    pub(crate) date: Option<NaiveDate>,
     pub(crate) presenter: String,
+    pub(crate) date: Option<NaiveDate>,
     pub(crate) data: Option<String>,
 }
 
@@ -191,10 +191,10 @@ pub fn create(db: &Database) -> Result<()> {
         data text default none); \
     \
     create table presence ( \
-        date text not null, \
         presenter text not null default '', \
+        date text not null, \
         data text default none, \
-        primary key (date, presenter)); \
+        primary key (presenter, date)); \
     ";
 
     let transaction = db.transaction()?;
