@@ -7,11 +7,7 @@ type Result<T> = std::result::Result<T, Error>;
 //maybe used for later
 impl Presence {
     pub fn is_valid(&self) -> bool {
-        if !self.presenter.trim().is_empty() || self.date != None {
-            true
-        } else {
-            false
-        }
+        !self.presenter.trim().is_empty()
     }
 }
 
@@ -26,10 +22,7 @@ impl FromRow for Presence {
 }
 
 /// Returns the presence with the given `account` and `date`.
-pub fn fetch(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<Presence> {
-    if date.is_none() {
-        return Err(Error::InvalidDate);
-    }
+pub fn fetch(db: &Database, account: &str, date: NaiveDate) -> Result<Presence> {
     Ok(db.con.query_row(
         "select \
         presenter, \
@@ -37,7 +30,7 @@ pub fn fetch(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<Pr
         data \
         from presence \
         where presenter=? and date=?",
-        rusqlite::params![account, date.unwrap()],
+        rusqlite::params![account, date],
         Presence::from_row,
     )?)
 }
@@ -63,13 +56,13 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Presence>> {
 /// Adds a new date with presenters.
 pub fn add(db: &Database, presence: &Presence) -> Result<()> {
     if !presence.is_valid() {
-        return Err(Error::InvalidDate);
+        return Err(Error::InvalidUser);
     }
     db.con.execute(
         "INSERT INTO presence VALUES (?, ?, ?)",
         rusqlite::params![
             presence.presenter.trim(),
-            presence.date.unwrap(),
+            presence.date,
             presence.data,
         ],
     )?;
@@ -81,15 +74,12 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
 pub fn update(
     db: &Database,
     previous_account: &str,
-    previous_date: Option<NaiveDate>,
+    previous_date: NaiveDate,
     presence: &Presence,
 ) -> Result<()> {
     let previous_account = previous_account.trim();
-    if previous_account.is_empty() {
+    if previous_account.is_empty() || !presence.is_valid() {
         return Err(Error::InvalidUser);
-    }
-    if !presence.is_valid() || previous_date.is_none() {
-        return Err(Error::InvalidDate);
     }
 
     let transaction = db.transaction()?;
@@ -98,10 +88,10 @@ pub fn update(
         "update presence set presenter=?, date=?, data=? where presenter=? and date=?",
         rusqlite::params![
             presence.presenter.trim(),
-            presence.date.unwrap(),
+            presence.date,
             presence.data,
             previous_account,
-            previous_date.unwrap(),
+            previous_date,
         ],
     )?;
 
@@ -111,19 +101,16 @@ pub fn update(
 
 /// Deletes the date and presenter.
 /// This includes all its data.
-pub fn delete(db: &Database, account: &str, date: Option<NaiveDate>) -> Result<()> {
+pub fn delete(db: &Database, account: &str, date: NaiveDate) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {
         return Err(Error::InvalidUser);
-    }
-    if date.is_none() {
-        return Err(Error::InvalidDate);
     }
     let transaction = db.transaction()?;
     // remove date and presenters
     transaction.execute(
         "delete from presence where presenter=? and date=?",
-        rusqlite::params![account, date.unwrap(),],
+        rusqlite::params![account, date],
     )?;
     transaction.commit()?;
     Ok(())

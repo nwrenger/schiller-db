@@ -46,25 +46,25 @@ fn main() {
 
     let presence = Presence {
         presenter: me.account.clone(),
-        date: NaiveDate::from_ymd_opt(2023, 4, 29),
+        date: NaiveDate::from_ymd_opt(2023, 4, 29).expect("Invalid Date!"),
         data: None,
     };
 
     let other_presence = Presence {
         presenter: me.account.clone(),
-        date: NaiveDate::from_ymd_opt(2023, 4, 30),
+        date: NaiveDate::from_ymd_opt(2023, 4, 30).expect("Invalid Date!"),
         data: Some("war 5 Min zu Spät".into()),
     };
 
     let new_presence = Presence {
         presenter: me.account.clone(),
-        date: NaiveDate::from_ymd_opt(2023, 4, 2),
+        date: NaiveDate::from_ymd_opt(2023, 4, 2).expect("Invalid Date!"),
         data: Some("Oh doch eher 10 Min".into()),
     };
 
     let lars_presence = Presence {
         presenter: you.account.clone(),
-        date: NaiveDate::from_ymd_opt(2023, 4, 2),
+        date: NaiveDate::from_ymd_opt(2023, 4, 2).expect("Invalid Date!"),
         data: None,
     };
 
@@ -93,7 +93,7 @@ fn main() {
     db::presence::update(
         &db,
         &me.account,
-        NaiveDate::from_ymd_opt(2023, 4, 29),
+        NaiveDate::from_ymd_opt(2023, 4, 29).expect("Invalid Date!"),
         &new_presence,
     )
     .unwrap();
@@ -105,7 +105,7 @@ fn main() {
 
     println!(
         "Fetching presence 2023-04-02 and nils.wrenger:\n{:#?}",
-        db::presence::fetch(&db, "nils.wrenger", NaiveDate::from_ymd_opt(2023, 4, 2)).unwrap()
+        db::presence::fetch(&db, "nils.wrenger", NaiveDate::from_ymd_opt(2023, 4, 2).expect("Invalid Date!")).unwrap(),
     );
 
     db::presence::delete(&db, &other_presence.presenter, other_presence.date).unwrap();

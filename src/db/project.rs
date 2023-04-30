@@ -25,7 +25,7 @@ pub struct User {
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
     pub(crate) presenter: String,
-    pub(crate) date: Option<NaiveDate>,
+    pub(crate) date: NaiveDate,
     pub(crate) data: Option<String>,
 }
 
