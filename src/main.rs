@@ -17,5 +17,7 @@ fn main() {
                 db
             }
         };
+    println!("{:#?}", db::stats::fetch(&db).unwrap());
     //todo Swagger UI
+    
 }
