@@ -127,3 +127,46 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     transaction.commit()?;
     Ok(())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use crate::db::project::{Database, User, create};
+    use crate::db::user;
+    #[test]
+    fn add_update_remove_users() {
+        let db = Database::memory().unwrap();
+        create(&db).unwrap();
+
+        let user = User {
+            account: "foo.bar".into(),
+            forename: "Foo".into(),
+            surname: "Bar".into(),
+            role: "Demo".into(),
+            criminal: false,
+            data: None,
+        };
+        user::add(&db, &user).unwrap();
+
+        let result = user::search(&db, "").unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], user);
+
+        user::update(
+            &db,
+            &user.account,
+            &User {
+                role: "Teacher".into(),
+                ..user.clone()
+            },
+        )
+        .unwrap();
+        let result = user::search(&db, "").unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].role, "Teacher");
+
+        user::delete(&db, &user.account).unwrap();
+        let result = user::search(&db, "").unwrap();
+        assert_eq!(result.len(), 0);
+    }
+}

@@ -115,3 +115,45 @@ pub fn delete(db: &Database, account: &str, date: NaiveDate) -> Result<()> {
     transaction.commit()?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use chrono::NaiveDate;
+
+    use crate::db::project::{Database, create, Presence};
+    use crate::db::presence;
+    #[test]
+    fn add_update_remove_users() {
+        let db = Database::memory().unwrap();
+        create(&db).unwrap();
+
+        let presence = Presence {
+            presenter: "foo.bar".into(),
+            date: NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
+            data: None,
+        };
+        presence::add(&db, &presence).unwrap();
+
+        let result = presence::search(&db, "").unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], presence);
+
+        presence::update(
+            &db,
+            &presence.presenter,
+            NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
+            &Presence {
+                data: Some("5 Mins Late".into()),
+                ..presence.clone()
+            },
+        )
+        .unwrap();
+        let result = presence::search(&db, "").unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].data, Some("5 Mins Late".into()));
+
+        presence::delete(&db, &presence.presenter, NaiveDate::from_ymd_opt(2023, 4, 26).unwrap()).unwrap();
+        let result = presence::search(&db, "").unwrap();
+        assert_eq!(result.len(), 0);
+    }
+}
