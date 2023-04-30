@@ -1,4 +1,4 @@
-use crate::db::project::{Database, FromRow, Error};
+use crate::db::project::{Database, Error, FromRow};
 
 type Result<T> = std::result::Result<T, Error>;
 

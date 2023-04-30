@@ -60,11 +60,7 @@ pub fn add(db: &Database, presence: &Presence) -> Result<()> {
     }
     db.con.execute(
         "INSERT INTO presence VALUES (?, ?, ?)",
-        rusqlite::params![
-            presence.presenter.trim(),
-            presence.date,
-            presence.data,
-        ],
+        rusqlite::params![presence.presenter.trim(), presence.date, presence.data,],
     )?;
     Ok(())
 }
@@ -120,8 +116,8 @@ pub fn delete(db: &Database, account: &str, date: NaiveDate) -> Result<()> {
 mod tests {
     use chrono::NaiveDate;
 
-    use crate::db::project::{Database, create, Presence};
     use crate::db::presence;
+    use crate::db::project::{create, Database, Presence};
     #[test]
     fn add_update_remove_users() {
         let db = Database::memory().unwrap();
@@ -152,7 +148,12 @@ mod tests {
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].data, Some("5 Mins Late".into()));
 
-        presence::delete(&db, &presence.presenter, NaiveDate::from_ymd_opt(2023, 4, 26).unwrap()).unwrap();
+        presence::delete(
+            &db,
+            &presence.presenter,
+            NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
+        )
+        .unwrap();
         let result = presence::search(&db, "").unwrap();
         assert_eq!(result.len(), 0);
     }

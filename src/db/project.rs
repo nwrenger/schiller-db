@@ -209,7 +209,7 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
     if path.exists() {
         let file = read_to_string(path).unwrap();
         let file_lines = file.lines().collect::<Vec<_>>();
-        for i in file_lines{
+        for i in file_lines {
             let line = i.replace(div, "\n");
             let data = line.lines().collect::<Vec<_>>();
             let user = User {

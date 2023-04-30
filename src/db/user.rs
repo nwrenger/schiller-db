@@ -128,10 +128,9 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::db::project::{Database, User, create};
+    use crate::db::project::{create, Database, User};
     use crate::db::user;
     #[test]
     fn add_update_remove_users() {
