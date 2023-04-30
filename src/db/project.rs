@@ -5,6 +5,8 @@ use std::{
     ptr::addr_of,
 };
 
+use std::fs::read_to_string;
+
 use chrono::NaiveDate;
 
 use rusqlite::Connection;
@@ -201,4 +203,29 @@ pub fn create(db: &Database) -> Result<()> {
     transaction.execute_batch(CREATE_TABLES)?;
     transaction.commit()?;
     Ok(())
+}
+
+pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()> {
+    if path.exists() {
+        let file = read_to_string(path).unwrap();
+        let file_lines = file.lines().collect::<Vec<_>>();
+        for i in file_lines{
+            let line = i.replace(div, "\n");
+            let data = line.lines().collect::<Vec<_>>();
+            let user = User {
+                account: data[0].into(),
+                forename: data[1].into(),
+                surname: data[2].into(),
+                role: data[3].into(),
+                criminal: false,
+                data: None,
+            };
+            if super::user::add(&db, &user).is_err() && user.role == "Lehrer" {
+                super::user::update(db, &user.account, &user).unwrap();
+            }
+        }
+        Ok(())
+    } else {
+        Err(Error::FileNotFound)
+    }
 }
