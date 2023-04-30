@@ -220,7 +220,7 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
                 criminal: false,
                 data: None,
             };
-            if super::user::add(&db, &user).is_err() && user.role == "Lehrer" {
+            if super::user::add(db, &user).is_err() && (user.role == "Lehrer" || user.role.contains("Jahrgang")) {
                 super::user::update(db, &user.account, &user).unwrap();
             }
         }
