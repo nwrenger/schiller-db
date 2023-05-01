@@ -23,6 +23,7 @@ pub struct User {
     pub(crate) data: Option<String>,
 }
 
+/// Data object for a presence.
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
@@ -205,18 +206,19 @@ pub fn create(db: &Database) -> Result<()> {
     Ok(())
 }
 
+//Fetches User Data from a file. Performance might not be the best.
+//Ignore the Error messages!
 pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()> {
     if path.exists() {
         let file = read_to_string(path).unwrap();
         let file_lines = file.lines().collect::<Vec<_>>();
         for i in file_lines {
-            let line = i.replace(div, "\n");
-            let data = line.lines().collect::<Vec<_>>();
+            let line = i.split(div).collect::<Vec<_>>();
             let user = User {
-                account: data[0].into(),
-                forename: data[1].into(),
-                surname: data[2].into(),
-                role: data[3].into(),
+                account: line[0].into(),
+                forename: line[1].into(),
+                surname: line[2].into(),
+                role: line[3].into(),
                 criminal: false,
                 data: None,
             };
