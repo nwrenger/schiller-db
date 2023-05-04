@@ -1,4 +1,5 @@
 use crate::db::project::{DBIter, Database, Error, FromRow, User};
+use rocket::request::FromParam;
 
 type Result<T> = std::result::Result<T, Error>;
 
@@ -23,6 +24,14 @@ impl FromRow for User {
     }
 }
 
+impl<'a> FromParam<'a> for User {
+    type Error = &'a str;
+
+    fn from_param(param: &'a str) -> std::result::Result<Self, Self::Error> {
+        Err(param)
+    }
+}
+
 /// Returns the user with the given `id`.
 pub fn fetch(db: &Database, id: &str) -> Result<User> {
     Ok(db.con.query_row(
@@ -41,7 +50,7 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
 }
 
 /// Performes a simple user search with the given `text`.
-pub fn search(db: &Database, text: &str) -> Result<Vec<User>> {
+pub fn search<'a>(db: &'a Database, text: &'a str) -> Result<Vec<User>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \

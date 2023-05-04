@@ -1,6 +1,7 @@
 use crate::db::project::{DBIter, Database, Error, FromRow, Presence};
 
 use chrono::NaiveDate;
+use rocket::request::FromParam;
 
 type Result<T> = std::result::Result<T, Error>;
 
@@ -18,6 +19,14 @@ impl FromRow for Presence {
             date: row.get("date")?,
             data: row.get("data")?,
         })
+    }
+}
+
+impl<'a> FromParam<'a> for Presence {
+    type Error = &'a str;
+
+    fn from_param(param: &'a str) -> std::result::Result<Self, Self::Error> {
+        Err(param)
     }
 }
 

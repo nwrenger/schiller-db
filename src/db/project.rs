@@ -1,6 +1,7 @@
 use std::{
     borrow::Cow,
     fmt,
+    marker::PhantomData,
     path::{Path, PathBuf},
     ptr::addr_of,
 };
@@ -10,9 +11,10 @@ use std::fs::read_to_string;
 use chrono::NaiveDate;
 
 use rusqlite::Connection;
+use serde::{Deserialize, Serialize};
 
 /// Data object for a user.
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct User {
     pub(crate) account: String,
@@ -24,7 +26,7 @@ pub struct User {
 }
 
 /// Data object for a presence.
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
     pub(crate) presenter: String,
@@ -38,7 +40,7 @@ macro_rules! error {
     };
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 
 pub enum Error {
     Arguments,
@@ -222,7 +224,11 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
                 criminal: false,
                 data: None,
             };
-            if super::user::add(db, &user).is_err() && (user.role == "Lehrer" || (user.role.contains("Jahrgang") && super::user::fetch(db, &user.account).unwrap().role != "Lehrer")) {
+            if super::user::add(db, &user).is_err()
+                && (user.role == "Lehrer"
+                    || (user.role.contains("Jahrgang")
+                        && super::user::fetch(db, &user.account).unwrap().role != "Lehrer"))
+            {
                 super::user::update(db, &user.account, &user).unwrap();
             }
         }

@@ -1,5 +1,5 @@
 [package]
-name = "ddblite"
+name = "pdm"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,4 +7,6 @@ edition = "2021"
 
 [dependencies]
 rusqlite = {version = "0.29.0", features = ["bundled", "chrono"]}
-chrono = "0.4"
+chrono = {version = "0.4", features = ["serde"]}
+rocket = {version = "=0.5.0-rc.3", features = ["json"]}
+serde = "1"
