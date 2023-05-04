@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::db::project::{DBIter, Database, Error, FromRow, User};
 use rocket::request::FromParam;
 
@@ -24,11 +26,47 @@ impl FromRow for User {
     }
 }
 
+impl FromStr for User {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        let parts: Vec<&str> = s.split(',').collect();
+
+        if parts.len() != 6 {
+            return Err(Error::InvalidFormat);
+        }
+
+        let account = parts[0].parse().map_err(|_| Error::InvalidFormat)?;
+        let forename = parts[1].to_owned();
+        let surname = parts[2].to_owned();
+        let role = parts[3].to_owned();
+        let criminal = parts[4].parse().unwrap_or(false);
+        let data = if parts[5].is_empty() {
+            None
+        } else {
+            Some(parts[5].to_owned())
+        };
+
+        Ok(User {
+            account,
+            forename,
+            surname,
+            role,
+            criminal,
+            data,
+        })
+    }
+}
+
 impl<'a> FromParam<'a> for User {
     type Error = &'a str;
 
     fn from_param(param: &'a str) -> std::result::Result<Self, Self::Error> {
-        Err(param)
+        if param.is_empty() {
+            return Err(param);
+        } else {
+            Ok(param.parse().unwrap())
+        }
     }
 }
 

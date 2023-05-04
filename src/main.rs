@@ -9,7 +9,7 @@ use chrono::NaiveDate;
 
 use db::project::{fetch_user_data, Database, Error, Presence, User};
 
-use rocket::{serde::json::Json};
+use rocket::serde::json::Json;
 
 #[get("/user/fetch/<id>")]
 async fn fetch_user(id: &str) -> Json<Result<User, Error>> {

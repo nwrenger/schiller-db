@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::db::project::{DBIter, Database, Error, FromRow, Presence};
 
 use chrono::NaiveDate;
@@ -22,11 +24,44 @@ impl FromRow for Presence {
     }
 }
 
+impl FromStr for Presence {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        let parts: Vec<&str> = s.split(',').collect();
+
+        if parts.len() != 3 {
+            return Err(Error::InvalidFormat);
+        }
+
+        let presenter = parts[0].parse().map_err(|_| Error::InvalidFormat)?;
+        let date = match NaiveDate::parse_from_str(parts[1].into(), "%Y-%m-%d") {
+            Ok(_) => NaiveDate::parse_from_str(parts[1].into(), "%Y-%m-%d").unwrap(),
+            Err(_) => return Err(Error::InvalidDate),
+        };
+        let data = if parts[2].is_empty() {
+            None
+        } else {
+            Some(parts[5].to_owned())
+        };
+
+        Ok(Presence {
+            presenter,
+            date,
+            data,
+        })
+    }
+}
+
 impl<'a> FromParam<'a> for Presence {
     type Error = &'a str;
 
     fn from_param(param: &'a str) -> std::result::Result<Self, Self::Error> {
-        Err(param)
+        if param.is_empty() || param.parse::<String>().is_err() {
+            return Err(param);
+        } else {
+            Ok(param.parse().unwrap())
+        }
     }
 }
 
