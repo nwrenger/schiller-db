@@ -1,7 +1,6 @@
 use std::{
     borrow::Cow,
     fmt,
-    marker::PhantomData,
     path::{Path, PathBuf},
     ptr::addr_of,
 };
