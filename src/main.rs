@@ -10,9 +10,9 @@ use chrono::NaiveDate;
 use db::project::{fetch_user_data, Database, Error, Presence, User};
 use db::stats::Stats;
 
-use rocket::serde::json::Json;
 use rocket::http::Status;
-use rocket::request::{Outcome, Request, FromRequest};
+use rocket::request::{FromRequest, Outcome, Request};
+use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 
 struct ApiKey<'r>(&'r str);
@@ -98,7 +98,11 @@ async fn all_presences(_key: ApiKey<'_>) -> Json<Result<Vec<Presence>, Error>> {
 }
 
 #[get("/presence/fetch/<account>/<date>")]
-async fn fetch_presence(_key: ApiKey<'_>, account: &str, date: &str) -> Json<Result<Presence, Error>> {
+async fn fetch_presence(
+    _key: ApiKey<'_>,
+    account: &str,
+    date: &str,
+) -> Json<Result<Presence, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
