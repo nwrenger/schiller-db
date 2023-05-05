@@ -11,7 +11,7 @@ use db::project::{fetch_user_data, Database, Error, Presence, User};
 use db::stats::Stats;
 
 use rocket::serde::json::Json;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 struct Index {
@@ -21,10 +21,10 @@ struct Index {
 
 #[get("/")]
 fn index() -> Json<Index> {
-  Json::from(Index {
-    status: "Up and Running!".into(),
-    message: "Welcome to the PDM!".into(),
-  })
+    Json::from(Index {
+        status: "Up and Running!".into(),
+        message: "Welcome to the PDM!".into(),
+    })
 }
 
 #[get("/stats")]
