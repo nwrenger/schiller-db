@@ -11,6 +11,12 @@ use db::project::{fetch_user_data, Database, Error, Presence, User};
 
 use rocket::serde::json::Json;
 
+#[get("/user/all")]
+async fn all_users() -> Json<Result<Vec<User>, Error>> {
+    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    Json(db::user::search(&db, ""))
+}
+
 #[get("/user/fetch/<id>")]
 async fn fetch_user(id: &str) -> Json<Result<User, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
@@ -23,14 +29,14 @@ async fn search_user(text: &str) -> Json<Result<Vec<User>, Error>> {
     Json(db::user::search(&db, text))
 }
 
-#[post("/user/add/<user>")]
-async fn add_user(user: User) -> Json<Result<(), Error>> {
+#[post("/user/add", format = "json", data = "<user>")]
+async fn add_user(user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
 
-#[post("/user/update/<user>")]
-async fn update_user(user: User) -> Json<Result<(), Error>> {
+#[put("/user/update", format = "json", data = "<user>")]
+async fn update_user(user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
@@ -39,6 +45,12 @@ async fn update_user(user: User) -> Json<Result<(), Error>> {
 async fn delete_user(id: &str) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
+}
+
+#[get("/presence/all")]
+async fn all_presences() -> Json<Result<Vec<Presence>, Error>> {
+    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    Json(db::presence::search(&db, ""))
 }
 
 #[get("/presence/fetch/<account>/<date>")]
@@ -59,14 +71,14 @@ async fn search_presence(text: &str) -> Json<Result<Vec<Presence>, Error>> {
     Json(db::presence::search(&db, text))
 }
 
-#[post("/presence/add/<presence>")]
-async fn add_presence(presence: Presence) -> Json<Result<(), Error>> {
+#[post("/presence/add", format = "json", data = "<presence>")]
+async fn add_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::add(&db, &presence))
 }
 
-#[post("/presence/update/<presence>")]
-async fn update_presence(presence: Presence) -> Json<Result<(), Error>> {
+#[put("/presence/update", format = "json", data = "<presence>")]
+async fn update_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::update(
         &db,
@@ -103,11 +115,13 @@ fn rocket() -> _ {
     rocket::build().mount(
         "/",
         routes![
+            all_users,
             fetch_user,
             search_user,
             add_user,
             update_user,
             delete_user,
+            all_presences,
             fetch_presence,
             search_presence,
             add_presence,
