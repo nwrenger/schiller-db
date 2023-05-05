@@ -21,7 +21,6 @@ impl FromRow for Presence {
     }
 }
 
-
 /// Returns the presence with the given `account` and `date`.
 pub fn fetch(db: &Database, account: &str, date: NaiveDate) -> Result<Presence> {
     Ok(db.con.query_row(
