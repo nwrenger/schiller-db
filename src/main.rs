@@ -21,7 +21,7 @@ struct Index {
 #[get("/")]
 fn index() -> Json<Index> {
   Json::from(Index {
-    status: "success".into(),
+    status: "Up and Running!".into(),
     message: "Welcome to the PDM!".into(),
   })
 }
