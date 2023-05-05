@@ -29,19 +29,19 @@ async fn search_user(text: &str) -> Json<Result<Vec<User>, Error>> {
     Json(db::user::search(&db, text))
 }
 
-#[post("/user/add", format = "json", data = "<user>")]
+#[post("/user", format = "json", data = "<user>")]
 async fn add_user(user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
 
-#[put("/user/update", format = "json", data = "<user>")]
+#[put("/user", format = "json", data = "<user>")]
 async fn update_user(user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
 
-#[delete("/user/delete/<id>")]
+#[delete("/user/<id>")]
 async fn delete_user(id: &str) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
@@ -71,13 +71,13 @@ async fn search_presence(text: &str) -> Json<Result<Vec<Presence>, Error>> {
     Json(db::presence::search(&db, text))
 }
 
-#[post("/presence/add", format = "json", data = "<presence>")]
+#[post("/presence", format = "json", data = "<presence>")]
 async fn add_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::add(&db, &presence))
 }
 
-#[put("/presence/update", format = "json", data = "<presence>")]
+#[put("/presence", format = "json", data = "<presence>")]
 async fn update_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::update(
@@ -88,7 +88,7 @@ async fn update_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
     ))
 }
 
-#[delete("/presence/delete/<account>/<date>")]
+#[delete("/presence/<account>/<date>")]
 async fn delete_presence(account: &str, date: &str) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
