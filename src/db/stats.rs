@@ -1,9 +1,11 @@
+use serde::{Serialize, Deserialize};
+
 use crate::db::project::{Database, Error, FromRow};
 
 type Result<T> = std::result::Result<T, Error>;
 
 /// Data object for book.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Stats {
     pub users: usize,

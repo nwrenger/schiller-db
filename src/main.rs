@@ -8,6 +8,7 @@ use std::{borrow::Cow, path::Path};
 use chrono::NaiveDate;
 
 use db::project::{fetch_user_data, Database, Error, Presence, User};
+use db::stats::Stats;
 
 use rocket::serde::json::Json;
 use serde::{Serialize, Deserialize};
@@ -24,6 +25,12 @@ fn index() -> Json<Index> {
     status: "Up and Running!".into(),
     message: "Welcome to the PDM!".into(),
   })
+}
+
+#[get("/stats")]
+async fn stats() -> Json<Result<Stats, Error>> {
+    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    Json(db::stats::fetch(&db))
 }
 
 #[get("/user/all")]
@@ -131,6 +138,7 @@ fn rocket() -> _ {
         "/",
         routes![
             index,
+            stats,
             all_users,
             fetch_user,
             search_user,
