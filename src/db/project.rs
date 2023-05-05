@@ -54,6 +54,8 @@ pub enum Error {
     // Specific errors
     InvalidDate,
     InvalidUser,
+    MissingApiKey,
+    InvalidApiKey,
     // Migration
     UnsupportedProjectVersion,
 }

@@ -11,7 +11,29 @@ use db::project::{fetch_user_data, Database, Error, Presence, User};
 use db::stats::Stats;
 
 use rocket::serde::json::Json;
+use rocket::http::Status;
+use rocket::request::{Outcome, Request, FromRequest};
 use serde::{Deserialize, Serialize};
+
+struct ApiKey<'r>(&'r str);
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for ApiKey<'r> {
+    type Error = Error;
+
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        /// Returns true if `key` is a valid API key string.
+        fn is_valid(key: &str) -> bool {
+            key == "test"
+        }
+
+        match req.headers().get_one("x-api-key") {
+            None => Outcome::Failure((Status::BadRequest, Error::MissingApiKey)),
+            Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
+            Some(_) => Outcome::Failure((Status::BadRequest, Error::InvalidApiKey)),
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 struct Index {
@@ -28,55 +50,55 @@ fn index() -> Json<Index> {
 }
 
 #[get("/stats")]
-async fn stats() -> Json<Result<Stats, Error>> {
+async fn stats(_key: ApiKey<'_>) -> Json<Result<Stats, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
 }
 
 #[get("/user/all")]
-async fn all_users() -> Json<Result<Vec<User>, Error>> {
+async fn all_users(_key: ApiKey<'_>) -> Json<Result<Vec<User>, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::search(&db, ""))
 }
 
 #[get("/user/fetch/<id>")]
-async fn fetch_user(id: &str) -> Json<Result<User, Error>> {
+async fn fetch_user(_key: ApiKey<'_>, id: &str) -> Json<Result<User, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
 }
 
 #[get("/user/search/<text>")]
-async fn search_user(text: &str) -> Json<Result<Vec<User>, Error>> {
+async fn search_user(_key: ApiKey<'_>, text: &str) -> Json<Result<Vec<User>, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::search(&db, text))
 }
 
 #[post("/user", format = "json", data = "<user>")]
-async fn add_user(user: Json<User>) -> Json<Result<(), Error>> {
+async fn add_user(_key: ApiKey<'_>, user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
 
 #[put("/user", format = "json", data = "<user>")]
-async fn update_user(user: Json<User>) -> Json<Result<(), Error>> {
+async fn update_user(_key: ApiKey<'_>, user: Json<User>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
 
 #[delete("/user/<id>")]
-async fn delete_user(id: &str) -> Json<Result<(), Error>> {
+async fn delete_user(_key: ApiKey<'_>, id: &str) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
 }
 
 #[get("/presence/all")]
-async fn all_presences() -> Json<Result<Vec<Presence>, Error>> {
+async fn all_presences(_key: ApiKey<'_>) -> Json<Result<Vec<Presence>, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::search(&db, ""))
 }
 
 #[get("/presence/fetch/<account>/<date>")]
-async fn fetch_presence(account: &str, date: &str) -> Json<Result<Presence, Error>> {
+async fn fetch_presence(_key: ApiKey<'_>, account: &str, date: &str) -> Json<Result<Presence, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
@@ -88,19 +110,19 @@ async fn fetch_presence(account: &str, date: &str) -> Json<Result<Presence, Erro
 }
 
 #[get("/presence/search/<text>")]
-async fn search_presence(text: &str) -> Json<Result<Vec<Presence>, Error>> {
+async fn search_presence(_key: ApiKey<'_>, text: &str) -> Json<Result<Vec<Presence>, Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::search(&db, text))
 }
 
 #[post("/presence", format = "json", data = "<presence>")]
-async fn add_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
+async fn add_presence(_key: ApiKey<'_>, presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::add(&db, &presence))
 }
 
 #[put("/presence", format = "json", data = "<presence>")]
-async fn update_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
+async fn update_presence(_key: ApiKey<'_>, presence: Json<Presence>) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::update(
         &db,
@@ -111,7 +133,7 @@ async fn update_presence(presence: Json<Presence>) -> Json<Result<(), Error>> {
 }
 
 #[delete("/presence/<account>/<date>")]
-async fn delete_presence(account: &str, date: &str) -> Json<Result<(), Error>> {
+async fn delete_presence(_key: ApiKey<'_>, account: &str, date: &str) -> Json<Result<(), Error>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
