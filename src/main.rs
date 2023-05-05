@@ -10,6 +10,21 @@ use chrono::NaiveDate;
 use db::project::{fetch_user_data, Database, Error, Presence, User};
 
 use rocket::serde::json::Json;
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+struct Index {
+    status: String,
+    message: String,
+}
+
+#[get("/")]
+fn index() -> Json<Index> {
+  Json::from(Index {
+    status: "success".into(),
+    message: "Welcome to the PDM!".into(),
+  })
+}
 
 #[get("/user/all")]
 async fn all_users() -> Json<Result<Vec<User>, Error>> {
@@ -115,6 +130,7 @@ fn rocket() -> _ {
     rocket::build().mount(
         "/",
         routes![
+            index,
             all_users,
             fetch_user,
             search_user,
