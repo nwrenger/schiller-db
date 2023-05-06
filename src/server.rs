@@ -107,7 +107,7 @@ pub async fn fetch_user(_api_key: ServerApiKey, id: &str) -> Json<Result<User>> 
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Searched all Users", body = Result<Vec<User>, Error>),
+        (status = 200, description = "Searched all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to search all Users", body = ServerError),
     ),
     security (
