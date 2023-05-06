@@ -209,7 +209,10 @@ pub async fn fetch_presence(
     )
 )]
 #[get("/presence/search?<text>")]
-pub async fn search_presence(_api_key: ServerApiKey, text: Option<&str>) -> Json<Result<Vec<Presence>>> {
+pub async fn search_presence(
+    _api_key: ServerApiKey,
+    text: Option<&str>,
+) -> Json<Result<Vec<Presence>>> {
     let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
     Json(db::presence::search(&db, text.unwrap_or_default()))
 }

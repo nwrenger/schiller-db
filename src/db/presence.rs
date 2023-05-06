@@ -1,4 +1,4 @@
-use crate::db::project::{DBIter, Database, Error, Result, FromRow, Presence};
+use crate::db::project::{DBIter, Database, Error, FromRow, Presence, Result};
 
 use chrono::NaiveDate;
 

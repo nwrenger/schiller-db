@@ -1,4 +1,4 @@
-use crate::db::project::{DBIter, Database, Error, Result,  FromRow, User};
+use crate::db::project::{DBIter, Database, Error, FromRow, Result, User};
 
 impl User {
     pub fn is_valid(&self) -> bool {

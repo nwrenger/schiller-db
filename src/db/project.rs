@@ -1,8 +1,10 @@
 use std::{
     borrow::Cow,
     fmt,
+    fs::File,
+    io::BufRead,
     path::{Path, PathBuf},
-    ptr::addr_of, fs::File, io::BufRead,
+    ptr::addr_of,
 };
 
 use std::io::BufReader;

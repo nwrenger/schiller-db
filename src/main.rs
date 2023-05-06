@@ -67,7 +67,6 @@ fn rocket() -> Rocket<Build> {
         }
     }
 
-
     let figment = rocket::Config::figment().merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
