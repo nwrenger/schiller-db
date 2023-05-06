@@ -17,21 +17,21 @@ use utoipa::ToSchema;
 #[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct User {
-    pub(crate) account: String,
-    pub(crate) forename: String,
-    pub(crate) surname: String,
-    pub(crate) role: String,
-    pub(crate) criminal: bool,
-    pub(crate) data: Option<String>,
+    pub account: String,
+    pub forename: String,
+    pub surname: String,
+    pub role: String,
+    pub criminal: bool,
+    pub data: Option<String>,
 }
 
 /// Data object for a presence.
 #[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
-    pub(crate) presenter: String,
-    pub(crate) date: NaiveDate,
-    pub(crate) data: Option<String>,
+    pub presenter: String,
+    pub date: NaiveDate,
+    pub data: Option<String>,
 }
 
 macro_rules! error {
