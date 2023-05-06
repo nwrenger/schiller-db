@@ -68,9 +68,7 @@ fn rocket() -> Rocket<Build> {
     }
 
 
-    let figment = rocket::Config::figment()
-        .merge(("port", 8080))
-        .merge(("address", "0.0.0.0"));
+    let figment = rocket::Config::figment().merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
         .register("/", catchers![unauthorized])
