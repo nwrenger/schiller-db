@@ -91,7 +91,7 @@ pub async fn stats(_api_key: ServerApiKey) -> Json<Result<Stats, Error>> {
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "Got all Users", body = User),
+        (status = 200, description = "Got all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to view all Users", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -126,7 +126,7 @@ pub async fn fetch_user(_api_key: ServerApiKey, id: &str) -> Json<Result<User, E
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "Searched all Users", body = User),
+        (status = 200, description = "Searched all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to search all Users", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     params(
@@ -198,7 +198,7 @@ pub async fn delete_user(_api_key: ServerApiKey, id: &str) -> Json<Result<(), Er
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "Got all Presences", body = Presence),
+        (status = 200, description = "Got all Presences", body = Vec<Presence>),
         (status = 401, description = "Unauthorized to view all Presences", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -244,7 +244,7 @@ pub async fn fetch_presence(
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "Searched all Presences", body = Presence),
+        (status = 200, description = "Searched all Presences", body = Vec<Presence>),
         (status = 401, description = "Unauthorized to search all Presences", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     params(
