@@ -2,7 +2,7 @@ use std::{
     borrow::Cow,
     fmt,
     path::{Path, PathBuf},
-    ptr::addr_of,
+    ptr::addr_of, fs::File, io::BufRead,
 };
 
 use std::io::BufReader;
@@ -213,14 +213,15 @@ pub fn create(db: &Database) -> Result<()> {
 //Ignore the Error messages!
 pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()> {
     if path.exists() {
-        let reader = BufReader::new(path);
+        let reader = BufReader::new(File::open(path)?);
         for i in reader.lines() {
-            let line = i.split(div).collect::<Vec<_>>();
+            let line = i?;
+            let mut lines = line.split(div);
             let user = User {
-                account: line[0].into(),
-                forename: line[1].into(),
-                surname: line[2].into(),
-                role: line[3].into(),
+                account: lines.next().unwrap().into(),
+                forename: lines.next().unwrap().into(),
+                surname: lines.next().unwrap().into(),
+                role: lines.next().unwrap().into(),
                 criminal: false,
                 data: None,
             };
