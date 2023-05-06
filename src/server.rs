@@ -19,7 +19,7 @@ use chrono::NaiveDate;
 use db::project::{Database, Error, Presence, User};
 use db::stats::Stats;
 
-/// Todo operation error.
+/// Server operation error.
 #[derive(Serialize, ToSchema, Responder, Debug)]
 pub enum ServerError {
     /// When unauthorized to complete operation
