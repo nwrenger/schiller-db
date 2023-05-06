@@ -113,7 +113,7 @@ impl<'a, T> DBIter<'a, T> {
 
 pub struct Database {
     path: PathBuf,
-    pub(crate) con: rusqlite::Connection,
+    pub con: rusqlite::Connection,
 }
 impl fmt::Debug for Database {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
