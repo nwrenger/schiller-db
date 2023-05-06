@@ -22,14 +22,6 @@ use db::stats::Stats;
 /// Todo operation error.
 #[derive(Serialize, ToSchema, Responder, Debug)]
 pub enum ServerError {
-    /// When there is conflict creating a new todo.
-    #[response(status = 409)]
-    Conflict(String),
-
-    /// When todo item is not found from storage.
-    #[response(status = 404)]
-    NotFound(String),
-
     /// When unauthorized to complete operation
     #[response(status = 401)]
     Unauthorized(String),
@@ -156,7 +148,6 @@ pub async fn search_user(_api_key: ServerApiKey, text: &str) -> Json<Result<Vec<
     responses(
         (status = 200, description = "Added a User", body = User),
         (status = 401, description = "Unauthorized to add a User", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 409, description = "User already exists", body = ServerError, example = json!(ServerError::Conflict(String::from("id = 1")))),
     ),
     security (
         ("api_key" = [])
@@ -174,7 +165,6 @@ pub async fn add_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<(
     responses(
         (status = 200, description = "Updated a User", body = User),
         (status = 401, description = "Unauthorized to update a User", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 409, description = "User doesn't exists", body = ServerError, example = json!(ServerError::Conflict(String::from("id = 1")))),
     ),
     security (
         ("api_key" = [])
@@ -191,7 +181,6 @@ pub async fn update_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Resul
     responses(
         (status = 200, description = "User deleted successfully"),
         (status = 401, description = "Unauthorized to delete Users", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 404, description = "User not found", body = ServerError, example = json!(ServerError::NotFound(String::from("id = 1"))))
     ),
     params(
         ("id", description = "The unique user id")
@@ -280,7 +269,6 @@ pub async fn search_presence(
     responses(
         (status = 200, description = "Added a presence", body = Presence),
         (status = 401, description = "Unauthorized to add a Presence", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 409, description = "Presence already exists", body = ServerError, example = json!(ServerError::Conflict(String::from("id = 1")))),
     ),
     security (
         ("api_key" = [])
@@ -301,7 +289,6 @@ pub async fn add_presence(
     responses(
         (status = 200, description = "Updated a Presence", body = Presence),
         (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 409, description = "Presence doesn't exists", body = ServerError, example = json!(ServerError::Conflict(String::from("id = 1")))),
     ),
     security (
         ("api_key" = [])
@@ -326,7 +313,6 @@ pub async fn update_presence(
     responses(
         (status = 200, description = "Presence deleted successfully"),
         (status = 401, description = "Unauthorized to delete Presences", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
-        (status = 404, description = "Presence not found", body = ServerError, example = json!(ServerError::NotFound(String::from("id = 1"))))
     ),
     params(
         ("account", description = "The unique user account"),
