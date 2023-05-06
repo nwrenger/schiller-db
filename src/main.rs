@@ -34,13 +34,11 @@ fn rocket() -> Rocket<Build> {
         paths(
             server::info,
             server::stats,
-            server::all_users,
             server::fetch_user,
             server::search_user,
             server::add_user,
             server::update_user,
             server::delete_user,
-            server::all_presences,
             server::fetch_presence,
             server::search_presence,
             server::add_presence,
@@ -69,7 +67,12 @@ fn rocket() -> Rocket<Build> {
         }
     }
 
-    rocket::build()
+
+    let figment = rocket::Config::figment()
+        .merge(("port", 8080))
+        .merge(("address", "0.0.0.0"));
+
+    rocket::custom(figment)
         .register("/", catchers![unauthorized])
         .mount(
             "/",
@@ -80,13 +83,11 @@ fn rocket() -> Rocket<Build> {
             routes![
                 server::info,
                 server::stats,
-                server::all_users,
                 server::fetch_user,
                 server::search_user,
                 server::add_user,
                 server::update_user,
                 server::delete_user,
-                server::all_presences,
                 server::fetch_presence,
                 server::search_presence,
                 server::add_presence,
