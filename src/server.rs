@@ -48,6 +48,7 @@ impl<'r> FromRequest<'r> for ServerApiKey {
     }
 }
 
+/// Data object for Infos.
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct Info {
     status: String,

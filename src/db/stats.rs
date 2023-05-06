@@ -5,7 +5,7 @@ use crate::db::project::{Database, Error, FromRow};
 
 type Result<T> = std::result::Result<T, Error>;
 
-/// Data object for book.
+/// Data object for Stats.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Stats {
