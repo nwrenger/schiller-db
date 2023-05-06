@@ -36,17 +36,17 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
 }
 
 #[derive(Serialize, Deserialize)]
-struct Index {
+struct Info {
     status: String,
     message: String,
 }
 
-#[get("/")]
-fn index() -> Json<Index> {
-    Json::from(Index {
+#[get("/info")]
+fn info() -> Json<Result<Info, Error>> {
+    Json::from(Ok(Info {
         status: "Up and Running!".into(),
         message: "Welcome to the PDM!".into(),
-    })
+    }))
 }
 
 #[get("/stats")]
@@ -163,7 +163,7 @@ fn rocket() -> _ {
     rocket::build().mount(
         "/",
         routes![
-            index,
+            info,
             stats,
             all_users,
             fetch_user,
