@@ -49,7 +49,7 @@ fn info() -> Json<Result<Info, Error>> {
         status: "Up and Running!".into(),
         message: "Welcome to the PDM!".into(),
         source: "https://github.com/NWrenger/pdm".into(),
-        developer_team: vec!["Leonard Böttcher".into(), "Nils Wrenger".into()]
+        developer_team: vec!["Leonard Böttcher".into(), "Nils Wrenger".into()],
     }))
 }
 
