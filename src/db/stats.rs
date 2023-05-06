@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::db::project::{Database, Error, FromRow};
 
 type Result<T> = std::result::Result<T, Error>;
 
 /// Data object for book.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Stats {
     pub users: usize,

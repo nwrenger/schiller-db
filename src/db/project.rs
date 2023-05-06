@@ -11,9 +11,10 @@ use chrono::NaiveDate;
 
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 /// Data object for a user.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct User {
     pub(crate) account: String,
@@ -25,7 +26,7 @@ pub struct User {
 }
 
 /// Data object for a presence.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Presence {
     pub(crate) presenter: String,
@@ -39,7 +40,7 @@ macro_rules! error {
     };
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, ToSchema)]
 
 pub enum Error {
     Arguments,
