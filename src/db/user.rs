@@ -1,6 +1,4 @@
-use crate::db::project::{DBIter, Database, Error, FromRow, User};
-
-type Result<T> = std::result::Result<T, Error>;
+use crate::db::project::{DBIter, Database, Error, Result,  FromRow, User};
 
 impl User {
     pub fn is_valid(&self) -> bool {

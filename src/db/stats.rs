@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::db::project::{Database, Error, FromRow};
-
-type Result<T> = std::result::Result<T, Error>;
+use crate::db::project::{Database, Result, FromRow};
 
 /// Data object for Stats.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]

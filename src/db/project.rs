@@ -41,7 +41,6 @@ macro_rules! error {
 }
 
 #[derive(Serialize, Deserialize, Debug, ToSchema)]
-
 pub enum Error {
     Arguments,
     Logic,
@@ -82,7 +81,7 @@ impl From<std::io::Error> for Error {
     }
 }
 
-type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, Error>;
 
 pub trait FromRow: Sized {
     fn from_row(stmt: &rusqlite::Row) -> rusqlite::Result<Self>;

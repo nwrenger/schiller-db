@@ -1,8 +1,6 @@
-use crate::db::project::{DBIter, Database, Error, FromRow, Presence};
+use crate::db::project::{DBIter, Database, Error, Result, FromRow, Presence};
 
 use chrono::NaiveDate;
-
-type Result<T> = std::result::Result<T, Error>;
 
 //maybe used for later
 impl Presence {
