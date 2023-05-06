@@ -146,7 +146,7 @@ pub async fn search_user(_api_key: ServerApiKey, text: &str) -> Json<Result<Vec<
     context_path = "",
     request_body = User,
     responses(
-        (status = 200, description = "Added a User", body = User),
+        (status = 200, description = "Add a User sended successfully", body = User),
         (status = 401, description = "Unauthorized to add a User", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -163,7 +163,7 @@ pub async fn add_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<(
     context_path = "",
     request_body = User,
     responses(
-        (status = 200, description = "Updated a User", body = User),
+        (status = 200, description = "Update a User sended successfully", body = User),
         (status = 401, description = "Unauthorized to update a User", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -179,7 +179,7 @@ pub async fn update_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Resul
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "User deleted successfully"),
+        (status = 200, description = "User delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Users", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     params(
@@ -267,7 +267,7 @@ pub async fn search_presence(
     context_path = "",
     request_body = Presence,
     responses(
-        (status = 200, description = "Added a presence", body = Presence),
+        (status = 200, description = "Add a presence sended successfully", body = Presence),
         (status = 401, description = "Unauthorized to add a Presence", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -287,7 +287,7 @@ pub async fn add_presence(
     context_path = "",
     request_body = Presence,
     responses(
-        (status = 200, description = "Updated a Presence", body = Presence),
+        (status = 200, description = "Update a Presence sended successfully", body = Presence),
         (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     security (
@@ -311,7 +311,7 @@ pub async fn update_presence(
 #[utoipa::path(
     context_path = "",
     responses(
-        (status = 200, description = "Presence deleted successfully"),
+        (status = 200, description = "Presence delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Presences", body = ServerError, example = json!(ServerError::Unauthorized(String::from("id = 1")))),
     ),
     params(
