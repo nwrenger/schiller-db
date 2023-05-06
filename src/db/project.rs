@@ -5,7 +5,7 @@ use std::{
     ptr::addr_of,
 };
 
-use std::fs::read_to_string;
+use std::io::BufReader;
 
 use chrono::NaiveDate;
 
@@ -213,9 +213,8 @@ pub fn create(db: &Database) -> Result<()> {
 //Ignore the Error messages!
 pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()> {
     if path.exists() {
-        let file = read_to_string(path).unwrap();
-        let file_lines = file.lines().collect::<Vec<_>>();
-        for i in file_lines {
+        let reader = BufReader::new(path);
+        for i in reader.lines() {
             let line = i.split(div).collect::<Vec<_>>();
             let user = User {
                 account: line[0].into(),
