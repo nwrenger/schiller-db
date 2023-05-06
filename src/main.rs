@@ -48,10 +48,10 @@ fn rocket() -> Rocket<Build> {
             server::delete_presence,
         ),
         components(
-            schemas(db::project::User, db::project::Presence, server::ServerError, db::stats::Stats, server::Info)
+            schemas(db::project::User, db::project::Presence, db::stats::Stats, server::ServerError, server::Info)
         ),
         tags(
-            (name = "Server", description = "Server management endpoints.")
+            (name = "server", description = "Server management endpoints.")
         ),
         modifiers(&SecurityAddon)
     )]
