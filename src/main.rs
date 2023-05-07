@@ -14,6 +14,8 @@ use utoipa::{
 };
 use utoipa_swagger_ui::SwaggerUi;
 
+use crate::server::ServerError;
+
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
     let path = Path::new("./pdm.db");
@@ -70,7 +72,7 @@ fn rocket() -> Rocket<Build> {
     let figment = rocket::Config::figment().merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
-        .register("/", catchers![unauthorized])
+        .register("/", catchers![unauthorized, unprocessable_entity])
         .mount(
             "/",
             SwaggerUi::new("/swagger-ui/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
@@ -97,6 +99,13 @@ fn rocket() -> Rocket<Build> {
 #[catch(401)]
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let (_, server_error) = req.guard::<ServerApiKey>().await.failed().unwrap();
+
+    json!(server_error)
+}
+
+#[catch(422)]
+async fn unprocessable_entity(_req: &Request<'_>) -> serde_json::Value {
+    let server_error = ServerError::UnprocessableEntity("wrong format".into());
 
     json!(server_error)
 }
