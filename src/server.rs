@@ -22,13 +22,13 @@ use db::stats::Stats;
 /// Server operation error.
 #[derive(Serialize, ToSchema, Responder, Debug)]
 pub enum ServerError {
-    ///When a wrong format is used
-    #[response(status = 422)]
-    UnprocessableEntity(String),
-
     /// When unauthorized to complete operation
     #[response(status = 401)]
     Unauthorized(String),
+    
+    ///When a wrong format is used
+    #[response(status = 422)]
+    UnprocessableEntity(String),
 }
 
 pub struct ServerApiKey;
@@ -129,7 +129,7 @@ pub async fn search_user(_api_key: ServerApiKey, text: Option<&str>) -> Json<Res
     responses(
         (status = 200, description = "Add a User sended successfully"),
         (status = 401, description = "Unauthorized to add a User", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("wrong format".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
         ("api_key" = [])
@@ -146,7 +146,7 @@ pub async fn add_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<(
     responses(
         (status = 200, description = "Update a User sended successfully"),
         (status = 401, description = "Unauthorized to update a User", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("wrong format".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
         ("api_key" = [])
@@ -228,7 +228,7 @@ pub async fn search_presence(
     responses(
         (status = 200, description = "Add a presence sended successfully"),
         (status = 401, description = "Unauthorized to add a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("wrong format".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
         ("api_key" = [])
@@ -245,7 +245,7 @@ pub async fn add_presence(_api_key: ServerApiKey, presence: Json<Presence>) -> J
     responses(
         (status = 200, description = "Update a Presence sended successfully"),
         (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("wrong format".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
         ("api_key" = [])
