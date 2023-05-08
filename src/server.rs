@@ -25,7 +25,7 @@ pub enum ServerError {
     /// When unauthorized to complete operation
     #[response(status = 401)]
     Unauthorized(String),
-    
+
     ///When a wrong format is used
     #[response(status = 422)]
     UnprocessableEntity(String),
