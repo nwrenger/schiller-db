@@ -29,8 +29,6 @@ fn rocket() -> Rocket<Build> {
         }
     };
 
-    env_logger::builder().format_level(false);
-
     #[derive(OpenApi)]
     #[openapi(
         paths(
