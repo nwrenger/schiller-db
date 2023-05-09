@@ -54,6 +54,7 @@ pub fn search<'a>(db: &'a Database, text: &'a str) -> Result<Vec<User>> {
         or forename like '%'||?1||'%' \
         or surname like '%'||?1||'%' \
         or role like '%'||?1||'%' \
+        or data like '%'||?1||'%' \
         order by account",
     )?;
     let rows = stmt.query([text.trim()])?;
