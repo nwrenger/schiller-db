@@ -39,7 +39,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "alpha" => Outcome::Success(EmploymentApiKey),
+            Some(key) if key == "e" => Outcome::Success(EmploymentApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
@@ -62,7 +62,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "beta" => Outcome::Success(PoliceApiKey),
+            Some(key) if key == "p" => Outcome::Success(PoliceApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
