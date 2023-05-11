@@ -112,15 +112,13 @@ fn rocket() -> Rocket<Build> {
 #[catch(401)]
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
-    let route = req.route().unwrap().name.as_ref();
-    if route.unwrap().starts_with("add")
-        || route.unwrap().starts_with("update")
-        || route.unwrap().starts_with("delete")
-    {
+    let route_0 = req.routed_segment(0).unwrap();
+    let route_1 = req.routed_segment(0).unwrap();
+    if route_1 == "add" || route_1 == "update" || route_1 == "delete" {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
-    } else if route.unwrap().ends_with("stats") || route.unwrap().ends_with("user") {
+    } else if route_0 == "stats" || route_0 == "criminals" {
         (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
-    } else if route.unwrap().ends_with("presence") {
+    } else if route_0 == "stats" {
         (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
     } else {
         (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
