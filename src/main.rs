@@ -114,7 +114,7 @@ async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
     if req.guard::<WriteApiKey>().await.failed().is_some() {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
-    } else if req.guard::<PoliceApiKey>().await.failed().is_some()  {
+    } else if req.guard::<PoliceApiKey>().await.failed().is_some() {
         (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
     } else if req.guard::<EmploymentApiKey>().await.failed().is_some() {
         (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
