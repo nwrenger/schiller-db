@@ -108,9 +108,10 @@ fn rocket() -> Rocket<Build> {
         )
 }
 
+#[allow(unused_assignments)]
 #[catch(401)]
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
-    let (_, mut server_error) = ("", ServerError::Unauthorized("unauthorized".to_string()));
+    let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
     let route = req.route().unwrap().name.as_ref();
     if route.unwrap().starts_with("add")
         || route.unwrap().starts_with("update")
