@@ -15,8 +15,6 @@ impl FromRow for User {
             forename: row.get("forename")?,
             surname: row.get("surname")?,
             role: row.get("role")?,
-            criminal: row.get("criminal")?,
-            data: row.get("data")?,
         })
     }
 }
@@ -28,9 +26,7 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
         account, \
         forename, \
         surname, \
-        role, \
-        criminal, \
-        data \
+        role \
         from user \
         where account=?",
         [id],
@@ -45,16 +41,13 @@ pub fn search<'a>(db: &'a Database, text: &'a str) -> Result<Vec<User>> {
         account, \
         forename, \
         surname, \
-        role, \
-        criminal, \
-        data \
+        role \
         \
         from user \
         where account like '%'||?1||'%' \
         or forename like '%'||?1||'%' \
         or surname like '%'||?1||'%' \
         or role like '%'||?1||'%' \
-        or data like '%'||?1||'%' \
         order by account",
     )?;
     let rows = stmt.query([text.trim()])?;
@@ -67,14 +60,12 @@ pub fn add(db: &Database, user: &User) -> Result<()> {
         return Err(Error::InvalidUser);
     }
     db.con.execute(
-        "insert into user values (?, ?, ?, ?, ?, ?)",
+        "insert into user values (?, ?, ?, ?)",
         rusqlite::params![
             user.account.trim(),
             user.forename.trim(),
             user.surname.trim(),
             user.role.trim(),
-            user.criminal,
-            user.data,
         ],
     )?;
     Ok(())
@@ -88,14 +79,12 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
     let transaction = db.transaction()?;
     // update user
     transaction.execute(
-        "update user set account=?, forename=?, surname=?, role=?, criminal=?, data=? where account=?",
+        "update user set account=?, forename=?, surname=?, role=? where account=?",
         rusqlite::params![
             user.account.trim(),
             user.forename.trim(),
             user.surname.trim(),
             user.role.trim(),
-            user.criminal,
-            user.data,
             previous_account,
         ],
     )?;
@@ -103,6 +92,12 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
     // update presence
     transaction.execute(
         "update presence set presenter=? where presenter=?",
+        [user.account.trim(), previous_account],
+    )?;
+
+    // update criminal
+    transaction.execute(
+        "update criminals set criminal=? where criminal=?",
         [user.account.trim(), previous_account],
     )?;
 
@@ -123,7 +118,10 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 
     //remove from presence
     transaction.execute("delete from presence where presenter=?", [account])?;
+    //remove from criminal
+    transaction.execute("delete from criminals where criminal=?", [account])?;
     transaction.commit()?;
+
     Ok(())
 }
 
@@ -141,8 +139,6 @@ mod tests {
             forename: "Foo".into(),
             surname: "Bar".into(),
             role: "Demo".into(),
-            criminal: false,
-            data: None,
         };
         user::add(&db, &user).unwrap();
 

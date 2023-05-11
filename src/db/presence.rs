@@ -2,7 +2,6 @@ use crate::db::project::{DBIter, Database, Error, FromRow, Presence, Result};
 
 use chrono::NaiveDate;
 
-//maybe used for later
 impl Presence {
     pub fn is_valid(&self) -> bool {
         !self.presenter.trim().is_empty()

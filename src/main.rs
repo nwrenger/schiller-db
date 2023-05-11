@@ -7,7 +7,7 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::{catch, catchers, routes, Build, Request, Rocket};
 use serde_json::json;
-use server::{EmploymentApiKey, PoliceApiKey};
+use server::{EmploymentApiKey, PoliceApiKey, GeneralApiKey, WriteApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
@@ -44,9 +44,14 @@ fn rocket() -> Rocket<Build> {
             server::add_presence,
             server::update_presence,
             server::delete_presence,
+            server::fetch_criminal,
+            server::search_criminal,
+            server::add_criminal,
+            server::update_criminal,
+            server::delete_criminal,
         ),
         components(
-            schemas(db::project::User, db::project::Presence, db::stats::Stats, server::ServerError, server::Info)
+            schemas(db::project::User, db::project::Presence, db::project::Criminal, db::stats::Stats, server::ServerError, server::Info)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -61,9 +66,12 @@ fn rocket() -> Rocket<Build> {
         fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
             let components = openapi.components.as_mut().unwrap(); // we can unwrap safely since there already is components registered.
             components.add_security_scheme(
-                "api_key",
-                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("server_api_key"))),
+                "server_api_key", SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("server_api_key"))),
+            );
+            components.add_security_scheme(
+                "write_api_key", SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("write_api_key"))),
             )
+
         }
     }
 
@@ -90,6 +98,11 @@ fn rocket() -> Rocket<Build> {
                 server::add_presence,
                 server::update_presence,
                 server::delete_presence,
+                server::fetch_criminal,
+                server::search_criminal,
+                server::add_criminal,
+                server::update_criminal,
+                server::delete_criminal,
             ],
         )
 }
@@ -98,10 +111,14 @@ fn rocket() -> Rocket<Build> {
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let (_, mut server_error) = ("", ServerError::Unauthorized("unauthorized".to_string()));
     let route = req.route().unwrap().name.as_ref();
-    if route.unwrap().ends_with("stats") || route.unwrap().ends_with("user") {
+    if route.unwrap().starts_with("add") || route.unwrap().starts_with("update") ||route.unwrap().starts_with("delete"){
+        (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
+    } else if route.unwrap().ends_with("stats") || route.unwrap().ends_with("user") {
         (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
     } else if route.unwrap().ends_with("presence") {
         (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
+    } else {
+        (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
     }
 
     json!(server_error)

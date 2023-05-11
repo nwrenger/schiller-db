@@ -16,7 +16,7 @@ use std::{borrow::Cow, path::Path};
 use crate::db;
 use chrono::NaiveDate;
 
-use db::project::{Database, Error, Presence, Result, User};
+use db::project::{Database, Error, Presence, Result, User, Criminal};
 use db::stats::Stats;
 
 /// Server operation error.
@@ -29,6 +29,52 @@ pub enum ServerError {
     ///When a wrong format is used
     #[response(status = 422)]
     UnprocessableEntity(String),
+}
+
+pub struct GeneralApiKey;
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for GeneralApiKey {
+    type Error = ServerError;
+
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        match request.headers().get("server_api_key").next() {
+            Some(key) if key == "e" || key == "p" => Outcome::Success(GeneralApiKey),
+            None => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("missing api key")),
+            )),
+            _ => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from(
+                    "invalid api key/missing permissions",
+                )),
+            )),
+        }
+    }
+}
+
+pub struct WriteApiKey;
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for WriteApiKey {
+    type Error = ServerError;
+
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        match request.headers().get("write_api_key").next() {
+            Some(key) if key == "r" => Outcome::Success(WriteApiKey),
+            None => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("missing api key")),
+            )),
+            _ => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from(
+                    "invalid api key/missing permissions for writing data",
+                )),
+            )),
+        }
+    }
 }
 
 pub struct EmploymentApiKey;
@@ -47,7 +93,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permission for users",
+                    "invalid api key/missing permissions for criminals",
                 )),
             )),
         }
@@ -70,7 +116,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permission for presences",
+                    "invalid api key/missing permissions for presences",
                 )),
             )),
         }
@@ -107,11 +153,11 @@ pub async fn info() -> Json<Info> {
         (status = 401, description = "Unauthorized to view Stats", body = ServerError),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = [])
     )
 )]
 #[get("/stats")]
-pub async fn stats(_api_key: PoliceApiKey) -> Json<Result<Stats>> {
+pub async fn stats(_api_key_1: PoliceApiKey) -> Json<Result<Stats>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
 }
@@ -125,11 +171,11 @@ pub async fn stats(_api_key: PoliceApiKey) -> Json<Result<Stats>> {
         ("id", description = "The unique user id")
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = [])
     )
 )]
 #[get("/user/fetch/<id>")]
-pub async fn fetch_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<User>> {
+pub async fn fetch_user(_api_key: GeneralApiKey, id: &str) -> Json<Result<User>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
 }
@@ -140,11 +186,11 @@ pub async fn fetch_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<User>> 
         (status = 401, description = "Unauthorized to search all Users", body = ServerError),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = [])
     )
 )]
 #[get("/user/search?<text>")]
-pub async fn search_user(_api_key: PoliceApiKey, text: Option<&str>) -> Json<Result<Vec<User>>> {
+pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Result<Vec<User>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::search(&db, text.unwrap_or_default()))
 }
@@ -157,11 +203,12 @@ pub async fn search_user(_api_key: PoliceApiKey, text: Option<&str>) -> Json<Res
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[post("/user", format = "json", data = "<user>")]
-pub async fn add_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Result<()>> {
+pub async fn add_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, user: Json<User>) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
@@ -174,11 +221,12 @@ pub async fn add_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Result<(
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[put("/user", format = "json", data = "<user>")]
-pub async fn update_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Result<()>> {
+pub async fn update_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, user: Json<User>) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
@@ -192,11 +240,12 @@ pub async fn update_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Resul
         ("id", description = "The unique user id")
     ),
     security(
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[delete("/user/<id>")]
-pub async fn delete_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<()>> {
+pub async fn delete_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, id: &str) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
 }
@@ -211,7 +260,7 @@ pub async fn delete_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<()>> {
         ("date", description = "The date")
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = [])
     )
 )]
 #[get("/presence/fetch/<account>/<date>")]
@@ -236,7 +285,7 @@ pub async fn fetch_presence(
         (status = 401, description = "Unauthorized to search all Presences", body = ServerError),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = [])
     )
 )]
 #[get("/presence/search?<text>")]
@@ -256,12 +305,14 @@ pub async fn search_presence(
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[post("/presence", format = "json", data = "<presence>")]
 pub async fn add_presence(
     _api_key: EmploymentApiKey,
+    _api_key_write: WriteApiKey,
     presence: Json<Presence>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -276,12 +327,14 @@ pub async fn add_presence(
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
     ),
     security (
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[put("/presence", format = "json", data = "<presence>")]
 pub async fn update_presence(
     _api_key: EmploymentApiKey,
+    _api_key_write: WriteApiKey,
     presence: Json<Presence>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -303,12 +356,14 @@ pub async fn update_presence(
         ("date", description = "The date")
     ),
     security(
-        ("api_key" = [])
+        ("server_api_key" = []),
+        ("write_api_key" = [])
     )
 )]
 #[delete("/presence/<account>/<date>")]
 pub async fn delete_presence(
     _api_key: EmploymentApiKey,
+    _api_key_write: WriteApiKey,
     account: &str,
     date: &str,
 ) -> Json<Result<()>> {
@@ -320,4 +375,114 @@ pub async fn delete_presence(
         }
     };
     Json(db::presence::delete(&db, account, date))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Got a Criminal by a specific account", body = Criminal),
+        (status = 401, description = "Unauthorized to fetch a Criminal", body = ServerError),
+    ),
+    params(
+        ("account", description = "The unique user account"),
+    ),
+    security (
+        ("server_api_key" = [])
+    )
+)]
+#[get("/criminal/fetch/<account>")]
+pub async fn fetch_criminal(
+    _api_key: PoliceApiKey,
+    account: &str,
+) -> Json<Result<Criminal>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminals::fetch(&db, account))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Searched all Criminals", body = Vec<Criminal>),
+        (status = 401, description = "Unauthorized to search all Criminals", body = ServerError),
+    ),
+    security (
+        ("server_api_key" = [])
+    )
+)]
+#[get("/criminal/search?<text>")]
+pub async fn search_criminal(
+    _api_key: PoliceApiKey,
+    text: Option<&str>,
+) -> Json<Result<Vec<Criminal>>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminals::search(&db, text.unwrap_or_default()))
+}
+
+#[utoipa::path(
+    request_body = Criminal,
+    responses(
+        (status = 200, description = "Add a criminal sended successfully"),
+        (status = 401, description = "Unauthorized to add a Crimials", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+    ),
+    security (
+        ("server_api_key" = []),
+        ("write_api_key" = [])
+    )
+)]
+#[post("/criminal", format = "json", data = "<criminals>")]
+pub async fn add_criminal(
+    _api_key: PoliceApiKey,
+    _api_key_write: WriteApiKey,
+    criminals: Json<Criminal>,
+) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminals::add(&db, &criminals))
+}
+
+#[utoipa::path(
+    request_body = Crimials,
+    responses(
+        (status = 200, description = "Update a Presence sended successfully"),
+        (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+    ),
+    security (
+        ("server_api_key" = []),
+        ("write_api_key" = [])
+    )
+)]
+#[put("/criminal", format = "json", data = "<criminals>")]
+pub async fn update_criminal(
+    _api_key: PoliceApiKey,
+    _api_key_write: WriteApiKey,
+    criminals: Json<Criminal>,
+) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminals::update(
+        &db,
+        &criminals.criminal,
+        &criminals,
+    ))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Criminal delete sended successfully"),
+        (status = 401, description = "Unauthorized to delete Criminals", body = ServerError),
+    ),
+    params(
+        ("account", description = "The unique user account"),
+    ),
+    security(
+        ("server_api_key" = []),
+        ("write_api_key" = [])
+    )
+)]
+#[delete("/criminal/<account>")]
+pub async fn delete_criminal(
+    _api_key: PoliceApiKey,
+    _api_key_write: WriteApiKey,
+    account: &str,
+) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminals::delete(&db, account))
 }

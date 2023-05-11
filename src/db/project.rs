@@ -23,7 +23,12 @@ pub struct User {
     pub forename: String,
     pub surname: String,
     pub role: String,
-    pub criminal: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
+#[cfg_attr(test, derive(PartialEq, Default))]
+pub struct Criminal {
+    pub criminal: String,
     pub data: Option<String>,
 }
 
@@ -194,15 +199,17 @@ pub fn create(db: &Database) -> Result<()> {
         account text not null primary key, \
         forename text not null, \
         surname text not null, \
-        role text not null, \
-        criminal integer not null default 0, \
-        data text default none); \
+        role text not null); \
     \
     create table presence ( \
         presenter text not null default '', \
         date text not null, \
         data text default none, \
         primary key (presenter, date)); \
+    \
+    create table criminals ( \
+        criminal text not null primary key, \
+        data text default none); \
     ";
 
     let transaction = db.transaction()?;
@@ -224,8 +231,6 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
                 forename: lines.next().unwrap().into(),
                 surname: lines.next().unwrap().into(),
                 role: lines.next().unwrap().into(),
-                criminal: false,
-                data: None,
             };
             if super::user::add(db, &user).is_err()
                 && (user.role == "Lehrer"
