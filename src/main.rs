@@ -113,7 +113,7 @@ fn rocket() -> Rocket<Build> {
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
     if req.guard::<GeneralApiKey>().await.failed().is_some() {
-    (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
+        (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
     } else {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     }
