@@ -46,7 +46,9 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
             )),
             _ => Outcome::Failure((
                 Status::Unauthorized,
-                ServerError::Unauthorized(String::from("invalid api key/missing permission for users")),
+                ServerError::Unauthorized(String::from(
+                    "invalid api key/missing permission for users",
+                )),
             )),
         }
     }
@@ -67,7 +69,9 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
             )),
             _ => Outcome::Failure((
                 Status::Unauthorized,
-                ServerError::Unauthorized(String::from("invalid api key/missing permission for presences")),
+                ServerError::Unauthorized(String::from(
+                    "invalid api key/missing permission for presences",
+                )),
             )),
         }
     }
@@ -256,7 +260,10 @@ pub async fn search_presence(
     )
 )]
 #[post("/presence", format = "json", data = "<presence>")]
-pub async fn add_presence(_api_key: EmploymentApiKey, presence: Json<Presence>) -> Json<Result<()>> {
+pub async fn add_presence(
+    _api_key: EmploymentApiKey,
+    presence: Json<Presence>,
+) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::presence::add(&db, &presence))
 }
@@ -273,7 +280,10 @@ pub async fn add_presence(_api_key: EmploymentApiKey, presence: Json<Presence>) 
     )
 )]
 #[put("/presence", format = "json", data = "<presence>")]
-pub async fn update_presence(_api_key: EmploymentApiKey, presence: Json<Presence>) -> Json<Result<()>> {
+pub async fn update_presence(
+    _api_key: EmploymentApiKey,
+    presence: Json<Presence>,
+) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::presence::update(
         &db,

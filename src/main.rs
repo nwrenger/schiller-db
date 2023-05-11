@@ -7,7 +7,7 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::{catch, catchers, routes, Build, Request, Rocket};
 use serde_json::json;
-use server::{PoliceApiKey, EmploymentApiKey};
+use server::{EmploymentApiKey, PoliceApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
