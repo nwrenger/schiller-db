@@ -1,6 +1,6 @@
 [package]
-name = "pdm"
-version = "1.1.1"
+name = "sndm"
+version = "1.1.2"
 edition = "2021"
 license = "MIT"
 

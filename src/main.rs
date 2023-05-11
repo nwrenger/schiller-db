@@ -7,7 +7,7 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::{catch, catchers, routes, Build, Request, Rocket};
 use serde_json::json;
-use server::ServerApiKey;
+use server::{PoliceApiKey, EmploymentApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
@@ -18,7 +18,7 @@ use crate::server::ServerError;
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
-    let path = Path::new("./pdm.db");
+    let path = Path::new("./sndm.db");
     match Database::open(Cow::from(path)) {
         Ok(_) => Database::open(Cow::from(path)).unwrap().0,
         Err(_) => {
@@ -96,7 +96,14 @@ fn rocket() -> Rocket<Build> {
 
 #[catch(401)]
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
-    let (_, server_error) = req.guard::<ServerApiKey>().await.failed().unwrap();
+    let (_, mut server_error) = ("", ServerError::Unauthorized("unauthorized".to_string()));
+    let route = req.route().unwrap().name.as_ref();
+    println!("{:?}", route);
+    if route.unwrap().ends_with("stats") || route.unwrap().ends_with("user") {
+        (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
+    } else if route.unwrap().ends_with("presence") {
+        (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
+    }
 
     json!(server_error)
 }

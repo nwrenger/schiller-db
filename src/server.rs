@@ -31,22 +31,43 @@ pub enum ServerError {
     UnprocessableEntity(String),
 }
 
-pub struct ServerApiKey;
+pub struct EmploymentApiKey;
 
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for ServerApiKey {
+impl<'r> FromRequest<'r> for EmploymentApiKey {
     type Error = ServerError;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "test" => Outcome::Success(ServerApiKey),
+            Some(key) if key == "alpha" => Outcome::Success(EmploymentApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
             )),
             _ => Outcome::Failure((
                 Status::Unauthorized,
-                ServerError::Unauthorized(String::from("invalid api key")),
+                ServerError::Unauthorized(String::from("invalid api key/missing permission for users")),
+            )),
+        }
+    }
+}
+
+pub struct PoliceApiKey;
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for PoliceApiKey {
+    type Error = ServerError;
+
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        match request.headers().get("server_api_key").next() {
+            Some(key) if key == "beta" => Outcome::Success(PoliceApiKey),
+            None => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("missing api key")),
+            )),
+            _ => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("invalid api key/missing permission for presences")),
             )),
         }
     }
@@ -70,8 +91,8 @@ pub struct Info {
 pub async fn info() -> Json<Info> {
     Json::from(Info {
         status: "Up and Running!".into(),
-        message: "Welcome to the PDM!".into(),
-        source: "https://github.com/NWrenger/pdm".into(),
+        message: "Welcome to the sndm!".into(),
+        source: "https://github.com/NWrenger/sndm".into(),
         developer_team: vec!["Nils Wrenger".into(), "Leonard Böttcher".into()],
     })
 }
@@ -86,8 +107,8 @@ pub async fn info() -> Json<Info> {
     )
 )]
 #[get("/stats")]
-pub async fn stats(_api_key: ServerApiKey) -> Json<Result<Stats>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn stats(_api_key: PoliceApiKey) -> Json<Result<Stats>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
 }
 
@@ -104,8 +125,8 @@ pub async fn stats(_api_key: ServerApiKey) -> Json<Result<Stats>> {
     )
 )]
 #[get("/user/fetch/<id>")]
-pub async fn fetch_user(_api_key: ServerApiKey, id: &str) -> Json<Result<User>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn fetch_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<User>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
 }
 
@@ -119,8 +140,8 @@ pub async fn fetch_user(_api_key: ServerApiKey, id: &str) -> Json<Result<User>> 
     )
 )]
 #[get("/user/search?<text>")]
-pub async fn search_user(_api_key: ServerApiKey, text: Option<&str>) -> Json<Result<Vec<User>>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn search_user(_api_key: PoliceApiKey, text: Option<&str>) -> Json<Result<Vec<User>>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::search(&db, text.unwrap_or_default()))
 }
 
@@ -136,8 +157,8 @@ pub async fn search_user(_api_key: ServerApiKey, text: Option<&str>) -> Json<Res
     )
 )]
 #[post("/user", format = "json", data = "<user>")]
-pub async fn add_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn add_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
 
@@ -153,8 +174,8 @@ pub async fn add_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<(
     )
 )]
 #[put("/user", format = "json", data = "<user>")]
-pub async fn update_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn update_user(_api_key: PoliceApiKey, user: Json<User>) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
 
@@ -171,8 +192,8 @@ pub async fn update_user(_api_key: ServerApiKey, user: Json<User>) -> Json<Resul
     )
 )]
 #[delete("/user/<id>")]
-pub async fn delete_user(_api_key: ServerApiKey, id: &str) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn delete_user(_api_key: PoliceApiKey, id: &str) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
 }
 
@@ -191,11 +212,11 @@ pub async fn delete_user(_api_key: ServerApiKey, id: &str) -> Json<Result<()>> {
 )]
 #[get("/presence/fetch/<account>/<date>")]
 pub async fn fetch_presence(
-    _api_key: ServerApiKey,
+    _api_key: EmploymentApiKey,
     account: &str,
     date: &str,
 ) -> Json<Result<Presence>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
         Err(_) => {
@@ -216,10 +237,10 @@ pub async fn fetch_presence(
 )]
 #[get("/presence/search?<text>")]
 pub async fn search_presence(
-    _api_key: ServerApiKey,
+    _api_key: EmploymentApiKey,
     text: Option<&str>,
 ) -> Json<Result<Vec<Presence>>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::presence::search(&db, text.unwrap_or_default()))
 }
 
@@ -235,8 +256,8 @@ pub async fn search_presence(
     )
 )]
 #[post("/presence", format = "json", data = "<presence>")]
-pub async fn add_presence(_api_key: ServerApiKey, presence: Json<Presence>) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn add_presence(_api_key: EmploymentApiKey, presence: Json<Presence>) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::presence::add(&db, &presence))
 }
 
@@ -252,8 +273,8 @@ pub async fn add_presence(_api_key: ServerApiKey, presence: Json<Presence>) -> J
     )
 )]
 #[put("/presence", format = "json", data = "<presence>")]
-pub async fn update_presence(_api_key: ServerApiKey, presence: Json<Presence>) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+pub async fn update_presence(_api_key: EmploymentApiKey, presence: Json<Presence>) -> Json<Result<()>> {
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::presence::update(
         &db,
         &presence.presenter,
@@ -277,11 +298,11 @@ pub async fn update_presence(_api_key: ServerApiKey, presence: Json<Presence>) -
 )]
 #[delete("/presence/<account>/<date>")]
 pub async fn delete_presence(
-    _api_key: ServerApiKey,
+    _api_key: EmploymentApiKey,
     account: &str,
     date: &str,
 ) -> Json<Result<()>> {
-    let db = Database::open(Cow::from(Path::new("./pdm.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
         Err(_) => {

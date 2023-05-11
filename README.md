@@ -1,5 +1,5 @@
-# Police Database Management or for short PDM
-A repo with the Backend of the PDA (Police Department App).
+# Schillernova's Database Managment or for short sndm
+A repo with the Backend of the sndi (Schillernova's Database Interface).
 ## Todos
 - [x] DB Managment
 - [x] Making a real/openable DB File
