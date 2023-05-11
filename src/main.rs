@@ -7,7 +7,7 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::{catch, catchers, routes, Build, Request, Rocket};
 use serde_json::json;
-use server::{EmploymentApiKey, GeneralApiKey, PoliceApiKey, WriteApiKey};
+use server::{GeneralApiKey, WriteApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
@@ -112,14 +112,10 @@ fn rocket() -> Rocket<Build> {
 #[catch(401)]
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
-    if req.guard::<WriteApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
-    } else if req.guard::<PoliceApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
-    } else if req.guard::<EmploymentApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
+    if req.guard::<GeneralApiKey>().await.failed().is_some() {
+    (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
     } else {
-        (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
+        (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     }
 
     json!(server_error)
