@@ -116,7 +116,7 @@ mod tests {
     use crate::db::presence;
     use crate::db::project::{create, Database, Presence};
     #[test]
-    fn add_update_remove_users() {
+    fn add_update_remove_presences() {
         let db = Database::memory().unwrap();
         create(&db).unwrap();
 
