@@ -71,7 +71,7 @@ pub fn update(
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update criminals set criminal=?, data=?, where criminal=?",
+        "update criminals set criminal=?, data=? where criminal=?",
         rusqlite::params![
             criminal.criminal,
             criminal.data,
@@ -105,7 +105,7 @@ mod tests {
     use crate::db::criminals;
     use crate::db::project::{create, Database, Criminal};
     #[test]
-    fn add_update_remove_users() {
+    fn add_update_remove_criminals() {
         let db = Database::memory().unwrap();
         create(&db).unwrap();
 
@@ -130,7 +130,7 @@ mod tests {
         .unwrap();
         let result = criminals::search(&db, "").unwrap();
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].data, Some("5 Mins Late".into()));
+        assert_eq!(result[0].data, Some("Car Stolen".into()));
 
         criminals::delete(
             &db,
