@@ -7,7 +7,7 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::{catch, catchers, routes, Build, Request, Rocket};
 use serde_json::json;
-use server::{EmploymentApiKey, PoliceApiKey, GeneralApiKey, WriteApiKey};
+use server::{EmploymentApiKey, GeneralApiKey, PoliceApiKey, WriteApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
@@ -66,12 +66,13 @@ fn rocket() -> Rocket<Build> {
         fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
             let components = openapi.components.as_mut().unwrap(); // we can unwrap safely since there already is components registered.
             components.add_security_scheme(
-                "server_api_key", SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("server_api_key"))),
+                "server_api_key",
+                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("server_api_key"))),
             );
             components.add_security_scheme(
-                "write_api_key", SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("write_api_key"))),
+                "write_api_key",
+                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("write_api_key"))),
             )
-
         }
     }
 
@@ -111,7 +112,10 @@ fn rocket() -> Rocket<Build> {
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let (_, mut server_error) = ("", ServerError::Unauthorized("unauthorized".to_string()));
     let route = req.route().unwrap().name.as_ref();
-    if route.unwrap().starts_with("add") || route.unwrap().starts_with("update") ||route.unwrap().starts_with("delete"){
+    if route.unwrap().starts_with("add")
+        || route.unwrap().starts_with("update")
+        || route.unwrap().starts_with("delete")
+    {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     } else if route.unwrap().ends_with("stats") || route.unwrap().ends_with("user") {
         (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();

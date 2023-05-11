@@ -16,7 +16,7 @@ use std::{borrow::Cow, path::Path};
 use crate::db;
 use chrono::NaiveDate;
 
-use db::project::{Database, Error, Presence, Result, User, Criminal};
+use db::project::{Criminal, Database, Error, Presence, Result, User};
 use db::stats::Stats;
 
 /// Server operation error.
@@ -46,9 +46,7 @@ impl<'r> FromRequest<'r> for GeneralApiKey {
             )),
             _ => Outcome::Failure((
                 Status::Unauthorized,
-                ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions",
-                )),
+                ServerError::Unauthorized(String::from("invalid api key/missing permissions")),
             )),
         }
     }
@@ -208,7 +206,11 @@ pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Re
     )
 )]
 #[post("/user", format = "json", data = "<user>")]
-pub async fn add_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, user: Json<User>) -> Json<Result<()>> {
+pub async fn add_user(
+    _api_key: GeneralApiKey,
+    _api_key_write: WriteApiKey,
+    user: Json<User>,
+) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
@@ -226,7 +228,11 @@ pub async fn add_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, user
     )
 )]
 #[put("/user", format = "json", data = "<user>")]
-pub async fn update_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, user: Json<User>) -> Json<Result<()>> {
+pub async fn update_user(
+    _api_key: GeneralApiKey,
+    _api_key_write: WriteApiKey,
+    user: Json<User>,
+) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
@@ -245,7 +251,11 @@ pub async fn update_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, u
     )
 )]
 #[delete("/user/<id>")]
-pub async fn delete_user(_api_key: GeneralApiKey, _api_key_write: WriteApiKey, id: &str) -> Json<Result<()>> {
+pub async fn delete_user(
+    _api_key: GeneralApiKey,
+    _api_key_write: WriteApiKey,
+    id: &str,
+) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
 }
@@ -390,10 +400,7 @@ pub async fn delete_presence(
     )
 )]
 #[get("/criminal/fetch/<account>")]
-pub async fn fetch_criminal(
-    _api_key: PoliceApiKey,
-    account: &str,
-) -> Json<Result<Criminal>> {
+pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Result<Criminal>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminals::fetch(&db, account))
 }
@@ -457,11 +464,7 @@ pub async fn update_criminal(
     criminals: Json<Criminal>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::update(
-        &db,
-        &criminals.criminal,
-        &criminals,
-    ))
+    Json(db::criminals::update(&db, &criminals.criminal, &criminals))
 }
 
 #[utoipa::path(

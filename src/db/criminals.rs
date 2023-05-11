@@ -1,4 +1,4 @@
-use crate::db::project::{DBIter, Database, Error, FromRow, Criminal, Result};
+use crate::db::project::{Criminal, DBIter, Database, Error, FromRow, Result};
 
 impl Criminal {
     pub fn is_valid(&self) -> bool {
@@ -51,18 +51,14 @@ pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
     }
     db.con.execute(
         "INSERT INTO criminals VALUES (?, ?)",
-        rusqlite::params![criminal.criminal.trim(),  criminal.data,],
+        rusqlite::params![criminal.criminal.trim(), criminal.data,],
     )?;
     Ok(())
 }
 
 /// Updates the criminal.
 /// This includes all its criminals and data.
-pub fn update(
-    db: &Database,
-    previous_account: &str,
-    criminal: &Criminal,
-) -> Result<()> {
+pub fn update(db: &Database, previous_account: &str, criminal: &Criminal) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !criminal.is_valid() {
         return Err(Error::InvalidUser);
@@ -72,11 +68,7 @@ pub fn update(
     // update date
     transaction.execute(
         "update criminals set criminal=?, data=? where criminal=?",
-        rusqlite::params![
-            criminal.criminal,
-            criminal.data,
-            previous_account,
-        ],
+        rusqlite::params![criminal.criminal, criminal.data, previous_account,],
     )?;
 
     transaction.commit()?;
@@ -92,10 +84,7 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     }
     let transaction = db.transaction()?;
     // remove date and presenters
-    transaction.execute(
-        "delete from criminals where criminal=?",
-        [account],
-    )?;
+    transaction.execute("delete from criminals where criminal=?", [account])?;
     transaction.commit()?;
     Ok(())
 }
@@ -103,7 +92,7 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use crate::db::criminals;
-    use crate::db::project::{create, Database, Criminal};
+    use crate::db::project::{create, Criminal, Database};
     #[test]
     fn add_update_remove_criminals() {
         let db = Database::memory().unwrap();
@@ -132,11 +121,7 @@ mod tests {
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].data, Some("Car Stolen".into()));
 
-        criminals::delete(
-            &db,
-            &criminal.criminal,
-        )
-        .unwrap();
+        criminals::delete(&db, &criminal.criminal).unwrap();
         let result = criminals::search(&db, "").unwrap();
         assert_eq!(result.len(), 0);
     }
