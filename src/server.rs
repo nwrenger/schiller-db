@@ -62,7 +62,7 @@ impl<'r> FromRequest<'r> for WriteApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
-            Some(key) if key == "r" => Outcome::Success(WriteApiKey),
+            Some(key) if key == "w" => Outcome::Success(WriteApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
