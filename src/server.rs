@@ -446,7 +446,7 @@ pub async fn add_criminal(
 }
 
 #[utoipa::path(
-    request_body = Crimials,
+    request_body = Criminal,
     responses(
         (status = 200, description = "Update a Presence sended successfully"),
         (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
