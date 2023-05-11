@@ -113,7 +113,7 @@ fn rocket() -> Rocket<Build> {
 async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
     let route_0 = req.routed_segment(0).unwrap();
-    let route_1 = req.routed_segment(1).unwrap();
+    let route_1 = req.routed_segment(1).unwrap_or("");
     if route_1 == "add" || route_1 == "update" || route_1 == "delete" {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     } else if route_0 == "stats" || route_0 == "criminals" {
