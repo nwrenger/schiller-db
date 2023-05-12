@@ -5,7 +5,8 @@ use std::{borrow::Cow, path::Path};
 
 use db::project::{fetch_user_data, Database};
 
-use rocket::{catch, catchers, routes, Build, Request, Rocket};
+use rocket::{catch, catchers, routes, Build, Request, Rocket, Response};
+use rocket::fairing::{Fairing, Info, Kind};
 use serde_json::json;
 use server::{GeneralApiKey, WriteApiKey};
 use utoipa::{
@@ -15,6 +16,42 @@ use utoipa::{
 use utoipa_swagger_ui::SwaggerUi;
 
 use crate::server::ServerError;
+
+use chrono::Utc;
+use std::fs::OpenOptions;
+use std::io::Write;
+
+struct SuccessLogger;
+
+#[rocket::async_trait]
+impl Fairing for SuccessLogger {
+    fn info(&self) -> Info {
+        Info {
+            name: "Success Logger",
+            kind: Kind::Response,
+        }
+    }
+
+    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
+        if response.status().code == 200 {
+            let now = Utc::now();
+            let mut file = OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open("log.txt")
+                .unwrap();
+            writeln!(
+                file,
+                "{} - Successful request made to {} route {} from IP {}",
+                now.to_rfc3339(),
+                request.method(),
+                request.uri().to_string(),
+                request.remote().unwrap()
+            )
+            .unwrap();
+        }
+    }
+}
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
@@ -80,6 +117,7 @@ fn rocket() -> Rocket<Build> {
 
     rocket::custom(figment)
         .register("/", catchers![unauthorized, unprocessable_entity])
+        .attach(SuccessLogger)
         .mount(
             "/",
             SwaggerUi::new("/swagger-ui/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
