@@ -7,7 +7,7 @@ A repo with the Server-side Backend for the sndi (Schillernova's Database Interf
 - [x] Server Integration
 - [x] Swagger UI Integration
 - [x] Testing, Fixing, etc.
-- [ ] Logging? Maybe
+- [x] Logging? Why not!
 ## What's next?
 Furthermore, a good friend of mine will code the UI for the server calls. And then testing goes into a second phase:
 - [ ] Everything Works
