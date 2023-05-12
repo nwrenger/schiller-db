@@ -17,7 +17,7 @@ use utoipa_swagger_ui::SwaggerUi;
 
 use crate::server::ServerError;
 
-use chrono::Utc;
+use chrono::Local;
 use std::fs::OpenOptions;
 use std::io::Write;
 
@@ -33,8 +33,8 @@ impl Fairing for SuccessLogger {
     }
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        if response.status().code == 200 {
-            let now = Utc::now();
+        if response.status().code == 200 && !request.uri().to_string().starts_with("/swagger-ui") && !request.uri().to_string().starts_with("/api-docs") {
+            let now = Local::now();
             let mut file = OpenOptions::new()
                 .create(true)
                 .append(true)
@@ -42,8 +42,8 @@ impl Fairing for SuccessLogger {
                 .unwrap();
             writeln!(
                 file,
-                "{} - Successful request made to {} route {} from IP {}",
-                now.to_rfc3339(),
+                "{} Successful request made to {} route {} from IP {}",
+                now.format("[%d-%m-%Y|%H:%M:%S%.3f]"),
                 request.method(),
                 request.uri().to_string(),
                 request.remote().unwrap()
