@@ -33,7 +33,10 @@ impl Fairing for SuccessLogger {
     }
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        if response.status().code == 200 && !request.uri().to_string().starts_with("/swagger-ui") && !request.uri().to_string().starts_with("/api-docs") {
+        if response.status().code == 200
+            && !request.uri().to_string().starts_with("/swagger-ui")
+            && !request.uri().to_string().starts_with("/api-docs")
+        {
             let now = Local::now();
             let mut file = OpenOptions::new()
                 .create(true)
