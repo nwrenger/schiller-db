@@ -8,7 +8,7 @@ use db::project::{fetch_user_data, Database};
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::{catch, catchers, routes, Build, Request, Response, Rocket};
 use serde_json::json;
-use server::{GeneralApiKey, WriteApiKey};
+use server::{EmploymentApiKey, GeneralApiKey, PoliceApiKey, WriteApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
@@ -119,7 +119,10 @@ fn rocket() -> Rocket<Build> {
     let figment = rocket::Config::figment().merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
-        .register("/", catchers![unauthorized, unprocessable_entity])
+        .register(
+            "/",
+            catchers![unauthorized, unprocessable_entity, internal_error],
+        )
         .attach(SuccessLogger)
         .mount(
             "/",
@@ -155,6 +158,10 @@ async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
     if req.guard::<GeneralApiKey>().await.failed().is_some() {
         (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
+    } else if req.guard::<PoliceApiKey>().await.failed().is_some() {
+        (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
+    } else if req.guard::<EmploymentApiKey>().await.failed().is_some() {
+        (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
     } else {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     }
@@ -165,6 +172,13 @@ async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
 #[catch(422)]
 async fn unprocessable_entity(_req: &Request<'_>) -> serde_json::Value {
     let server_error = ServerError::UnprocessableEntity("wrong format".into());
+
+    json!(server_error)
+}
+
+#[catch(500)]
+async fn internal_error(_req: &Request<'_>) -> serde_json::Value {
+    let server_error = ServerError::InternalError("internal server error".into());
 
     json!(server_error)
 }

@@ -29,6 +29,10 @@ pub enum ServerError {
     ///When a wrong format is used
     #[response(status = 422)]
     UnprocessableEntity(String),
+
+    ///When something internally doesn't work
+    #[response(status = 500)]
+    InternalError(String),
 }
 
 pub struct GeneralApiKey;
@@ -91,7 +95,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for criminals",
+                    "invalid api key/missing permissions for presences",
                 )),
             )),
         }
@@ -114,7 +118,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for presences",
+                    "invalid api key/missing permissions for criminals",
                 )),
             )),
         }
@@ -132,7 +136,8 @@ pub struct Info {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Got Infos", body = Info)
+        (status = 200, description = "Got Infos", body = Info),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     )
 )]
 #[get("/info")]
@@ -149,6 +154,7 @@ pub async fn info() -> Json<Info> {
     responses(
         (status = 200, description = "Got Stats", body = Stats),
         (status = 401, description = "Unauthorized to view Stats", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = [])
@@ -164,6 +170,7 @@ pub async fn stats(_api_key_1: PoliceApiKey) -> Json<Result<Stats>> {
     responses(
         (status = 200, description = "Got a User by a specific id", body = User),
         (status = 401, description = "Unauthorized to fetch a User", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("id", description = "The unique user id")
@@ -182,6 +189,7 @@ pub async fn fetch_user(_api_key: GeneralApiKey, id: &str) -> Json<Result<User>>
     responses(
         (status = 200, description = "Searched all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to search all Users", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = [])
@@ -197,8 +205,9 @@ pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Re
     request_body = User,
     responses(
         (status = 200, description = "Add a User sended successfully"),
-        (status = 401, description = "Unauthorized to add a User", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to add a User", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -219,8 +228,9 @@ pub async fn add_user(
     request_body = User,
     responses(
         (status = 200, description = "Update a User sended successfully"),
-        (status = 401, description = "Unauthorized to update a User", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to update a User", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -241,6 +251,7 @@ pub async fn update_user(
     responses(
         (status = 200, description = "User delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Users", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("id", description = "The unique user id")
@@ -264,6 +275,7 @@ pub async fn delete_user(
     responses(
         (status = 200, description = "Got a Presence by a specific account and date", body = Presence),
         (status = 401, description = "Unauthorized to fetch a Presence", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -293,6 +305,7 @@ pub async fn fetch_presence(
     responses(
         (status = 200, description = "Searched all Presences", body = Vec<Presence>),
         (status = 401, description = "Unauthorized to search all Presences", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = [])
@@ -311,8 +324,9 @@ pub async fn search_presence(
     request_body = Presence,
     responses(
         (status = 200, description = "Add a presence sended successfully"),
-        (status = 401, description = "Unauthorized to add a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to add a Presence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -333,8 +347,9 @@ pub async fn add_presence(
     request_body = Presence,
     responses(
         (status = 200, description = "Update a Presence sended successfully"),
-        (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to update a Presence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -360,6 +375,7 @@ pub async fn update_presence(
     responses(
         (status = 200, description = "Presence delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Presences", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -391,6 +407,7 @@ pub async fn delete_presence(
     responses(
         (status = 200, description = "Got a Criminal by a specific account", body = Criminal),
         (status = 401, description = "Unauthorized to fetch a Criminal", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -409,6 +426,7 @@ pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Resul
     responses(
         (status = 200, description = "Searched all Criminals", body = Vec<Criminal>),
         (status = 401, description = "Unauthorized to search all Criminals", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = [])
@@ -427,8 +445,9 @@ pub async fn search_criminal(
     request_body = Criminal,
     responses(
         (status = 200, description = "Add a criminal sended successfully"),
-        (status = 401, description = "Unauthorized to add a Crimials", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to add a Crimials", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -449,8 +468,9 @@ pub async fn add_criminal(
     request_body = Criminal,
     responses(
         (status = 200, description = "Update a Presence sended successfully"),
-        (status = 401, description = "Unauthorized to update a Presence", body = ServerError, example = json!(ServerError::Unauthorized("string".into()))),
+        (status = 401, description = "Unauthorized to update a Presence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = []),
@@ -471,6 +491,7 @@ pub async fn update_criminal(
     responses(
         (status = 200, description = "Criminal delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Criminals", body = ServerError),
+        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
         ("account", description = "The unique user account"),
