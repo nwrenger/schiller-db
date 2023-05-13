@@ -48,7 +48,7 @@ impl Fairing for SuccessLogger {
                 "{} Successful request made to {} route {} from IP {}",
                 now.format("[%d-%m-%Y|%H:%M:%S%.3f]"),
                 request.method(),
-                request.uri().to_string(),
+                request.uri(),
                 request.remote().unwrap()
             )
             .unwrap();
