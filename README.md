@@ -32,7 +32,7 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 
 <img src="images/sqlite_dia.png" alt="Database Schema" width=400 />
 
-(The bold printed texts are the primary key!)
+(The bold printed texts are the primary keys!)
 
 ## Usage
 
