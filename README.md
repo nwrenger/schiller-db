@@ -19,12 +19,12 @@ Developed by [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal). Lo
 
 ### Application Layer
 
-This layer is implemented in Rust ([src](src)) and Rocket(0.5 rc 3).
+This layer is implemented in Rust ([src](src)) and [Rocket](https://rocket.rs) (0.5 rc-3).
 
 It is responsible for the consistency checks and business logic.
 This layer also manages the database connection to store and fetch the project data.
 
-Besides that, it also consists the managment and logic for a server using [Rocket](https://rocket.rs), including Swagger UI (using Utoipa).
+Besides that, it also consists the managment and logic for a server using [Rocket](https://rocket.rs), including Swagger UI (using the Utoipa Crate).
 
 ### Database Layer
 
@@ -36,7 +36,7 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 
 ## Usage
 
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file(benutzer.txt), otherwise it won't start. Run it with sudo/admin permission(because of server port being http://0.0.0.0:80).
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80).
 
 ## Current Todos
 
