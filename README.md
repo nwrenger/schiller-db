@@ -8,7 +8,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 ## Architecture - Including SNDI
 
-This application follows a 3-tier principle.
+This application follows the 3-tier principle.
 * **UI Layer:** Developed by my friend. Getting the Data from Server Calls - named SNDI.
 * **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
 * **Database Layer:** The SQLite database that stores the persistent data specific to a project.
