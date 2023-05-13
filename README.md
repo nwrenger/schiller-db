@@ -9,7 +9,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 ## Architecture - Including SNDI
 
 This application follows the 3-tier principle.
-* **UI Layer:** Developed by my friend. Getting the Data from Server Calls - named SNDI.
+* **UI Layer:** Developed by my friend. Getting the Data from Server Calls. It's named SNDI.
 * **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
 * **Database Layer:** The SQLite database that stores the persistent data specific to a project.
 
@@ -47,4 +47,4 @@ Just run the binary/exceutable file provided in the release. Make sure it's in t
 - [x] Swagger UI Integration
 - [x] Testing, Fixing, etc.
 - [x] Logging? Why not!
-- [ ] Network test(After [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal) is finished with the UI)
+- [ ] Network test (After [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal) is finished with the UI)
