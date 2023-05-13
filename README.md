@@ -1,5 +1,5 @@
-# Schillernova's Database Managment or for short sndm
-A repo with the Server-side Backend for the sndi (Schillernova's Database Interface).
+# Schillernova's Database Managment or for short SNDM
+A repo with the Server-side Backend for the SNDI (Schillernova's Database Interface).
 ## Todos
 - [x] DB Managment
 - [x] Making a real/openable DB File
