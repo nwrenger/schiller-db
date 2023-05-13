@@ -145,7 +145,7 @@ pub async fn info() -> Json<Info> {
     Json::from(Info {
         status: "Up and Running!".into(),
         message: "Welcome to the sndm!".into(),
-        source: "https://github.com/NWrenger/sndm".into(),
+        source: "https://github.com/nwrenger/sndm".into(),
         developer_team: vec!["Nils Wrenger".into(), "Leonard Böttcher".into()],
     })
 }
