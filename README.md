@@ -61,7 +61,7 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 
 ## Usage
 
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80).
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://localhost/swagger-ui/ / http://0.0.0.0/swagger-ui/
 
 ## Current Todos
 
