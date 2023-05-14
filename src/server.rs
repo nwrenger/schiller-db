@@ -26,6 +26,10 @@ pub enum ServerError {
     #[response(status = 401)]
     Unauthorized(String),
 
+    ///When nothing for your sepcific route was found
+    #[response(status = 404)]
+    NotFound(String),
+
     ///When a wrong format is used
     #[response(status = 422)]
     UnprocessableEntity(String),
@@ -293,7 +297,7 @@ pub async fn fetch_presence(
 ) -> Json<Result<Presence>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
-        Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
+        Ok(date) => date,
         Err(_) => {
             return Json(Err(Error::InvalidDate));
         }
@@ -395,7 +399,7 @@ pub async fn delete_presence(
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
-        Ok(_) => NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
+        Ok(date) => date,
         Err(_) => {
             return Json(Err(Error::InvalidDate));
         }

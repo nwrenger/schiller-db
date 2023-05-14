@@ -60,7 +60,7 @@ impl Fairing for SuccessLogger {
 fn rocket() -> Rocket<Build> {
     let path = Path::new("./sndm.db");
     match Database::open(Cow::from(path)) {
-        Ok(_) => Database::open(Cow::from(path)).unwrap().0,
+        Ok(db) => db.0,
         Err(_) => {
             let db = Database::create(Cow::from(path)).unwrap();
             db::project::create(&db).unwrap();
@@ -123,7 +123,12 @@ fn rocket() -> Rocket<Build> {
     rocket::custom(figment)
         .register(
             "/",
-            catchers![unauthorized, unprocessable_entity, internal_error],
+            catchers![
+                unauthorized,
+                not_found,
+                unprocessable_entity,
+                internal_error
+            ],
         )
         .attach(SuccessLogger)
         .mount(
@@ -167,6 +172,13 @@ async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
     } else {
         (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
     }
+
+    json!(server_error)
+}
+
+#[catch(404)]
+fn not_found() -> serde_json::Value {
+    let server_error = ServerError::NotFound("route not found".into());
 
     json!(server_error)
 }
