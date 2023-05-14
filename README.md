@@ -17,7 +17,7 @@ This application follows the 3-tier principle.
 
 Developed by [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal). Look out there for further explainations.
 
-### Application Layer
+### Application/Server Layer
 
 This layer is implemented in Rust ([src](src)) and [Rocket](https://rocket.rs) (0.5 rc-3).
 
@@ -25,6 +25,31 @@ It is responsible for the consistency checks and business logic.
 This layer also manages the database connection to store and fetch the project data.
 
 Besides that, it also consists the managment and logic for a server using [Rocket](https://rocket.rs), including Swagger UI (using the Utoipa Crate).
+
+#### Server
+
+The Server calls are:
+
+- 5 for each data table (user, criminals, presence)
+- stats - getting general statistics
+- info
+
+Swagger UI integrated via Utoipa:
+
+<img src="images/server_routes.png" alt="Database Schema" width=400 />
+
+Schemas:
+
+<img src="images/schemas.png" alt="Database Schema" width=400 />
+
+Security:
+
+- Using a Key for Writing/Changing Permissions
+- A Key for criminals
+- A Key for presence
+- A Key for Users (in this case either the Key for criminals or presence)
+- the keys are not encrypted
+- logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
 
 ### Database Layer
 
