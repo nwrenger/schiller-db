@@ -44,10 +44,10 @@ Schemas:
 
 Security:
 
-- Using a Key for Writing/Changing Permissions
-- A Key for criminals
-- A Key for presence
-- A Key for Users (in this case either the Key for criminals or presence)
+- Using a Key for Writing/Changing Data (POST, PUT, DELETE)
+- Using a Key for accessing Criminals
+- Using a Key for accessing Presence
+- Using a Key for accessing Users (in this case either the Key for Criminals or Presence)
 - the keys are not encrypted
 - logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
 
