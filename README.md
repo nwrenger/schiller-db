@@ -6,6 +6,10 @@ A repo with the Server-side Backend for the SNDI (Schillernova's Database Interf
 
 The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/sndm/releases).
 
+### Usage
+
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/.
+
 ## Architecture - Including SNDI
 
 This application follows the 3-tier principle.
@@ -58,10 +62,6 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 <img src="images/sqlite_dia.png" alt="Database Schema" width=400 />
 
 (The bold printed texts are the primary keys!)
-
-## Usage
-
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/.
 
 ## Current Todos
 
