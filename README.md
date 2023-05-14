@@ -10,14 +10,14 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 This application follows the 3-tier principle.
 * **UI Layer:** Developed by my friend. Getting the Data from Server Calls. It's named SNDI.
-* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
+* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration. It's named SNDM.
 * **Database Layer:** The SQLite database that stores the persistent data specific to a project.
 
-### UI Layer
+### UI Layer - SNDI
 
 Developed by [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal). Look out there for further explainations.
 
-### Application/Server Layer
+### Application/Server Layer - SNDM
 
 This layer is implemented in Rust ([src](src)) and [Rocket](https://rocket.rs) (0.5 rc-3).
 
