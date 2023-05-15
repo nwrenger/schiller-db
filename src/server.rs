@@ -31,11 +31,8 @@ impl<'r> FromRequest<'r> for GeneralApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() => {
-                Outcome::Success(GeneralApiKey)
-            }
-            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() || key == KEY_A.unwrap() => Outcome::Success(GeneralApiKey),
+            None | _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -49,8 +46,7 @@ impl<'r> FromRequest<'r> for AdminApiKey {
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == KEY_A.unwrap() => Outcome::Success(AdminApiKey),
-            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            None | _=> Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -64,8 +60,7 @@ impl<'r> FromRequest<'r> for WriteApiKey {
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
             Some(key) if key == KEY_W.unwrap() => Outcome::Success(WriteApiKey),
-            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            None | _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -79,8 +74,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == KEY_E.unwrap() => Outcome::Success(EmploymentApiKey),
-            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            None | _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -93,9 +87,8 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "p" => Outcome::Success(PoliceApiKey),
-            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            Some(key) if key == KEY_P.unwrap() => Outcome::Success(PoliceApiKey),
+            None | _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
