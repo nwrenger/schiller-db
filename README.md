@@ -49,10 +49,10 @@ Schemas:
 Security:
 
 - Using a Key for Writing/Changing Data (POST, PUT, DELETE) of Criminal and Absence
-- Using a Key for Writing/Changing Data (POST, PUT, DELETE) of Users
 - Using a Key for accessing Criminal
 - Using a Key for accessing Absence
 - Using a Key for accessing Users (in this case either the Key for Criminal or Absence)
+- A Key with Admin Permissions -> can do everything and evenmore than the keys above like changing User data
 - the keys are not encrypted
 - logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
 

@@ -61,7 +61,7 @@ impl<'r> FromRequest<'r> for WriteApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
-            Some(key) if key == KEY_W => Outcome::Success(WriteApiKey),
+            Some(key) if key == KEY_W || key == KEY_A => Outcome::Success(WriteApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -75,7 +75,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E => Outcome::Success(EmploymentApiKey),
+            Some(key) if key == KEY_E || key == KEY_A => Outcome::Success(EmploymentApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -89,7 +89,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_P => Outcome::Success(PoliceApiKey),
+            Some(key) if key == KEY_P || key == KEY_A => Outcome::Success(PoliceApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
