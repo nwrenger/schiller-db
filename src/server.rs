@@ -38,16 +38,41 @@ pub enum ServerError {
     #[response(status = 500)]
     InternalError(String),
 }
+const KEY_A: Option<&'static str> = option_env!("SNDM_KEY_A");
+const KEY_W: Option<&'static str> = option_env!("SNDM_KEY_W");
+const KEY_E: Option<&'static str> = option_env!("SNDM_KEY_E");
+const KEY_P: Option<&'static str> = option_env!("SNDM_KEY_P");
 
 pub struct GeneralApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for GeneralApiKey {
     type Error = ServerError;
-
+    
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "e" || key == "p" => Outcome::Success(GeneralApiKey),
+            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() => Outcome::Success(GeneralApiKey),
+            None => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("missing api key")),
+            )),
+            _ => Outcome::Failure((
+                Status::Unauthorized,
+                ServerError::Unauthorized(String::from("invalid api key/missing permissions")),
+            )),
+        }
+    }
+}
+
+pub struct AdminApiKey;
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for AdminApiKey {
+    type Error = ServerError;
+    
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        match request.headers().get("server_api_key").next() {
+            Some(key) if key == KEY_A.unwrap() => Outcome::Success(AdminApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
@@ -65,10 +90,11 @@ pub struct WriteApiKey;
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for WriteApiKey {
     type Error = ServerError;
-
+    
+    
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
-            Some(key) if key == "w" => Outcome::Success(WriteApiKey),
+            Some(key) if key == KEY_W.unwrap() => Outcome::Success(WriteApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
@@ -91,7 +117,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == "e" => Outcome::Success(EmploymentApiKey),
+            Some(key) if key == KEY_E.unwrap() => Outcome::Success(EmploymentApiKey),
             None => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from("missing api key")),
@@ -220,7 +246,7 @@ pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Re
 )]
 #[post("/user", format = "json", data = "<user>")]
 pub async fn add_user(
-    _api_key: GeneralApiKey,
+    _api_key: AdminApiKey,
     _api_key_write: WriteApiKey,
     user: Json<User>,
 ) -> Json<Result<()>> {
@@ -243,7 +269,7 @@ pub async fn add_user(
 )]
 #[put("/user", format = "json", data = "<user>")]
 pub async fn update_user(
-    _api_key: GeneralApiKey,
+    _api_key: AdminApiKey,
     _api_key_write: WriteApiKey,
     user: Json<User>,
 ) -> Json<Result<()>> {
@@ -267,7 +293,7 @@ pub async fn update_user(
 )]
 #[delete("/user/<id>")]
 pub async fn delete_user(
-    _api_key: GeneralApiKey,
+    _api_key: AdminApiKey,
     _api_key_write: WriteApiKey,
     id: &str,
 ) -> Json<Result<()>> {

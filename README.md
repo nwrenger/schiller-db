@@ -48,7 +48,8 @@ Schemas:
 
 Security:
 
-- Using a Key for Writing/Changing Data (POST, PUT, DELETE)
+- Using a Key for Writing/Changing Data (POST, PUT, DELETE) of Criminal and Absence
+- Using a Key for Writing/Changing Data (POST, PUT, DELETE) of Users
 - Using a Key for accessing Criminal
 - Using a Key for accessing Absence
 - Using a Key for accessing Users (in this case either the Key for Criminal or Absence)
