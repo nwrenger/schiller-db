@@ -25,6 +25,7 @@ pub struct User {
     pub role: String,
 }
 
+/// Data object for a criminal.
 #[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Criminal {
@@ -47,7 +48,7 @@ macro_rules! error {
     };
 }
 
-///Operation Error
+/// Operation Error
 #[derive(Serialize, Deserialize, Debug, ToSchema)]
 pub enum Error {
     /// Default errors
