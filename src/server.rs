@@ -18,10 +18,10 @@ use chrono::NaiveDate;
 use db::project::{Absence, Criminal, Database, Error, Result, User};
 use db::stats::Stats;
 
-const KEY_A: &'static str = option_env!("SNDM_KEY_A").unwrap_or("");
-const KEY_W: &'static str = option_env!("SNDM_KEY_W").unwrap_or("");
-const KEY_E: &'static str = option_env!("SNDM_KEY_E").unwrap_or("");
-const KEY_P: &'static str = option_env!("SNDM_KEY_P").unwrap_or("");
+const KEY_A: &str = option_env!("SNDM_KEY_A").unwrap_or("");
+const KEY_W: &str = option_env!("SNDM_KEY_W").unwrap_or("");
+const KEY_E: &str = option_env!("SNDM_KEY_E").unwrap_or("");
+const KEY_P: &str = option_env!("SNDM_KEY_P").unwrap_or("");
 
 pub struct GeneralApiKey;
 
