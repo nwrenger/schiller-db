@@ -64,8 +64,6 @@ pub enum Error {
     /// Specific errors
     InvalidDate,
     InvalidUser,
-    MissingApiKey,
-    InvalidApiKey,
     /// Server specific errors
     Unauthorized,
     NotFound,
