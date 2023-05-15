@@ -7,19 +7,17 @@ use db::project::{fetch_user_data, Database};
 
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::{catch, catchers, routes, Build, Request, Response, Rocket};
-use serde_json::json;
-use server::{EmploymentApiKey, GeneralApiKey, PoliceApiKey, WriteApiKey};
 use utoipa::{
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
     Modify, OpenApi,
 };
 use utoipa_swagger_ui::SwaggerUi;
 
-use crate::server::ServerError;
-
 use chrono::Local;
 use std::fs::OpenOptions;
 use std::io::Write;
+
+use crate::db::project::Error;
 
 struct SuccessLogger;
 
@@ -91,7 +89,7 @@ fn rocket() -> Rocket<Build> {
             server::delete_criminal,
         ),
         components(
-            schemas(db::project::User, db::project::Absence, db::project::Criminal, db::stats::Stats, server::ServerError, server::Info)
+            schemas(db::project::User, db::project::Absence, db::project::Criminal, db::stats::Stats, db::project::Error, server::Info)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -159,40 +157,22 @@ fn rocket() -> Rocket<Build> {
         )
 }
 
-#[allow(unused_assignments)]
 #[catch(401)]
-async fn unauthorized(req: &Request<'_>) -> serde_json::Value {
-    let mut server_error = ServerError::Unauthorized("unauthorized".to_string());
-    if req.guard::<GeneralApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<GeneralApiKey>().await.failed().unwrap();
-    } else if req.guard::<PoliceApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<PoliceApiKey>().await.failed().unwrap();
-    } else if req.guard::<EmploymentApiKey>().await.failed().is_some() {
-        (_, server_error) = req.guard::<EmploymentApiKey>().await.failed().unwrap();
-    } else {
-        (_, server_error) = req.guard::<WriteApiKey>().await.failed().unwrap();
-    }
-
-    json!(server_error)
+async fn unauthorized(_req: &Request<'_>) -> serde_json::Value {
+    Error::Unauthorized.into()
 }
 
 #[catch(404)]
-fn not_found() -> serde_json::Value {
-    let server_error = ServerError::NotFound("route not found".into());
-
-    json!(server_error)
+async fn not_found(_req: &Request<'_>) -> serde_json::Value {
+    Error::NotFound.into()
 }
 
 #[catch(422)]
 async fn unprocessable_entity(_req: &Request<'_>) -> serde_json::Value {
-    let server_error = ServerError::UnprocessableEntity("wrong format".into());
-
-    json!(server_error)
+    Error::UnprocessableEntity.into()
 }
 
 #[catch(500)]
 async fn internal_error(_req: &Request<'_>) -> serde_json::Value {
-    let server_error = ServerError::InternalError("internal server error".into());
-
-    json!(server_error)
+    Error::InternalError.into()
 }

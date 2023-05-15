@@ -47,8 +47,10 @@ macro_rules! error {
     };
 }
 
+///Operation Error
 #[derive(Serialize, Deserialize, Debug, ToSchema)]
 pub enum Error {
+    /// Default errors
     Arguments,
     Logic,
     NoProject,
@@ -58,12 +60,17 @@ pub enum Error {
     Network,
     InvalidFormat,
     NothingFound,
-    // Specific errors
+    /// Specific errors
     InvalidDate,
     InvalidUser,
     MissingApiKey,
     InvalidApiKey,
-    // Migration
+    /// Server specific errors
+    Unauthorized,
+    NotFound,
+    UnprocessableEntity,
+    InternalError,
+    /// Migration
     UnsupportedProjectVersion,
 }
 
@@ -85,6 +92,12 @@ impl From<std::io::Error> for Error {
     fn from(e: std::io::Error) -> Self {
         error!("File Error: {e:?}");
         Self::FileOpen
+    }
+}
+
+impl From<Error> for serde_json::Value {
+    fn from(e: Error) -> Self {
+        serde_json::json!({ "Err": e })
     }
 }
 

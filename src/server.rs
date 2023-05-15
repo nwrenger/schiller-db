@@ -4,7 +4,6 @@ use rocket::{
     outcome::Outcome,
     post, put,
     request::{self, FromRequest},
-    response::Responder,
     serde::json::Json,
     Request,
 };
@@ -16,28 +15,9 @@ use std::{borrow::Cow, path::Path};
 use crate::db;
 use chrono::NaiveDate;
 
-use db::project::{Criminal, Database, Error, Absence, Result, User};
+use db::project::{Absence, Criminal, Database, Error, Result, User};
 use db::stats::Stats;
 
-/// Server operation error.
-#[derive(Serialize, ToSchema, Responder, Debug)]
-pub enum ServerError {
-    /// When unauthorized to complete operation
-    #[response(status = 401)]
-    Unauthorized(String),
-
-    ///When nothing for your sepcific route was found
-    #[response(status = 404)]
-    NotFound(String),
-
-    ///When a wrong format is used
-    #[response(status = 422)]
-    UnprocessableEntity(String),
-
-    ///When something internally doesn't work
-    #[response(status = 500)]
-    InternalError(String),
-}
 const KEY_A: Option<&'static str> = option_env!("SNDM_KEY_A");
 const KEY_W: Option<&'static str> = option_env!("SNDM_KEY_W");
 const KEY_E: Option<&'static str> = option_env!("SNDM_KEY_E");
@@ -47,19 +27,15 @@ pub struct GeneralApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for GeneralApiKey {
-    type Error = ServerError;
-    
+    type Error = Error;
+
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() => Outcome::Success(GeneralApiKey),
-            None => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("missing api key")),
-            )),
-            _ => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("invalid api key/missing permissions")),
-            )),
+            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() => {
+                Outcome::Success(GeneralApiKey)
+            }
+            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -68,19 +44,13 @@ pub struct AdminApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for AdminApiKey {
-    type Error = ServerError;
-    
+    type Error = Error;
+
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == KEY_A.unwrap() => Outcome::Success(AdminApiKey),
-            None => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("missing api key")),
-            )),
-            _ => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("invalid api key/missing permissions")),
-            )),
+            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -89,22 +59,13 @@ pub struct WriteApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for WriteApiKey {
-    type Error = ServerError;
-    
-    
+    type Error = Error;
+
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
             Some(key) if key == KEY_W.unwrap() => Outcome::Success(WriteApiKey),
-            None => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("missing api key")),
-            )),
-            _ => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for writing data",
-                )),
-            )),
+            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -113,21 +74,13 @@ pub struct EmploymentApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for EmploymentApiKey {
-    type Error = ServerError;
+    type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == KEY_E.unwrap() => Outcome::Success(EmploymentApiKey),
-            None => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("missing api key")),
-            )),
-            _ => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for absences",
-                )),
-            )),
+            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -136,21 +89,13 @@ pub struct PoliceApiKey;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for PoliceApiKey {
-    type Error = ServerError;
+    type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == "p" => Outcome::Success(PoliceApiKey),
-            None => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from("missing api key")),
-            )),
-            _ => Outcome::Failure((
-                Status::Unauthorized,
-                ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for criminal",
-                )),
-            )),
+            None => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
@@ -167,12 +112,12 @@ pub struct Info {
 #[utoipa::path(
     responses(
         (status = 200, description = "Got Infos", body = Info),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     )
 )]
 #[get("/info")]
 pub async fn info() -> Json<Info> {
-    Json::from(Info {
+    Json(Info {
         status: "Up and Running!".into(),
         message: "Welcome to the sndm!".into(),
         source: "https://github.com/nwrenger/sndm".into(),
@@ -183,8 +128,8 @@ pub async fn info() -> Json<Info> {
 #[utoipa::path(
     responses(
         (status = 200, description = "Got Stats", body = Stats),
-        (status = 401, description = "Unauthorized to view Stats", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to view Stats", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = [])
@@ -199,8 +144,8 @@ pub async fn stats(_api_key_1: PoliceApiKey) -> Json<Result<Stats>> {
 #[utoipa::path(
     responses(
         (status = 200, description = "Got a User by a specific id", body = User),
-        (status = 401, description = "Unauthorized to fetch a User", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to fetch a User", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("id", description = "The unique user id")
@@ -218,8 +163,8 @@ pub async fn fetch_user(_api_key: GeneralApiKey, id: &str) -> Json<Result<User>>
 #[utoipa::path(
     responses(
         (status = 200, description = "Searched all Users", body = Vec<User>),
-        (status = 401, description = "Unauthorized to search all Users", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to search all Users", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = [])
@@ -235,9 +180,9 @@ pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Re
     request_body = User,
     responses(
         (status = 200, description = "Add a User sended successfully"),
-        (status = 401, description = "Unauthorized to add a User", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to add a User", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -258,9 +203,9 @@ pub async fn add_user(
     request_body = User,
     responses(
         (status = 200, description = "Update a User sended successfully"),
-        (status = 401, description = "Unauthorized to update a User", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to update a User", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -280,8 +225,8 @@ pub async fn update_user(
 #[utoipa::path(
     responses(
         (status = 200, description = "User delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Users", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to delete Users", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("id", description = "The unique user id")
@@ -304,8 +249,8 @@ pub async fn delete_user(
 #[utoipa::path(
     responses(
         (status = 200, description = "Got an Absence by a specific account and date", body = Absence),
-        (status = 401, description = "Unauthorized to fetch an Absence", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to fetch an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -334,8 +279,8 @@ pub async fn fetch_absence(
 #[utoipa::path(
     responses(
         (status = 200, description = "Searched all Absences", body = Vec<Absence>),
-        (status = 401, description = "Unauthorized to search all Absences", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to search all Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = [])
@@ -354,9 +299,9 @@ pub async fn search_absence(
     request_body = Absence,
     responses(
         (status = 200, description = "Add an Absence sended successfully"),
-        (status = 401, description = "Unauthorized to add a Absence", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to add a Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -377,9 +322,9 @@ pub async fn add_absence(
     request_body = Absence,
     responses(
         (status = 200, description = "Update an Absence sended successfully"),
-        (status = 401, description = "Unauthorized to update an Absence", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to update an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -404,8 +349,8 @@ pub async fn update_absence(
 #[utoipa::path(
     responses(
         (status = 200, description = "Absence delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Absences", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to delete Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -436,8 +381,8 @@ pub async fn delete_absence(
 #[utoipa::path(
     responses(
         (status = 200, description = "Got a Criminal by a specific account", body = Criminal),
-        (status = 401, description = "Unauthorized to fetch a Criminal", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to fetch a Criminal", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
@@ -455,8 +400,8 @@ pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Resul
 #[utoipa::path(
     responses(
         (status = 200, description = "Searched all Criminals", body = Vec<Criminal>),
-        (status = 401, description = "Unauthorized to search all Criminals", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to search all Criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = [])
@@ -475,9 +420,9 @@ pub async fn search_criminal(
     request_body = Criminal,
     responses(
         (status = 200, description = "Add a criminal sended successfully"),
-        (status = 401, description = "Unauthorized to add a Crimials", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to add a Crimials", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -498,9 +443,9 @@ pub async fn add_criminal(
     request_body = Criminal,
     responses(
         (status = 200, description = "Update a absence sended successfully"),
-        (status = 401, description = "Unauthorized to update a absence", body = ServerError),
-        (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to update a absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
         ("server_api_key" = []),
@@ -520,8 +465,8 @@ pub async fn update_criminal(
 #[utoipa::path(
     responses(
         (status = 200, description = "Criminal delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Criminal", body = ServerError),
-        (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
+        (status = 401, description = "Unauthorized to delete Criminal", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
