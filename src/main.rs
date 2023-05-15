@@ -79,11 +79,11 @@ fn rocket() -> Rocket<Build> {
             server::add_user,
             server::update_user,
             server::delete_user,
-            server::fetch_presence,
-            server::search_presence,
-            server::add_presence,
-            server::update_presence,
-            server::delete_presence,
+            server::fetch_absence,
+            server::search_absence,
+            server::add_absence,
+            server::update_absence,
+            server::delete_absence,
             server::fetch_criminal,
             server::search_criminal,
             server::add_criminal,
@@ -91,7 +91,7 @@ fn rocket() -> Rocket<Build> {
             server::delete_criminal,
         ),
         components(
-            schemas(db::project::User, db::project::Presence, db::project::Criminal, db::stats::Stats, server::ServerError, server::Info)
+            schemas(db::project::User, db::project::Absence, db::project::Criminal, db::stats::Stats, server::ServerError, server::Info)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -145,11 +145,11 @@ fn rocket() -> Rocket<Build> {
                 server::add_user,
                 server::update_user,
                 server::delete_user,
-                server::fetch_presence,
-                server::search_presence,
-                server::add_presence,
-                server::update_presence,
-                server::delete_presence,
+                server::fetch_absence,
+                server::search_absence,
+                server::add_absence,
+                server::update_absence,
+                server::delete_absence,
                 server::fetch_criminal,
                 server::search_criminal,
                 server::add_criminal,

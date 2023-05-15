@@ -2,14 +2,14 @@ use crate::db::project::{Criminal, DBIter, Database, Error, FromRow, Result};
 
 impl Criminal {
     pub fn is_valid(&self) -> bool {
-        !self.criminal.trim().is_empty()
+        !self.account.trim().is_empty()
     }
 }
 
 impl FromRow for Criminal {
     fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Criminal> {
         Ok(Criminal {
-            criminal: row.get("criminal")?,
+            account: row.get("account")?,
             data: row.get("data")?,
         })
     }
@@ -19,10 +19,10 @@ impl FromRow for Criminal {
 pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
     Ok(db.con.query_row(
         "select \
-        criminal, \
+        account, \
         data \
-        from criminals \
-        where criminal=?",
+        from criminal \
+        where account=?",
         [account],
         Criminal::from_row,
     )?)
@@ -32,13 +32,13 @@ pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
 pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
     let mut stmt = db.con.prepare(
         "select \
-        criminal, \
+        account, \
         data \
         \
-        from criminals \
-        where criminal like '%'||?1||'%' \
+        from criminal \
+        where account like '%'||?1||'%' \
         or data like '%'||?1||'%' \
-        order by criminal",
+        order by account",
     )?;
     let rows = stmt.query([text.trim()])?;
     DBIter::new(rows).collect()
@@ -50,14 +50,14 @@ pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
         return Err(Error::InvalidUser);
     }
     db.con.execute(
-        "INSERT INTO criminals VALUES (?, ?)",
-        rusqlite::params![criminal.criminal.trim(), criminal.data,],
+        "INSERT INTO criminal VALUES (?, ?)",
+        rusqlite::params![criminal.account.trim(), criminal.data,],
     )?;
     Ok(())
 }
 
 /// Updates the criminal.
-/// This includes all its criminals and data.
+/// This includes all its data.
 pub fn update(db: &Database, previous_account: &str, criminal: &Criminal) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !criminal.is_valid() {
@@ -67,8 +67,8 @@ pub fn update(db: &Database, previous_account: &str, criminal: &Criminal) -> Res
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update criminals set criminal=?, data=? where criminal=?",
-        rusqlite::params![criminal.criminal, criminal.data, previous_account,],
+        "update criminal set account=?, data=? where account=?",
+        rusqlite::params![criminal.account, criminal.data, previous_account,],
     )?;
 
     transaction.commit()?;
@@ -84,45 +84,45 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     }
     let transaction = db.transaction()?;
     // remove date and presenters
-    transaction.execute("delete from criminals where criminal=?", [account])?;
+    transaction.execute("delete from criminal where account=?", [account])?;
     transaction.commit()?;
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::db::criminals;
+    use crate::db::criminal;
     use crate::db::project::{create, Criminal, Database};
     #[test]
-    fn add_update_remove_criminals() {
+    fn add_update_remove_criminal() {
         let db = Database::memory().unwrap();
         create(&db).unwrap();
 
         let criminal = Criminal {
-            criminal: "foo".to_string(),
-            data: None,
+            account: "foo".to_string(),
+            data: "Car Destroyed".into(),
         };
-        criminals::add(&db, &criminal).unwrap();
+        criminal::add(&db, &criminal).unwrap();
 
-        let result = criminals::search(&db, "").unwrap();
+        let result = criminal::search(&db, "").unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], criminal);
 
-        criminals::update(
+        criminal::update(
             &db,
-            &criminal.criminal,
+            &criminal.account,
             &Criminal {
-                data: Some("Car Stolen".into()),
+                data: "Car Stolen".into(),
                 ..criminal.clone()
             },
         )
         .unwrap();
-        let result = criminals::search(&db, "").unwrap();
+        let result = criminal::search(&db, "").unwrap();
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].data, Some("Car Stolen".into()));
+        assert_eq!(result[0].data, "Car Stolen".to_string());
 
-        criminals::delete(&db, &criminal.criminal).unwrap();
-        let result = criminals::search(&db, "").unwrap();
+        criminal::delete(&db, &criminal.account).unwrap();
+        let result = criminal::search(&db, "").unwrap();
         assert_eq!(result.len(), 0);
     }
 }

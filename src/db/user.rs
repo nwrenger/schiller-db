@@ -89,15 +89,15 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
         ],
     )?;
 
-    // update presence
+    // update absence
     transaction.execute(
-        "update presence set presenter=? where presenter=?",
+        "update absence set account=? where account=?",
         [user.account.trim(), previous_account],
     )?;
 
     // update criminal
     transaction.execute(
-        "update criminals set criminal=? where criminal=?",
+        "update criminal set account=? where account=?",
         [user.account.trim(), previous_account],
     )?;
 
@@ -106,7 +106,7 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
 }
 
 /// Deletes the user.
-/// This includes all its presences.
+/// This includes all its absences.
 pub fn delete(db: &Database, account: &str) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {
@@ -116,10 +116,10 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     // remove user
     transaction.execute("delete from user where account=?", [account])?;
 
-    //remove from presence
-    transaction.execute("delete from presence where presenter=?", [account])?;
+    //remove from absence
+    transaction.execute("delete from absence where account=?", [account])?;
     //remove from criminal
-    transaction.execute("delete from criminals where criminal=?", [account])?;
+    transaction.execute("delete from criminal where account=?", [account])?;
     transaction.commit()?;
 
     Ok(())

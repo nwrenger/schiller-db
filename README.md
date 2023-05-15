@@ -34,7 +34,7 @@ Besides that, it also consists the managment and logic for a server using [Rocke
 
 The Server calls are:
 
-- 5 for each data table (user, criminals, presence)
+- 5 for each data table (user, criminal, absence)
 - stats - getting general statistics
 - info
 
@@ -49,9 +49,9 @@ Schemas:
 Security:
 
 - Using a Key for Writing/Changing Data (POST, PUT, DELETE)
-- Using a Key for accessing Criminals
-- Using a Key for accessing Presence
-- Using a Key for accessing Users (in this case either the Key for Criminals or Presence)
+- Using a Key for accessing Criminal
+- Using a Key for accessing Absence
+- Using a Key for accessing Users (in this case either the Key for Criminal or Absence)
 - the keys are not encrypted
 - logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
 

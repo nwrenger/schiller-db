@@ -28,17 +28,17 @@ pub struct User {
 #[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Criminal {
-    pub criminal: String,
-    pub data: Option<String>,
+    pub account: String,
+    pub data: String,
 }
 
-/// Data object for a presence.
+/// Data object for an absence.
 #[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[cfg_attr(test, derive(PartialEq, Default))]
-pub struct Presence {
-    pub presenter: String,
+pub struct Absence {
+    pub account: String,
     pub date: NaiveDate,
-    pub data: Option<String>,
+    pub time: Option<String>,
 }
 
 macro_rules! error {
@@ -201,15 +201,15 @@ pub fn create(db: &Database) -> Result<()> {
         surname text not null, \
         role text not null); \
     \
-    create table presence ( \
-        presenter text not null default '', \
+    create table absence ( \
+        account text not null, \
         date text not null, \
-        data text default none, \
-        primary key (presenter, date)); \
+        time text default none, \
+        primary key (account, date)); \
     \
-    create table criminals ( \
-        criminal text not null primary key, \
-        data text default none); \
+    create table criminal ( \
+        account text not null primary key, \
+        data text not null); \
     ";
 
     let transaction = db.transaction()?;

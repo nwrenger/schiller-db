@@ -24,7 +24,7 @@ pub fn fetch(db: &Database) -> Result<Stats> {
     const STATS: &str = "\
         select \
         (select count(*) from user) as users, \
-        (select count(*) from criminals) as criminals \
+        (select count(*) from criminal) as criminals \
     ";
     Ok(db.con.query_row(STATS, [], Stats::from_row)?)
 }

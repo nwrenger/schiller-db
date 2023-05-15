@@ -16,7 +16,7 @@ use std::{borrow::Cow, path::Path};
 use crate::db;
 use chrono::NaiveDate;
 
-use db::project::{Criminal, Database, Error, Presence, Result, User};
+use db::project::{Criminal, Database, Error, Absence, Result, User};
 use db::stats::Stats;
 
 /// Server operation error.
@@ -99,7 +99,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for presences",
+                    "invalid api key/missing permissions for absences",
                 )),
             )),
         }
@@ -122,7 +122,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
             _ => Outcome::Failure((
                 Status::Unauthorized,
                 ServerError::Unauthorized(String::from(
-                    "invalid api key/missing permissions for criminals",
+                    "invalid api key/missing permissions for criminal",
                 )),
             )),
         }
@@ -277,8 +277,8 @@ pub async fn delete_user(
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Got a Presence by a specific account and date", body = Presence),
-        (status = 401, description = "Unauthorized to fetch a Presence", body = ServerError),
+        (status = 200, description = "Got an Absence by a specific account and date", body = Absence),
+        (status = 401, description = "Unauthorized to fetch an Absence", body = ServerError),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
@@ -289,12 +289,12 @@ pub async fn delete_user(
         ("server_api_key" = [])
     )
 )]
-#[get("/presence/fetch/<account>/<date>")]
-pub async fn fetch_presence(
+#[get("/absence/fetch/<account>/<date>")]
+pub async fn fetch_absence(
     _api_key: EmploymentApiKey,
     account: &str,
     date: &str,
-) -> Json<Result<Presence>> {
+) -> Json<Result<Absence>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -302,33 +302,33 @@ pub async fn fetch_presence(
             return Json(Err(Error::InvalidDate));
         }
     };
-    Json(db::presence::fetch(&db, account, date))
+    Json(db::absence::fetch(&db, account, date))
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Searched all Presences", body = Vec<Presence>),
-        (status = 401, description = "Unauthorized to search all Presences", body = ServerError),
+        (status = 200, description = "Searched all Absences", body = Vec<Absence>),
+        (status = 401, description = "Unauthorized to search all Absences", body = ServerError),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     security (
         ("server_api_key" = [])
     )
 )]
-#[get("/presence/search?<text>")]
-pub async fn search_presence(
+#[get("/absence/search?<text>")]
+pub async fn search_absence(
     _api_key: EmploymentApiKey,
     text: Option<&str>,
-) -> Json<Result<Vec<Presence>>> {
+) -> Json<Result<Vec<Absence>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::presence::search(&db, text.unwrap_or_default()))
+    Json(db::absence::search(&db, text.unwrap_or_default()))
 }
 
 #[utoipa::path(
-    request_body = Presence,
+    request_body = Absence,
     responses(
-        (status = 200, description = "Add a presence sended successfully"),
-        (status = 401, description = "Unauthorized to add a Presence", body = ServerError),
+        (status = 200, description = "Add an Absence sended successfully"),
+        (status = 401, description = "Unauthorized to add a Absence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
@@ -337,21 +337,21 @@ pub async fn search_presence(
         ("write_api_key" = [])
     )
 )]
-#[post("/presence", format = "json", data = "<presence>")]
-pub async fn add_presence(
+#[post("/absence", format = "json", data = "<absence>")]
+pub async fn add_absence(
     _api_key: EmploymentApiKey,
     _api_key_write: WriteApiKey,
-    presence: Json<Presence>,
+    absence: Json<Absence>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::presence::add(&db, &presence))
+    Json(db::absence::add(&db, &absence))
 }
 
 #[utoipa::path(
-    request_body = Presence,
+    request_body = Absence,
     responses(
-        (status = 200, description = "Update a Presence sended successfully"),
-        (status = 401, description = "Unauthorized to update a Presence", body = ServerError),
+        (status = 200, description = "Update an Absence sended successfully"),
+        (status = 401, description = "Unauthorized to update an Absence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
@@ -360,25 +360,25 @@ pub async fn add_presence(
         ("write_api_key" = [])
     )
 )]
-#[put("/presence", format = "json", data = "<presence>")]
-pub async fn update_presence(
+#[put("/absence", format = "json", data = "<absence>")]
+pub async fn update_absence(
     _api_key: EmploymentApiKey,
     _api_key_write: WriteApiKey,
-    presence: Json<Presence>,
+    absence: Json<Absence>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::presence::update(
+    Json(db::absence::update(
         &db,
-        &presence.presenter,
-        presence.date,
-        &presence,
+        &absence.account,
+        absence.date,
+        &absence,
     ))
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Presence delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Presences", body = ServerError),
+        (status = 200, description = "Absence delete sended successfully"),
+        (status = 401, description = "Unauthorized to delete Absences", body = ServerError),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
@@ -390,8 +390,8 @@ pub async fn update_presence(
         ("write_api_key" = [])
     )
 )]
-#[delete("/presence/<account>/<date>")]
-pub async fn delete_presence(
+#[delete("/absence/<account>/<date>")]
+pub async fn delete_absence(
     _api_key: EmploymentApiKey,
     _api_key_write: WriteApiKey,
     account: &str,
@@ -404,7 +404,7 @@ pub async fn delete_presence(
             return Json(Err(Error::InvalidDate));
         }
     };
-    Json(db::presence::delete(&db, account, date))
+    Json(db::absence::delete(&db, account, date))
 }
 
 #[utoipa::path(
@@ -423,7 +423,7 @@ pub async fn delete_presence(
 #[get("/criminal/fetch/<account>")]
 pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Result<Criminal>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::fetch(&db, account))
+    Json(db::criminal::fetch(&db, account))
 }
 
 #[utoipa::path(
@@ -442,7 +442,7 @@ pub async fn search_criminal(
     text: Option<&str>,
 ) -> Json<Result<Vec<Criminal>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::search(&db, text.unwrap_or_default()))
+    Json(db::criminal::search(&db, text.unwrap_or_default()))
 }
 
 #[utoipa::path(
@@ -458,21 +458,21 @@ pub async fn search_criminal(
         ("write_api_key" = [])
     )
 )]
-#[post("/criminal", format = "json", data = "<criminals>")]
+#[post("/criminal", format = "json", data = "<criminal>")]
 pub async fn add_criminal(
     _api_key: PoliceApiKey,
     _api_key_write: WriteApiKey,
-    criminals: Json<Criminal>,
+    criminal: Json<Criminal>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::add(&db, &criminals))
+    Json(db::criminal::add(&db, &criminal))
 }
 
 #[utoipa::path(
     request_body = Criminal,
     responses(
-        (status = 200, description = "Update a Presence sended successfully"),
-        (status = 401, description = "Unauthorized to update a Presence", body = ServerError),
+        (status = 200, description = "Update a absence sended successfully"),
+        (status = 401, description = "Unauthorized to update a absence", body = ServerError),
         (status = 422, description = "The Json is parsed in a wrong format", body = ServerError, example = json!(ServerError::UnprocessableEntity("string".into()))),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
@@ -481,20 +481,20 @@ pub async fn add_criminal(
         ("write_api_key" = [])
     )
 )]
-#[put("/criminal", format = "json", data = "<criminals>")]
+#[put("/criminal", format = "json", data = "<criminal>")]
 pub async fn update_criminal(
     _api_key: PoliceApiKey,
     _api_key_write: WriteApiKey,
-    criminals: Json<Criminal>,
+    criminal: Json<Criminal>,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::update(&db, &criminals.criminal, &criminals))
+    Json(db::criminal::update(&db, &criminal.account, &criminal))
 }
 
 #[utoipa::path(
     responses(
         (status = 200, description = "Criminal delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Criminals", body = ServerError),
+        (status = 401, description = "Unauthorized to delete Criminal", body = ServerError),
         (status = 500, description = "Something internally went wrong", body = ServerError, example = json!(ServerError::InternalError("string".into()))),
     ),
     params(
@@ -512,5 +512,5 @@ pub async fn delete_criminal(
     account: &str,
 ) -> Json<Result<()>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminals::delete(&db, account))
+    Json(db::criminal::delete(&db, account))
 }
