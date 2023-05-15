@@ -1,4 +1,4 @@
-use crate::db::project::{DBIter, Database, Error, FromRow, Absence, Result};
+use crate::db::project::{Absence, DBIter, Database, Error, FromRow, Result};
 
 use chrono::NaiveDate;
 
@@ -112,7 +112,7 @@ mod tests {
     use chrono::NaiveDate;
 
     use crate::db::absence;
-    use crate::db::project::{create, Database, Absence};
+    use crate::db::project::{create, Absence, Database};
     #[test]
     fn add_update_remove_absences() {
         let db = Database::memory().unwrap();
