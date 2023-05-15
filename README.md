@@ -8,7 +8,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 ### Usage
 
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/.
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, you have to set the Admin Key (SNDM_KEY_A), Employment Key (SNDM_KEY_E), Police Key (SNDM_KEY_P) and the Writing Key (SNDM_KEY_W) using the environment.
 
 ## Architecture - Including SNDI
 
@@ -48,11 +48,11 @@ Schemas:
 
 Security:
 
-- Using a Key for Writing/Changing Data (POST, PUT, DELETE) of Criminal and Absence
-- Using a Key for accessing Criminal
-- Using a Key for accessing Absence
-- Using a Key for accessing Users (in this case either the Key for Criminal or Absence)
-- A Key with Admin Permissions -> can do everything and evenmore than the keys above like changing User data
+- Writing Key -> a Key for Writing/Changing Data (POST, PUT, DELETE) of Criminal and Absence
+- Police Key -> a Key for accessing Criminal
+- Employment Key -> a Key for accessing Absence
+- Employment Key/Police Key -> a Key for accessing Users
+- Adming Key -> a Key with Admin Permissions -> can do everything and even more than the keys above like changing User data
 - the keys are not encrypted
 - logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
 
