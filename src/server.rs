@@ -31,7 +31,11 @@ impl<'r> FromRequest<'r> for GeneralApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E.unwrap() || key == KEY_P.unwrap() || key == KEY_A.unwrap() => Outcome::Success(GeneralApiKey),
+            Some(key)
+                if key == KEY_E.unwrap() || key == KEY_P.unwrap() || key == KEY_A.unwrap() =>
+            {
+                Outcome::Success(GeneralApiKey)
+            }
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -46,7 +50,7 @@ impl<'r> FromRequest<'r> for AdminApiKey {
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
             Some(key) if key == KEY_A.unwrap() => Outcome::Success(AdminApiKey),
-            _=> Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
 }
