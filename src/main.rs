@@ -14,6 +14,7 @@ use utoipa::{
 use utoipa_swagger_ui::SwaggerUi;
 
 use chrono::Local;
+use dotenv::dotenv;
 use std::fs::OpenOptions;
 use std::io::Write;
 
@@ -66,6 +67,8 @@ fn rocket() -> Rocket<Build> {
             db
         }
     };
+
+    dotenv().ok();
 
     #[derive(OpenApi)]
     #[openapi(
