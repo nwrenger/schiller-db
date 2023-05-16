@@ -92,7 +92,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let key_p: String = env::var("SNDM_KEY_E").unwrap_or("".to_string());
-        let key_a: String = env::var("SNDM_KEY_E").unwrap_or("".to_string());
+        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
         match request.headers().get("server_api_key").next() {
             Some(key) if key == key_p || key == key_a => Outcome::Success(PoliceApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
