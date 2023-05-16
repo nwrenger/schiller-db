@@ -164,7 +164,7 @@ async fn unauthorized(_req: &Request<'_>) -> serde_json::Value {
 
 #[catch(404)]
 async fn not_found(_req: &Request<'_>) -> serde_json::Value {
-    Error::NotFound.into()
+    Error::PageNotFound.into()
 }
 
 #[catch(422)]

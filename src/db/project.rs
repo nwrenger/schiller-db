@@ -66,7 +66,7 @@ pub enum Error {
     InvalidUser,
     /// Server specific errors
     Unauthorized,
-    NotFound,
+    PageNotFound,
     UnprocessableEntity,
     InternalError,
     /// Migration
