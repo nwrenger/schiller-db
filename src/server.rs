@@ -18,10 +18,10 @@ use chrono::NaiveDate;
 use db::project::{Absence, Criminal, Database, Error, Result, User};
 use db::stats::Stats;
 
-const KEY_A: &str = option_env!("SNDM_KEY_A").unwrap_or("");
-const KEY_W: &str = option_env!("SNDM_KEY_W").unwrap_or("");
-const KEY_E: &str = option_env!("SNDM_KEY_E").unwrap_or("");
-const KEY_P: &str = option_env!("SNDM_KEY_P").unwrap_or("");
+const KEY_A: Option<&str> = option_env!("SNDM_KEY_A");
+const KEY_W: Option<&str> = option_env!("SNDM_KEY_W");
+const KEY_E: Option<&str> = option_env!("SNDM_KEY_E");
+const KEY_P: Option<&str> = option_env!("SNDM_KEY_P");
 
 pub struct GeneralApiKey;
 
@@ -31,7 +31,7 @@ impl<'r> FromRequest<'r> for GeneralApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E || key == KEY_P || key == KEY_A => {
+            Some(key) if key == KEY_E.unwrap_or("") || key == KEY_P.unwrap_or("")  || key == KEY_A.unwrap_or("")  => {
                 Outcome::Success(GeneralApiKey)
             }
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
@@ -47,7 +47,7 @@ impl<'r> FromRequest<'r> for AdminApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_A => Outcome::Success(AdminApiKey),
+            Some(key) if key == KEY_A.unwrap_or("")  => Outcome::Success(AdminApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -61,7 +61,7 @@ impl<'r> FromRequest<'r> for WriteApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("write_api_key").next() {
-            Some(key) if key == KEY_W || key == KEY_A => Outcome::Success(WriteApiKey),
+            Some(key) if key == KEY_W.unwrap_or("")  || key == KEY_A.unwrap_or("")  => Outcome::Success(WriteApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -75,7 +75,7 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_E || key == KEY_A => Outcome::Success(EmploymentApiKey),
+            Some(key) if key == KEY_E.unwrap_or("")  || key == KEY_A.unwrap_or("")  => Outcome::Success(EmploymentApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }
@@ -89,7 +89,7 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match request.headers().get("server_api_key").next() {
-            Some(key) if key == KEY_P || key == KEY_A => Outcome::Success(PoliceApiKey),
+            Some(key) if key == KEY_P.unwrap_or("")  || key == KEY_A.unwrap_or("")  => Outcome::Success(PoliceApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
         }
     }

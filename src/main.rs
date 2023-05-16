@@ -1,4 +1,3 @@
-#![feature(const_option_ext)]
 pub mod db;
 mod server;
 
