@@ -8,7 +8,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 ### Usage
 
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, you have to set the Admin Key (SNDM_KEY_A), Employment Key (SNDM_KEY_E), Police Key (SNDM_KEY_P) and the Writing Key (SNDM_KEY_W) using the environment.
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, you have to set the Admin Key (SNDM_KEY_A), Employment Key (SNDM_KEY_E), Police Key (SNDM_KEY_P) and the Writing Key (SNDM_KEY_W) using the environment file keys.env.
 
 ## Architecture - Including SNDI
 
