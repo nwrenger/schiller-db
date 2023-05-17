@@ -25,9 +25,9 @@ impl<'r> FromRequest<'r> for GeneralApiKey {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_e: String = env::var("SNDM_KEY_E").unwrap_or("".to_string());
-        let key_p: String = env::var("SNDM_KEY_P").unwrap_or("".to_string());
-        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
+        let key_e: String = env::var("EMPLOYMENT_KEY").unwrap_or("".to_string());
+        let key_p: String = env::var("POLICE_KEY").unwrap_or("".to_string());
+        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
         match request.headers().get("server_api_key").next() {
             Some(key) if key == key_e || key == key_p || key == key_a => {
                 Outcome::Success(GeneralApiKey)
@@ -44,7 +44,7 @@ impl<'r> FromRequest<'r> for AdminApiKey {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
+        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
         match request.headers().get("server_api_key").next() {
             Some(key) if key == key_a => Outcome::Success(AdminApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
@@ -59,8 +59,8 @@ impl<'r> FromRequest<'r> for WriteApiKey {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_w: String = env::var("SNDM_KEY_W").unwrap_or("".to_string());
-        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
+        let key_w: String = env::var("WRITING_KEY").unwrap_or("".to_string());
+        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
         match request.headers().get("write_api_key").next() {
             Some(key) if key == key_w || key == key_a => Outcome::Success(WriteApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
@@ -75,8 +75,8 @@ impl<'r> FromRequest<'r> for EmploymentApiKey {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_e: String = env::var("SNDM_KEY_E").unwrap_or("".to_string());
-        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
+        let key_e: String = env::var("EMPLOYMENT_KEY").unwrap_or("".to_string());
+        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
         match request.headers().get("server_api_key").next() {
             Some(key) if key == key_e || key == key_a => Outcome::Success(EmploymentApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
@@ -91,8 +91,8 @@ impl<'r> FromRequest<'r> for PoliceApiKey {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_p: String = env::var("SNDM_KEY_E").unwrap_or("".to_string());
-        let key_a: String = env::var("SNDM_KEY_A").unwrap_or("".to_string());
+        let key_p: String = env::var("POLICE_KEY").unwrap_or("".to_string());
+        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
         match request.headers().get("server_api_key").next() {
             Some(key) if key == key_p || key == key_a => Outcome::Success(PoliceApiKey),
             _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
