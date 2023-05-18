@@ -11,7 +11,7 @@ use std::io::BufReader;
 
 use chrono::NaiveDate;
 
-use rusqlite::Connection;
+use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -94,16 +94,16 @@ impl From<std::io::Error> for Error {
     }
 }
 
-impl From<Error> for serde_json::Value {
-    fn from(e: Error) -> Self {
-        serde_json::json!({ "Err": e })
-    }
-}
-
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub trait FromRow: Sized {
     fn from_row(stmt: &rusqlite::Row) -> rusqlite::Result<Self>;
+}
+
+impl<T: FromSql> FromRow for T {
+    fn from_row(stmt: &rusqlite::Row) -> rusqlite::Result<Self> {
+        stmt.get(1)
+    }
 }
 
 impl<'a, T: FromRow> Iterator for DBIter<'a, T> {
@@ -221,7 +221,14 @@ pub fn create(db: &Database) -> Result<()> {
     \
     create table criminal ( \
         account text not null primary key, \
-        data text not null); \
+        data text not null);
+    \
+    create table login ( \
+        user text not null primary key, \
+        password text not null, \
+        access_user int default 0, \
+        access_absence int default 0, \
+        access_criminal int default 0); \
     ";
 
     let transaction = db.transaction()?;

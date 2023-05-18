@@ -8,7 +8,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 ### Usage
 
-Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt), otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, you have to set the Admin Key (ADMIN_KEY), Employment Key (EMPLOYMENT_KEY), Police Key (POLICE_KEY) and the Writing Key (WRITING_KEY) using the environment file keys.env.
+Just run the binary/exceutable file provided in the release. Make sure it's in the same Diractory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other User and their permissions. Without those permissions you are unauthorised and can't interact with the Server/Database.
 
 ## Architecture - Including SNDI
 
@@ -40,27 +40,23 @@ The Server calls are:
 
 Swagger UI integrated via Utoipa:
 
-<img src="images/server_routes.png" alt="Database Schema" width=400 />
+<img src="images/server_routes.png" alt="Database Schema" width=500 />
 
 Schemas:
 
-<img src="images/schemas.png" alt="Database Schema" width=400 />
+<img src="images/schemas.png" alt="Database Schema" width=500 />
 
 Security:
 
-- Writing Key -> a Key for Writing/Changing Data (POST, PUT, DELETE) of Criminal and Absence
-- Police Key -> a Key for accessing Criminal
-- Employment Key -> a Key for accessing Absence
-- Employment Key/Police Key -> a Key for accessing Users
-- Adming Key -> a Key with Admin Permissions -> can do everything and even more than the keys above like changing User data
-- the keys are not encrypted
-- logging every Successful Server call (excluding Swagger UI) to seperate file called 'log.txt'
+- User System, an Admin, definded throught the admin.env file
+- Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Absence, Criminal)
+- logging every Server call (excluding Swagger UI) to seperate file called 'log.txt' with Information who did what
 
 ### Database Layer
 
 The [SQLite](https://sqlite.org/index.html) database has the following schema:
 
-<img src="images/sqlite_dia.png" alt="Database Schema" width=400 />
+<img src="images/sqlite_dia.png" alt="Database Schema" width=600 />
 
 (The bold printed texts are the primary keys!)
 

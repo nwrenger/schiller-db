@@ -1,3 +1,5 @@
+use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
+use log::warn;
 use rocket::{
     delete, get,
     http::Status,
@@ -10,92 +12,106 @@ use rocket::{
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use std::{borrow::Cow, env, path::Path};
+use std::{borrow::Cow, path::Path};
+use std::{env, marker::PhantomData};
 
-use crate::db;
+use crate::db::{self, user::UserSearch};
 use chrono::NaiveDate;
 
+use db::login::{Login, Permission};
 use db::project::{Absence, Criminal, Database, Error, Result, User};
 use db::stats::Stats;
 
-pub struct GeneralApiKey;
-
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for GeneralApiKey {
-    type Error = Error;
-
-    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_e: String = env::var("EMPLOYMENT_KEY").unwrap_or("".to_string());
-        let key_p: String = env::var("POLICE_KEY").unwrap_or("".to_string());
-        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
-        match request.headers().get("server_api_key").next() {
-            Some(key) if key == key_e || key == key_p || key == key_a => {
-                Outcome::Success(GeneralApiKey)
-            }
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-        }
+pub trait Access {
+    fn check(l: Login) -> bool;
+}
+pub struct UserReadOnly {}
+impl Access for UserReadOnly {
+    fn check(l: Login) -> bool {
+        matches!(l.access_user, Permission::ReadOnly | Permission::Write)
+    }
+}
+pub struct UserWrite {}
+impl Access for UserWrite {
+    fn check(l: Login) -> bool {
+        matches!(l.access_user, Permission::Write)
+    }
+}
+pub struct AbsenceReadOnly {}
+impl Access for AbsenceReadOnly {
+    fn check(l: Login) -> bool {
+        matches!(l.access_absence, Permission::ReadOnly | Permission::Write)
+    }
+}
+pub struct AbsenceWrite {}
+impl Access for AbsenceWrite {
+    fn check(l: Login) -> bool {
+        matches!(l.access_absence, Permission::Write)
+    }
+}
+pub struct CriminalReadOnly {}
+impl Access for CriminalReadOnly {
+    fn check(l: Login) -> bool {
+        matches!(l.access_criminal, Permission::ReadOnly | Permission::Write)
+    }
+}
+pub struct CriminalWrite {}
+impl Access for CriminalWrite {
+    fn check(l: Login) -> bool {
+        matches!(l.access_criminal, Permission::Write)
     }
 }
 
-pub struct AdminApiKey;
-
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for AdminApiKey {
-    type Error = Error;
-
-    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
-        match request.headers().get("server_api_key").next() {
-            Some(key) if key == key_a => Outcome::Success(AdminApiKey),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-        }
-    }
+pub struct Auth<P: Access> {
+    pub user: String,
+    pub _phantom: PhantomData<P>,
 }
 
-pub struct WriteApiKey;
-
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for WriteApiKey {
+impl<'r, P: Access> FromRequest<'r> for Auth<P> {
     type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_w: String = env::var("WRITING_KEY").unwrap_or("".to_string());
-        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
-        match request.headers().get("write_api_key").next() {
-            Some(key) if key == key_w || key == key_a => Outcome::Success(WriteApiKey),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-        }
-    }
-}
+        // Parsing authentication header
+        // e.g. "Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" -> Aladdin:open sesame
 
-pub struct EmploymentApiKey;
+        let header = request.headers().get("authorization").next();
 
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for EmploymentApiKey {
-    type Error = Error;
+        let Some(user_pass) = header
+                .and_then(|v| v.strip_prefix("Basic "))
+                .and_then(|v| BASE64.decode(v).ok())
+                .and_then(|v| String::from_utf8(v).ok()) else {
+            warn!("auth {header:?} from {:?}", request.client_ip());
+            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+        };
+        let Some((user, password)) = user_pass.split_once(':') else {
+            warn!("auth header '{user_pass}' from {:?}", request.client_ip());
+            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+        };
 
-    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_e: String = env::var("EMPLOYMENT_KEY").unwrap_or("".to_string());
-        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
-        match request.headers().get("server_api_key").next() {
-            Some(key) if key == key_e || key == key_a => Outcome::Success(EmploymentApiKey),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
-        }
-    }
-}
+        // lookup in database
 
-pub struct PoliceApiKey;
+        let Ok((db, _)) = Database::open(Cow::from(Path::new("./sndm.db"))) else {
+            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+        };
+        let Ok(login) = db::login::fetch(&db, user, password) else {
+            warn!("auth credentials '{user}:{password}' from {:?}", request.client_ip());
+            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+        };
 
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for PoliceApiKey {
-    type Error = Error;
+        // checking permissions
 
-    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let key_p: String = env::var("POLICE_KEY").unwrap_or("".to_string());
-        let key_a: String = env::var("ADMIN_KEY").unwrap_or("".to_string());
-        match request.headers().get("server_api_key").next() {
-            Some(key) if key == key_p || key == key_a => Outcome::Success(PoliceApiKey),
-            _ => Outcome::Failure((Status::Unauthorized, Error::Unauthorized)),
+        if P::check(login) {
+            Outcome::Success(Self {
+                user: user.into(),
+                _phantom: PhantomData,
+            })
+        } else {
+            warn!(
+                "auth permissions '{user}:{password}' from {:?}",
+                request.client_ip()
+            );
+            Outcome::Failure((Status::Unauthorized, Error::Unauthorized))
         }
     }
 }
@@ -112,7 +128,6 @@ pub struct Info {
 #[utoipa::path(
     responses(
         (status = 200, description = "Got Infos", body = Info),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     )
 )]
 #[get("/info")]
@@ -129,14 +144,14 @@ pub async fn info() -> Json<Info> {
     responses(
         (status = 200, description = "Got Stats", body = Stats),
         (status = 401, description = "Unauthorized to view Stats", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/stats")]
-pub async fn stats(_api_key_1: PoliceApiKey) -> Json<Result<Stats>> {
+pub async fn stats(auth: Auth<CriminalReadOnly>) -> Json<Result<Stats>> {
+    warn!("GET /stats: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
 }
@@ -145,17 +160,17 @@ pub async fn stats(_api_key_1: PoliceApiKey) -> Json<Result<Stats>> {
     responses(
         (status = 200, description = "Got a User by a specific id", body = User),
         (status = 401, description = "Unauthorized to fetch a User", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("id", description = "The unique user id")
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/user/fetch/<id>")]
-pub async fn fetch_user(_api_key: GeneralApiKey, id: &str) -> Json<Result<User>> {
+pub async fn fetch_user(auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>> {
+    warn!("GET /user/fetch/{id}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
 }
@@ -164,16 +179,28 @@ pub async fn fetch_user(_api_key: GeneralApiKey, id: &str) -> Json<Result<User>>
     responses(
         (status = 200, description = "Searched all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to search all Users", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
-#[get("/user/search?<text>")]
-pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Result<Vec<User>>> {
+#[get("/user/search?<name>&<role>&<offset>")]
+pub async fn search_user(
+    auth: Auth<UserReadOnly>,
+    name: Option<&str>,
+    role: Option<&str>,
+    offset: Option<usize>,
+) -> Json<Result<Vec<User>>> {
+    warn!(
+        "GET /user/search?{name:?}&{role:?}&{offset:?}: {}",
+        auth.user
+    );
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::user::search(&db, text.unwrap_or_default()))
+    Json(db::user::search(
+        &db,
+        UserSearch::new(name.unwrap_or_default(), role.unwrap_or("%")),
+        offset.unwrap_or_default(),
+    ))
 }
 
 #[utoipa::path(
@@ -182,19 +209,14 @@ pub async fn search_user(_api_key: GeneralApiKey, text: Option<&str>) -> Json<Re
         (status = 200, description = "Add a User sended successfully"),
         (status = 401, description = "Unauthorized to add a User", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[post("/user", format = "json", data = "<user>")]
-pub async fn add_user(
-    _api_key: AdminApiKey,
-    _api_key_write: WriteApiKey,
-    user: Json<User>,
-) -> Json<Result<()>> {
+pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()>> {
+    warn!("POST /user with data {user:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::add(&db, &user))
 }
@@ -205,19 +227,14 @@ pub async fn add_user(
         (status = 200, description = "Update a User sended successfully"),
         (status = 401, description = "Unauthorized to update a User", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[put("/user", format = "json", data = "<user>")]
-pub async fn update_user(
-    _api_key: AdminApiKey,
-    _api_key_write: WriteApiKey,
-    user: Json<User>,
-) -> Json<Result<()>> {
+pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()>> {
+    warn!("PUT /user with data {user:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::update(&db, &user.account, &user))
 }
@@ -226,22 +243,17 @@ pub async fn update_user(
     responses(
         (status = 200, description = "User delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Users", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("id", description = "The unique user id")
     ),
     security(
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[delete("/user/<id>")]
-pub async fn delete_user(
-    _api_key: AdminApiKey,
-    _api_key_write: WriteApiKey,
-    id: &str,
-) -> Json<Result<()>> {
+pub async fn delete_user(auth: Auth<UserWrite>, id: &str) -> Json<Result<()>> {
+    warn!("DELETE /user/{id}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::delete(&db, id))
 }
@@ -250,22 +262,22 @@ pub async fn delete_user(
     responses(
         (status = 200, description = "Got an Absence by a specific account and date", body = Absence),
         (status = 401, description = "Unauthorized to fetch an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
         ("date", description = "The date")
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/absence/fetch/<account>/<date>")]
 pub async fn fetch_absence(
-    _api_key: EmploymentApiKey,
+    auth: Auth<AbsenceReadOnly>,
     account: &str,
     date: &str,
 ) -> Json<Result<Absence>> {
+    warn!("GET /absence/fetch/{account}/{date}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -280,17 +292,17 @@ pub async fn fetch_absence(
     responses(
         (status = 200, description = "Searched all Absences", body = Vec<Absence>),
         (status = 401, description = "Unauthorized to search all Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/absence/search?<text>")]
 pub async fn search_absence(
-    _api_key: EmploymentApiKey,
+    auth: Auth<AbsenceReadOnly>,
     text: Option<&str>,
 ) -> Json<Result<Vec<Absence>>> {
+    warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::search(&db, text.unwrap_or_default()))
 }
@@ -301,19 +313,14 @@ pub async fn search_absence(
         (status = 200, description = "Add an Absence sended successfully"),
         (status = 401, description = "Unauthorized to add a Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[post("/absence", format = "json", data = "<absence>")]
-pub async fn add_absence(
-    _api_key: EmploymentApiKey,
-    _api_key_write: WriteApiKey,
-    absence: Json<Absence>,
-) -> Json<Result<()>> {
+pub async fn add_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Json<Result<()>> {
+    warn!("POST /absence with data {absence:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::add(&db, &absence))
 }
@@ -324,19 +331,14 @@ pub async fn add_absence(
         (status = 200, description = "Update an Absence sended successfully"),
         (status = 401, description = "Unauthorized to update an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[put("/absence", format = "json", data = "<absence>")]
-pub async fn update_absence(
-    _api_key: EmploymentApiKey,
-    _api_key_write: WriteApiKey,
-    absence: Json<Absence>,
-) -> Json<Result<()>> {
+pub async fn update_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Json<Result<()>> {
+    warn!("PUT /absence with data {absence:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::update(
         &db,
@@ -350,24 +352,22 @@ pub async fn update_absence(
     responses(
         (status = 200, description = "Absence delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
         ("date", description = "The date")
     ),
     security(
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[delete("/absence/<account>/<date>")]
 pub async fn delete_absence(
-    _api_key: EmploymentApiKey,
-    _api_key_write: WriteApiKey,
+    auth: Auth<AbsenceWrite>,
     account: &str,
     date: &str,
 ) -> Json<Result<()>> {
+    warn!("DELETE /absence/{account}/{date}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -382,17 +382,17 @@ pub async fn delete_absence(
     responses(
         (status = 200, description = "Got a Criminal by a specific account", body = Criminal),
         (status = 401, description = "Unauthorized to fetch a Criminal", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/criminal/fetch/<account>")]
-pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Result<Criminal>> {
+pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str) -> Json<Result<Criminal>> {
+    warn!("GET /criminal/fetch/{account}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::fetch(&db, account))
 }
@@ -401,17 +401,17 @@ pub async fn fetch_criminal(_api_key: PoliceApiKey, account: &str) -> Json<Resul
     responses(
         (status = 200, description = "Searched all Criminals", body = Vec<Criminal>),
         (status = 401, description = "Unauthorized to search all Criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[get("/criminal/search?<text>")]
 pub async fn search_criminal(
-    _api_key: PoliceApiKey,
+    auth: Auth<CriminalReadOnly>,
     text: Option<&str>,
 ) -> Json<Result<Vec<Criminal>>> {
+    warn!("GET /criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::search(&db, text.unwrap_or_default()))
 }
@@ -422,19 +422,14 @@ pub async fn search_criminal(
         (status = 200, description = "Add a criminal sended successfully"),
         (status = 401, description = "Unauthorized to add a Crimials", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[post("/criminal", format = "json", data = "<criminal>")]
-pub async fn add_criminal(
-    _api_key: PoliceApiKey,
-    _api_key_write: WriteApiKey,
-    criminal: Json<Criminal>,
-) -> Json<Result<()>> {
+pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -> Json<Result<()>> {
+    warn!("POST /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::add(&db, &criminal))
 }
@@ -445,19 +440,17 @@ pub async fn add_criminal(
         (status = 200, description = "Update a absence sended successfully"),
         (status = 401, description = "Unauthorized to update a absence", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     security (
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[put("/criminal", format = "json", data = "<criminal>")]
 pub async fn update_criminal(
-    _api_key: PoliceApiKey,
-    _api_key_write: WriteApiKey,
+    auth: Auth<CriminalWrite>,
     criminal: Json<Criminal>,
 ) -> Json<Result<()>> {
+    warn!("PUT /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::update(&db, &criminal.account, &criminal))
 }
@@ -466,22 +459,61 @@ pub async fn update_criminal(
     responses(
         (status = 200, description = "Criminal delete sended successfully"),
         (status = 401, description = "Unauthorized to delete Criminal", body = Error, example = json!({"Err": Error::Unauthorized})),
-        (status = 500, description = "Something internally went wrong", body = Error, example = json!({"Err": Error::InternalError})),
     ),
     params(
         ("account", description = "The unique user account"),
     ),
     security(
-        ("server_api_key" = []),
-        ("write_api_key" = [])
+        ("authorization" = []),
     )
 )]
 #[delete("/criminal/<account>")]
-pub async fn delete_criminal(
-    _api_key: PoliceApiKey,
-    _api_key_write: WriteApiKey,
-    account: &str,
-) -> Json<Result<()>> {
+pub async fn delete_criminal(auth: Auth<UserWrite>, account: &str) -> Json<Result<()>> {
+    warn!("DELETE /criminal/{account}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::delete(&db, account))
+}
+
+#[utoipa::path(
+    request_body = Login,
+    responses(
+        (status = 200, description = "Add a Login sended successfully"),
+        (status = 401, description = "Unauthorized to add a Logins", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[post("/login", format = "json", data = "<login>")]
+pub async fn add_login(auth: Auth<UserWrite>, login: Json<Login>) -> Json<Result<()>> {
+    warn!("POST /login with data {login:?}: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::login::add(&db, &login))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Login delete sended successfully"),
+        (status = 401, description = "Unauthorized to delete Login", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    params(
+        ("user", description = "The unique user"),
+    ),
+    security(
+        ("authorization" = []),
+    )
+)]
+#[delete("/login/<user>")]
+pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>> {
+    warn!("DELETE /login/{user}: {}", auth.user);
+    let user = user.trim();
+
+    if user == env::var("SNDM_USER").unwrap() {
+        warn!("unable to delete admin '{user}'");
+        return Json(Err(Error::InvalidUser));
+    }
+
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::login::delete(&db, user))
 }
