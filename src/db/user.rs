@@ -34,8 +34,22 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
     )?)
 }
 
+/// Parameters for the advanced search
+///
+/// Adding the '%' char allows every number of every character in this place
+#[derive(Debug, Clone, Default)]
+pub struct UserSearch<'a> {
+    pub name: &'a str,
+    pub role: &'a str,
+}
+impl<'a> UserSearch<'a> {
+    pub fn new(name: &'a str, role: &'a str) -> UserSearch<'a> {
+        Self { name, role }
+    }
+}
+
 /// Performes a simple user search with the given `text`.
-pub fn search<'a>(db: &'a Database, text: &'a str) -> Result<Vec<User>> {
+pub fn search(db: &Database, params: UserSearch, offset: usize) -> Result<Vec<User>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -44,13 +58,18 @@ pub fn search<'a>(db: &'a Database, text: &'a str) -> Result<Vec<User>> {
         role \
         \
         from user \
-        where account like '%'||?1||'%' \
-        or forename like '%'||?1||'%' \
-        or surname like '%'||?1||'%' \
-        or role like '%'||?1||'%' \
-        order by account",
+        where (account like '%'||?1||'%' \
+            or forename like '%'||?1||'%' \
+            or surname like '%'||?1||'%') \
+        and role like ?2 \
+        order by account \
+        limit 100 offset ?3",
     )?;
-    let rows = stmt.query([text.trim()])?;
+    let rows = stmt.query(rusqlite::params![
+        params.name.trim(),
+        params.role.trim(),
+        offset
+    ])?;
     DBIter::new(rows).collect()
 }
 
@@ -70,6 +89,7 @@ pub fn add(db: &Database, user: &User) -> Result<()> {
     )?;
     Ok(())
 }
+
 /// Updates the user and all references if its account changes.
 pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> {
     let previous_account = previous_account.trim();
@@ -128,7 +148,7 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use crate::db::project::{create, Database, User};
-    use crate::db::user;
+    use crate::db::user::{self, UserSearch};
     #[test]
     fn add_update_remove_users() {
         let db = Database::memory().unwrap();
@@ -142,7 +162,7 @@ mod tests {
         };
         user::add(&db, &user).unwrap();
 
-        let result = user::search(&db, "").unwrap();
+        let result = user::search(&db, UserSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], user);
 
@@ -155,12 +175,12 @@ mod tests {
             },
         )
         .unwrap();
-        let result = user::search(&db, "").unwrap();
+        let result = user::search(&db, UserSearch::new("%foo%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].role, "Teacher");
 
         user::delete(&db, &user.account).unwrap();
-        let result = user::search(&db, "").unwrap();
+        let result = user::search(&db, UserSearch::new("no one", "%"), 0).unwrap();
         assert_eq!(result.len(), 0);
     }
 }

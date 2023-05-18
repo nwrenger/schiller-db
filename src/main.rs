@@ -1,61 +1,51 @@
 pub mod db;
 mod server;
 
+use std::env;
 use std::{borrow::Cow, path::Path};
 
-use db::project::{fetch_user_data, Database};
+use db::project::{fetch_user_data, Database, Result};
 
-use rocket::fairing::{Fairing, Info, Kind};
-use rocket::{catch, catchers, routes, Build, Request, Response, Rocket};
-use utoipa::{
-    openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
-    Modify, OpenApi,
-};
+use log::{warn, Level, LevelFilter};
+use rocket::serde::json::Json;
+use rocket::{catch, catchers, response::Responder, routes, Build, Request, Response, Rocket};
+use serde::Serialize;
+use simplelog::{ConfigBuilder, WriteLogger};
+use utoipa::openapi::security::{Http, HttpAuthScheme};
+use utoipa::{openapi::security::SecurityScheme, Modify, OpenApi};
 use utoipa_swagger_ui::SwaggerUi;
 
-use chrono::Local;
 use std::fs::OpenOptions;
-use std::io::Write;
 
+use crate::db::login::{Login, Permission};
 use crate::db::project::Error;
-
-struct SuccessLogger;
-
-#[rocket::async_trait]
-impl Fairing for SuccessLogger {
-    fn info(&self) -> Info {
-        Info {
-            name: "Success Logger",
-            kind: Kind::Response,
-        }
-    }
-
-    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        if response.status().code == 200
-            && !request.uri().to_string().starts_with("/swagger-ui")
-            && !request.uri().to_string().starts_with("/api-docs")
-        {
-            let now = Local::now();
-            let mut file = OpenOptions::new()
-                .create(true)
-                .append(true)
-                .open("log.txt")
-                .unwrap();
-            writeln!(
-                file,
-                "{} Successful request made to {} route {} from IP {}",
-                now.format("[%d-%m-%Y|%H:%M:%S%.3f]"),
-                request.method(),
-                request.uri(),
-                request.remote().unwrap()
-            )
-            .unwrap();
-        }
-    }
-}
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
+    let file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("log.txt")
+        .unwrap();
+
+    WriteLogger::init(
+        LevelFilter::Warn,
+        ConfigBuilder::new()
+            .set_time_format_rfc3339()
+            .set_level_color(Level::Trace, None)
+            .set_level_color(Level::Debug, None)
+            .set_level_color(Level::Info, None)
+            .set_level_color(Level::Warn, None)
+            .set_level_color(Level::Error, None)
+            .build(),
+        file,
+    )
+    .unwrap();
+
+    warn!("Started Logging");
+
+    dotenv::from_filename("keys.env").ok();
+
     let path = Path::new("./sndm.db");
     match Database::open(Cow::from(path)) {
         Ok(db) => db.0,
@@ -63,11 +53,21 @@ fn rocket() -> Rocket<Build> {
             let db = Database::create(Cow::from(path)).unwrap();
             db::project::create(&db).unwrap();
             fetch_user_data(&db, Cow::from(Path::new("./benutzer.txt")), "|").unwrap();
+            // Admin user
+            db::login::add(
+                &db,
+                &Login {
+                    user: env::var("SNDM_USER").unwrap(),
+                    password: env::var("SNDM_PASSWORD").unwrap(),
+                    access_user: Permission::Write,
+                    access_absence: Permission::Write,
+                    access_criminal: Permission::Write,
+                },
+            )
+            .unwrap();
             db
         }
     };
-
-    dotenv::from_filename("keys.env").ok();
 
     #[derive(OpenApi)]
     #[openapi(
@@ -89,9 +89,11 @@ fn rocket() -> Rocket<Build> {
             server::add_criminal,
             server::update_criminal,
             server::delete_criminal,
+            server::add_login,
+            server::delete_login,
         ),
         components(
-            schemas(db::project::User, db::project::Absence, db::project::Criminal, db::stats::Stats, db::project::Error, server::Info)
+            schemas(db::project::User, db::project::Absence, db::project::Criminal, db::login::Login, db::login::Permission, db::stats::Stats, db::project::Error, server::Info)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -106,13 +108,9 @@ fn rocket() -> Rocket<Build> {
         fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
             let components = openapi.components.as_mut().unwrap(); // we can unwrap safely since there already is components registered.
             components.add_security_scheme(
-                "server_api_key",
-                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("server_api_key"))),
+                "authorization",
+                SecurityScheme::Http(Http::new(HttpAuthScheme::Basic)),
             );
-            components.add_security_scheme(
-                "write_api_key",
-                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("write_api_key"))),
-            )
         }
     }
 
@@ -130,7 +128,6 @@ fn rocket() -> Rocket<Build> {
                 internal_error
             ],
         )
-        .attach(SuccessLogger)
         .mount(
             "/",
             SwaggerUi::new("/swagger-ui/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
@@ -155,26 +152,45 @@ fn rocket() -> Rocket<Build> {
                 server::add_criminal,
                 server::update_criminal,
                 server::delete_criminal,
+                server::add_login,
+                server::delete_login,
             ],
         )
 }
 
+struct JsonWithHeaders<T: Serialize> {
+    headers: Vec<(&'static str, &'static str)>,
+    json: Json<T>,
+}
+
+impl<'r, T: Serialize> Responder<'r, 'static> for JsonWithHeaders<T> {
+    fn respond_to(self, request: &'r Request<'_>) -> rocket::response::Result<'static> {
+        let mut builder = Response::build_from(Responder::respond_to(self.json, request)?);
+        for &(key, value) in &self.headers {
+            builder.raw_header(key, value);
+        }
+        builder.ok()
+    }
+}
+
 #[catch(401)]
-async fn unauthorized(_req: &Request<'_>) -> serde_json::Value {
-    Error::Unauthorized.into()
+async fn unauthorized<'r>(_req: &Request<'_>) -> JsonWithHeaders<Result<()>> {
+    let json = Json(Err(Error::Unauthorized));
+    let headers = vec![("WWW-Authenticate", "Basic realm=\"User Visible Realm\"")];
+    JsonWithHeaders { headers, json }
 }
 
 #[catch(404)]
-async fn not_found(_req: &Request<'_>) -> serde_json::Value {
-    Error::PageNotFound.into()
+async fn not_found(_req: &Request<'_>) -> Json<Result<()>> {
+    Json(Err(Error::PageNotFound))
 }
 
 #[catch(422)]
-async fn unprocessable_entity(_req: &Request<'_>) -> serde_json::Value {
-    Error::UnprocessableEntity.into()
+async fn unprocessable_entity(_req: &Request<'_>) -> Json<Result<()>> {
+    Json(Err(Error::UnprocessableEntity))
 }
 
 #[catch(500)]
-async fn internal_error(_req: &Request<'_>) -> serde_json::Value {
-    Error::InternalError.into()
+async fn internal_error(_req: &Request<'_>) -> Json<Result<()>> {
+    Json(Err(Error::InternalError))
 }
