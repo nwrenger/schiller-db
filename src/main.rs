@@ -44,7 +44,7 @@ fn rocket() -> Rocket<Build> {
 
     warn!("Started Logging");
 
-    dotenv::from_filename("keys.env").ok();
+    dotenv::from_filename("admin.env").ok();
 
     let path = Path::new("./sndm.db");
     match Database::open(Cow::from(path)) {
