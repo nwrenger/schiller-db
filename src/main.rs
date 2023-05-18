@@ -37,6 +37,7 @@ fn rocket() -> Rocket<Build> {
             .set_level_color(Level::Info, None)
             .set_level_color(Level::Warn, None)
             .set_level_color(Level::Error, None)
+            .add_filter_ignore_str("rocket")
             .build(),
         file,
     )
