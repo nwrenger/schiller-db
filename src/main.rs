@@ -32,6 +32,7 @@ fn rocket() -> Rocket<Build> {
         LevelFilter::Warn,
         ConfigBuilder::new()
             .set_time_format_rfc3339()
+            .set_time_offset_to_local().unwrap_or(&mut ConfigBuilder::default())
             .set_level_color(Level::Trace, None)
             .set_level_color(Level::Debug, None)
             .set_level_color(Level::Info, None)
