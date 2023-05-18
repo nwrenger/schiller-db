@@ -1,6 +1,17 @@
-use crate::db::project::{Absence, DBIter, Database, Error, FromRow, Result};
+use crate::db::project::{DBIter, Database, Error, FromRow, Result};
 
 use chrono::NaiveDate;
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+/// Data object for an absence.
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
+#[cfg_attr(test, derive(PartialEq, Default))]
+pub struct Absence {
+    pub account: String,
+    pub date: NaiveDate,
+    pub time: Option<String>,
+}
 
 impl Absence {
     pub fn is_valid(&self) -> bool {
@@ -111,8 +122,8 @@ pub fn delete(db: &Database, account: &str, date: NaiveDate) -> Result<()> {
 mod tests {
     use chrono::NaiveDate;
 
-    use crate::db::absence;
-    use crate::db::project::{create, Absence, Database};
+    use crate::db::absence::{self, Absence};
+    use crate::db::project::{create, Database};
     #[test]
     fn add_update_remove_absences() {
         let db = Database::memory().unwrap();

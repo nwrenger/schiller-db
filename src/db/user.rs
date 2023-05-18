@@ -1,4 +1,17 @@
-use crate::db::project::{DBIter, Database, Error, FromRow, Result, User};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+use crate::db::project::{DBIter, Database, Error, FromRow, Result};
+
+/// Data object for a user.
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
+#[cfg_attr(test, derive(PartialEq, Default))]
+pub struct User {
+    pub account: String,
+    pub forename: String,
+    pub surname: String,
+    pub role: String,
+}
 
 impl User {
     pub fn is_valid(&self) -> bool {
@@ -155,8 +168,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use crate::db::project::{create, Database, User};
-    use crate::db::user::{self, UserSearch};
+    use crate::db::project::{create, Database};
+    use crate::db::user::{self, User, UserSearch};
     #[test]
     fn add_update_remove_users() {
         let db = Database::memory().unwrap();

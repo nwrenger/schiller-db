@@ -9,38 +9,10 @@ use std::{
 
 use std::io::BufReader;
 
-use chrono::NaiveDate;
-
+use crate::db::user::User;
 use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-
-/// Data object for a user.
-#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
-#[cfg_attr(test, derive(PartialEq, Default))]
-pub struct User {
-    pub account: String,
-    pub forename: String,
-    pub surname: String,
-    pub role: String,
-}
-
-/// Data object for a criminal.
-#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
-#[cfg_attr(test, derive(PartialEq, Default))]
-pub struct Criminal {
-    pub account: String,
-    pub data: String,
-}
-
-/// Data object for an absence.
-#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
-#[cfg_attr(test, derive(PartialEq, Default))]
-pub struct Absence {
-    pub account: String,
-    pub date: NaiveDate,
-    pub time: Option<String>,
-}
 
 macro_rules! error {
     ($($args:tt)*) => {
@@ -254,7 +226,9 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
             if super::user::add(db, &user).is_err()
                 && (user.role == "Lehrer"
                     || (user.role.starts_with("Klasse")
-                        && super::user::fetch(db, &user.account)?.role != "Lehrer") && !user.role.contains("Lehrer") && !user.role.contains("Bio"))
+                        && super::user::fetch(db, &user.account)?.role != "Lehrer")
+                        && !user.role.contains("Lehrer")
+                        && !user.role.contains("Bio"))
             {
                 super::user::update(db, &user.account, &user)?;
             }

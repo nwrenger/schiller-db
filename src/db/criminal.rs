@@ -1,4 +1,15 @@
-use crate::db::project::{Criminal, DBIter, Database, Error, FromRow, Result};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+use crate::db::project::{DBIter, Database, Error, FromRow, Result};
+
+/// Data object for a criminal.
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
+#[cfg_attr(test, derive(PartialEq, Default))]
+pub struct Criminal {
+    pub account: String,
+    pub data: String,
+}
 
 impl Criminal {
     pub fn is_valid(&self) -> bool {
@@ -91,8 +102,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use crate::db::criminal;
-    use crate::db::project::{create, Criminal, Database};
+    use crate::db::criminal::{self, Criminal};
+    use crate::db::project::{create, Database};
     #[test]
     fn add_update_remove_criminal() {
         let db = Database::memory().unwrap();

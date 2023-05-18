@@ -18,9 +18,12 @@ use std::{env, marker::PhantomData};
 use crate::db::{self, user::UserSearch};
 use chrono::NaiveDate;
 
+use db::absence::Absence;
+use db::criminal::Criminal;
 use db::login::{Login, Permission};
-use db::project::{Absence, Criminal, Database, Error, Result, User};
+use db::project::{Database, Error, Result};
 use db::stats::Stats;
+use db::user::User;
 
 pub trait Access {
     fn check(l: Login) -> bool;
