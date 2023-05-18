@@ -121,6 +121,12 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
         [user.account.trim(), previous_account],
     )?;
 
+    // update login
+    transaction.execute(
+        "update login set user=? where user=?",
+        [user.account.trim(), previous_account],
+    )?;
+
     transaction.commit()?;
     Ok(())
 }
@@ -140,6 +146,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     transaction.execute("delete from absence where account=?", [account])?;
     //remove from criminal
     transaction.execute("delete from criminal where account=?", [account])?;
+    //remove from login
+    transaction.execute("delete from login where user=?", [account])?;
     transaction.commit()?;
 
     Ok(())
