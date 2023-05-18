@@ -391,10 +391,7 @@ pub async fn delete_absence(
     )
 )]
 #[get("/criminal/fetch/<account>")]
-pub async fn fetch_criminal(
-    auth: Auth<CriminalReadOnly>,
-    account: &str,
-) -> Json<Result<Criminal>> {
+pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str) -> Json<Result<Criminal>> {
     warn!("GET /criminal/fetch/{account}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::fetch(&db, account))
@@ -431,10 +428,7 @@ pub async fn search_criminal(
     )
 )]
 #[post("/criminal", format = "json", data = "<criminal>")]
-pub async fn add_criminal(
-    auth: Auth<CriminalWrite>,
-    criminal: Json<Criminal>,
-) -> Json<Result<()>> {
+pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -> Json<Result<()>> {
     warn!("POST /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::add(&db, &criminal))

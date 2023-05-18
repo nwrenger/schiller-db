@@ -11,7 +11,7 @@ use std::io::BufReader;
 
 use chrono::NaiveDate;
 
-use rusqlite::{Connection, types::FromSql};
+use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
