@@ -1,4 +1,4 @@
-# Schillernova's Database Managment or for short SNDM
+# Schillernover's Database Managment or for short SNDM
 
 A repo with the Server-side Backend for the SNDI (Schillernova's Database Interface).
 
