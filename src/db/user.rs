@@ -47,6 +47,21 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
     )?)
 }
 
+/// Returns all roles from the user table
+pub fn all_roles(db: &Database) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "select \
+        role \
+        from user",
+    )?;
+    let mut rows = stmt.query([])?;
+    let mut roles = Vec::new();
+    while let Some(row) = rows.next()? {
+        roles.push(row.get(0).unwrap());
+    }
+    Ok(roles)
+}
+
 /// Parameters for the advanced search
 ///
 /// Adding the '%' char allows every number of every character in this place
@@ -171,7 +186,7 @@ mod tests {
     use crate::db::project::{create, Database};
     use crate::db::user::{self, User, UserSearch};
     #[test]
-    fn add_update_remove_users() {
+    fn add_update_remove_users_all_roles() {
         let db = Database::memory().unwrap();
         create(&db).unwrap();
 
@@ -186,6 +201,10 @@ mod tests {
         let result = user::search(&db, UserSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], user);
+
+        let result = user::all_roles(&db).unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "Demo".to_string());
 
         user::update(
             &db,

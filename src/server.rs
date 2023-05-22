@@ -180,6 +180,22 @@ pub async fn fetch_user(auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>
 
 #[utoipa::path(
     responses(
+        (status = 200, description = "Got all Roles", body = Vec<String>),
+        (status = 401, description = "Unauthorized to get all Roles", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/user/all_roles")]
+pub async fn all_roles(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+    warn!("GET /user/all_roles: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::user::all_roles(&db))
+}
+
+#[utoipa::path(
+    responses(
         (status = 200, description = "Searched all Users", body = Vec<User>),
         (status = 401, description = "Unauthorized to search all Users", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
