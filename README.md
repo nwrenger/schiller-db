@@ -35,6 +35,7 @@ Besides that, it also consists the managment and logic for a server using [Rocke
 The Server calls are:
 
 - 5 for each data table (user, criminal, absence)
+- 2 for logins(create, delete)
 - stats - getting general statistics
 - info
 
