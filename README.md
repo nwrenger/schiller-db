@@ -1,6 +1,6 @@
 # Schillernover's Database Management or for Short SNDM
 
-A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface).
+A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcomming project week.
 
 ### Download
 
