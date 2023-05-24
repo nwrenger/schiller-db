@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="styles.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SNDI</title>
+</head>
+<body style="background-color: #a4b0be;">
+<div id="TopNavbar">
+    <a href="" class="tnH1"><b>SNDI</b></a>
+</div>
+<div class="bottomPart">
+    <div class="sidebar">
+        <div id="rolelist-div">
+            <ul id="myUL">
+                <li><span class="caret">Beverages</span>
+                  <ul class="nested">
+                    <li>Water</li>
+                    <li>Coffee</li>
+                    <li><span class="caret">Tea</span>
+                      <ul class="nested">
+                        <li>Black Tea</li>
+                        <li>White Tea</li>
+                        <li><span class="caret">Green Tea</span>
+                          <ul class="nested">
+                            <li>Sencha</li>
+                            <li>Gyokuro</li>
+                            <li>Matcha</li>
+                            <li>Pi Lo Chun</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>  
+                  </ul>
+                </li>
+              </ul>
+        </div>
+    </div>
+    <div class="inputMask">
+        <h1 id="accountName"><b>forename.surname</h1>
+
+        <input type="text" id="forename" name="forename" class="defaultInput" readonly value="Max">
+        <input type="text" id="surname" name="surname" class="defaultInput" readonly value="Mustermann">
+        <input type="text" id="account" name="account" class="defaultInput" readonly value="max.mustermann">
+        <input type="text" id="role" name="role" class="defaultInput" readonly value="Jahrgang 12">
+
+        <p style="margin-top: 100px;"> </p>
+        <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')" class="viewButton">Strafregister</button>
+        <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')" class="viewButton">Abwesenheit</button>
+    </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

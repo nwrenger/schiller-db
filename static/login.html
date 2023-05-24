@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="styles.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SNDI</title>
+</head>
+<body style="background-color: #57606f;">
+    <div id="TopNavbar">
+        <a href="" class="tnH1"><b>SNDI</b></a>
+    </div>
+<div class="bottomPart">
+    <div class="loginwin">
+        <img src="img/img_avatar2.png" class="loginimg">
+        
+        <form action="javascript:handleLoginSubmit()">
+            <div class="logincontainer">
+                <div class="logindiv">
+                    <label for="user" class="loginlabel"><b>Username</b></label><br>
+                <input type="text" placeholder="Enter Username" name="user" required class="logininput"><br>
+            </div>
+            
+            <div class="logindiv">
+                <label for="password" class="loginlabel"><b>Password</b></label><br>
+                <input type="password" placeholder="Enter Password" name="password" required class="logininput"><br>
+                <div>
+                  
+                    <button type="submit" class="loginbutton">Login</button>
+                    <div class="error" id="error" hidden>
+                        Wrong Credentials!
+                    </div>
+                </div>      
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="login.js"></script>
+
+</body>
+</html>

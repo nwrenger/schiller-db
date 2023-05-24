@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	width: auto;
+	font-family: 'Montserrat', sans-serif;
+}
+
+#TopNavbar{
+	width: 100%;
+	text-align: center;
+    display: flex;
+	background-color: #2f3542;
+	
+}
+
+.tnH1{
+	text-align: center;
+	font-weight: 500;
+    font-size: 48px;
+    line-height: 1.5em;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	left: 0px;
+
+	color: #ffffff;
+}
+
+.bottomPart{
+	width: 100%;
+	position: absolute;
+	text-align: center;
+    display: flex;
+}
+
+.sidebar{
+	width: 25%;
+	height: 900px;
+	left: 0px;
+	background-color: #747d8c;
+}
+
+#rolelist-div{
+	overflow: auto;
+	width: 100%;
+	height: 800px;
+}
+
+.inputMask{
+	width: 75%;
+	right: 0px;
+}
+
+.defaultInput{
+	width: 30%;
+
+	text-align: left;
+	font-weight: 500;
+    font-size: 48px;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin: 50px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+
+	border: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #ffffff;
+  color: #2f3542;
+  border-radius: 50px;
+}
+
+#accountName{
+	color: #ffffff;
+	margin-top: 50px;
+	margin-bottom: 25px;
+	font-size: 48px;
+	text-align: left;
+	padding-left: 13%;
+}
+
+.viewButton{
+	width: 75%;
+
+	text-align: center;
+	font-weight: 500;
+    font-size: 48px;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin: 50px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+
+	border: none;
+	background: #5352ed;
+	color: #ffffff;
+  border-radius: 50px;
+  transition: 0.3s;
+}
+
+.viewButton:hover{
+	background: #3742fa;
+  transition: 0.3s;
+}
+
+.loginwin{
+	background-color: #a4b0be;
+	margin: auto;
+	margin-top: 100px;
+	width: 50%;
+	height: 630px;
+	border: none;
+	border-radius: 50px;
+}
+
+.loginimg{
+	margin: 24px;
+	width: 30%;
+	border-radius: 50%;
+}
+
+.logininput{
+	width: 50%;
+
+	text-align: left;
+	font-weight: 500;
+    font-size: 24px;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+
+	border: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #ffffff;
+  color: #2f3542;
+  border-radius: 50px;
+}
+
+.loginbutton{
+	width: 50%;
+
+	text-align: left;
+	font-weight: 500;
+    font-size: 24px;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin-top: 25px;
+	margin-bottom: 5px;
+
+	border: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #ffffff;
+  background-color: #7bed9f;
+  border-radius: 50px;
+}
+
+.loginbutton:hover{
+	color: #ffffff;
+  background-color: #2ed573;
+  transition: 0.2s;
+}
+
+.loginlabel{
+	text-align: left;
+	font-weight: 500;
+    font-size: 20px;
+	padding: 20px;
+	color: #2f3542;
+}
+
+.logincontainer{
+	text-align: center;
+	justify-content: center;
+}
+
+.logindiv{
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+.caret {
+	cursor: pointer;
+	-webkit-user-select: none; /* Safari 3.1+ */
+	-moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+	user-select: none;
+  }
+  
+  .caret::before {
+	content: "\25B6";
+	color: black;
+	display: inline-block;
+	margin-right: 6px;
+  }
+  
+  .caret-down::before {
+	-ms-transform: rotate(90deg); /* IE 9 */
+	-webkit-transform: rotate(90deg); /* Safari */
+	transform: rotate(90deg);  
+  }
+  
+  .nested {
+	display: none;
+  }
+  
+  .active {
+	display: block;
+  }
+
+  .error {
+	margin-top: 10px;
+	color: red;
+	font-weight: bold;
+	font-size: x-large;
+  }

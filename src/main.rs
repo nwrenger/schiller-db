@@ -139,6 +139,8 @@ fn rocket() -> Rocket<Build> {
         .mount(
             "/",
             routes![
+                server::index,
+                server::static_files,
                 server::info,
                 server::stats,
                 server::fetch_user,

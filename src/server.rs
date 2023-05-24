@@ -7,12 +7,12 @@ use rocket::{
     post, put,
     request::{self, FromRequest},
     serde::json::Json,
-    Request,
+    Request, fs::NamedFile,
 };
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use std::{borrow::Cow, path::Path};
+use std::{borrow::Cow, path::{Path, PathBuf}};
 use std::{env, marker::PhantomData};
 
 use crate::db::{self, user::UserSearch};
@@ -117,6 +117,18 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
             Outcome::Failure((Status::Unauthorized, Error::Unauthorized))
         }
     }
+}
+
+#[get("/")]
+pub async fn index() -> Option<NamedFile> {
+    let path = Path::new("static").join("index.html");
+    NamedFile::open(path).await.ok()
+}
+
+#[get("/<path..>")]
+pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
+    let path = Path::new("static").join(path);
+    NamedFile::open(path).await.ok()
 }
 
 /// Data object for Infos.
@@ -418,8 +430,8 @@ pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str) -> Json
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Searched all Criminals", body = Vec<Criminal>),
-        (status = 401, description = "Unauthorized to search all Criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Searched all criminals", body = Vec<Criminal>),
+        (status = 401, description = "Unauthorized to search all criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     security (
         ("authorization" = []),
@@ -439,7 +451,7 @@ pub async fn search_criminal(
     request_body = Criminal,
     responses(
         (status = 200, description = "Add a criminal sended successfully"),
-        (status = 401, description = "Unauthorized to add a Crimials", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 401, description = "Unauthorized to add a criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
     security (
