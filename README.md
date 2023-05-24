@@ -37,8 +37,7 @@ The Server calls are:
 - 5 for each data table (user, criminal, absence)
 - 2 for logins (create, delete)
 - all_roles - to get all roles from user
-- stats - getting general statistics
-- info
+- stats - getting general statistics/infos
 
 Swagger UI integrated via Utoipa:
 
