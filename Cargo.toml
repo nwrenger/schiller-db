@@ -4,7 +4,7 @@ description = "Schillernover's Database Management"
 version = "2.4.2"
 edition = "2021"
 authors = ["Nils Wrenger <nils@wrenger.net>", "Leonard Böttcher <leonard.boettcher@iserv-schillerschule.de>"]
-repository = "https://github.com/wrenger/schiller-lib"
+repository = "https://github.com/nwrenger/sndm"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
