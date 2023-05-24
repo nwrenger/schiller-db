@@ -19,7 +19,7 @@ async function handleLoginSubmit() {
         window.localStorage.setItem("user", user)
         window.localStorage.setItem("auth", auth);
         window.localStorage.setItem("all_roles", JSON.stringify(all_roles["Ok"]));
-        //get with getItem and clear at logout completly with clear
+        //get with getItem and clear at logout completely with clear
         window.open("/", "_self")
     } else {
         document.getElementById("error").hidden = false;
