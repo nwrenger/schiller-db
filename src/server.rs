@@ -1,18 +1,21 @@
 use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
 use log::warn;
 use rocket::{
-    delete, get,
+    delete,
+    fs::NamedFile,
+    get,
     http::Status,
     outcome::Outcome,
     post, put,
     request::{self, FromRequest},
     serde::json::Json,
-    Request, fs::NamedFile,
+    Request,
 };
-use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
 
-use std::{borrow::Cow, path::{Path, PathBuf}};
+use std::{
+    borrow::Cow,
+    path::{Path, PathBuf},
+};
 use std::{env, marker::PhantomData};
 
 use crate::db::{self, user::UserSearch};
@@ -129,30 +132,6 @@ pub async fn index() -> Option<NamedFile> {
 pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
     let path = Path::new("static").join(path);
     NamedFile::open(path).await.ok()
-}
-
-/// Data object for Infos.
-#[derive(Serialize, Deserialize, ToSchema)]
-pub struct Info {
-    status: String,
-    message: String,
-    source: String,
-    developer_team: Vec<String>,
-}
-
-#[utoipa::path(
-    responses(
-        (status = 200, description = "Got Infos", body = Info),
-    )
-)]
-#[get("/info")]
-pub async fn info() -> Json<Info> {
-    Json(Info {
-        status: "Up and Running!".into(),
-        message: "Welcome to the sndm!".into(),
-        source: "https://github.com/nwrenger/sndm".into(),
-        developer_team: vec!["Nils Wrenger".into(), "Leonard Böttcher".into()],
-    })
 }
 
 #[utoipa::path(

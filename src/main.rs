@@ -75,7 +75,6 @@ fn rocket() -> Rocket<Build> {
     #[derive(OpenApi)]
     #[openapi(
         paths(
-            server::info,
             server::stats,
             server::fetch_user,
             server::all_roles,
@@ -97,7 +96,7 @@ fn rocket() -> Rocket<Build> {
             server::delete_login,
         ),
         components(
-            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::stats::Stats, db::project::Error, server::Info)
+            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::stats::Stats, db::project::Error)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -141,7 +140,6 @@ fn rocket() -> Rocket<Build> {
             routes![
                 server::index,
                 server::static_files,
-                server::info,
                 server::stats,
                 server::fetch_user,
                 server::all_roles,

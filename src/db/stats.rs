@@ -3,7 +3,6 @@ use utoipa::ToSchema;
 
 use crate::db::project::{Database, FromRow, Result};
 
-
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
 const PKG_REPOSITORY: &str = env!("CARGO_PKG_REPOSITORY");
@@ -41,7 +40,6 @@ impl FromRow for Stats {
 pub fn fetch(db: &Database) -> Result<Stats> {
     const STATS: &str = "\
         select \
-        (select count(*) from user) as users, \
-    ";
+        (select count(*) from user) as users";
     Ok(db.con.query_row(STATS, [], Stats::from_row)?)
 }
