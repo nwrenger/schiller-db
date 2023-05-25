@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-<html>
-<head>
-<link href="styles.css" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="de">
 
-<title>SNDI</title>
+<head>
+    <link href="styles.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SNDI</title>
 </head>
-<body style="background-color: #a4b0be;">
-<div id="TopNavbar">
-    <a href="" class="tnH1"><b>SNDI</b></a>
-    <button type="button" onclick=logout() class="logoutButton">Logout</button>
-</div>
-<div class="bottomPart">
-    <div class="sidebar">
-        <div id="rolelist-div">
-            <ul id="myUL"></ul>
+
+<body>
+    <div class="top-navbar">
+        <a href="">SNDI</a>
+        <button type="button" onclick=logout() class="logout-button">Logout</button>
+    </div>
+    <div class="main-container">
+        <div class="left-sidebar">
+            <div class="rolelist-div">
+                <ul id="myUL"></ul>
+            </div>
+        </div>
+        <div class="input-mask">
+            <h1 class="account-name">forename.surname</h1>
+
+            <div class="input-container">
+                <input type="text" id="forename" name="forename" class="default-input" value="Max">
+                <input type="text" id="surname" name="surname" class="default-input" value="Mustermann">
+                <input type="text" id="account" name="account" class="default-input" value="max.mustermann">
+                <input type="text" id="role" name="role" class="default-input" value="Jahrgang 12">
+            </div>
+            <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')"
+                class="view-button">Strafregister</button>
+            <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')"
+                class="view-button">Abwesenheit</button>
         </div>
     </div>
-    <div class="inputMask">
-        <h1 id="accountName"><b>forename.surname</h1>
-
-        <input type="text" id="forename" name="forename" class="defaultInput" readonly value="Max">
-        <input type="text" id="surname" name="surname" class="defaultInput" readonly value="Mustermann">
-        <input type="text" id="account" name="account" class="defaultInput" readonly value="max.mustermann">
-        <input type="text" id="role" name="role" class="defaultInput" readonly value="Jahrgang 12">
-
-        <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')" class="viewButton">Strafregister</button>
-        <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')" class="viewButton">Abwesenheit</button>
-    </div>
-</div>
-<script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
+
 </html>
