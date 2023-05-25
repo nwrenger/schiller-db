@@ -18,3 +18,8 @@ for (i = 0; i < all_roles.length; i++) {
     node.appendChild(data);
     list.appendChild(node);
 }
+
+function logout() {
+    localStorage.clear()
+    window.open("login.html", "_self");
+}

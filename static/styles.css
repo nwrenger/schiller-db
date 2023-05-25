@@ -98,6 +98,7 @@ html, body {
 
 .viewButton{
 	width: 75%;
+	left: 0px;
 
 	text-align: center;
 	font-weight: 500;
@@ -120,6 +121,34 @@ html, body {
 
 .viewButton:hover{
 	background: #3742fa;
+  transition: 0.3s;
+}
+
+.logoutButton {
+	width: 11%;
+	right: 0px;
+
+	text-align: right;
+	font-weight: 500;
+    font-size: 32px;
+    text-decoration: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin-block: 30px;
+	margin-top: 13px;
+	margin-bottom: 15px;
+
+	border: none;
+	background: #5a5a75a6;
+	color: #ffffff;
+  border-radius: 50px;
+  transition: 0.3s;
+}
+
+.logoutButton:hover {
+	background: #5a5a75d7;
   transition: 0.3s;
 }
 
