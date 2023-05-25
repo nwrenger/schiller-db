@@ -17,6 +17,7 @@ html, body {
 	height: 10%;
 	text-align: center;
     display: flex;
+	justify-content: space-between;
 	background-color: #2f3542;
 	
 }
@@ -124,31 +125,35 @@ html, body {
   transition: 0.3s;
 }
 
-.logoutButton {
-	width: 11%;
-	right: 0px;
+.logoutButton{
+	width: 10%;
 
 	text-align: right;
 	font-weight: 500;
-    font-size: 32px;
+    font-size: 24px;
     text-decoration: none;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-left: 30px;
 	padding-right: 30px;
-	margin-block: 30px;
-	margin-top: 13px;
+	margin-top: 15px;
+	margin-right: 20px;
 	margin-bottom: 15px;
 
 	border: none;
-	background: #5a5a75a6;
-	color: #ffffff;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #ffffff;
+  background-color: #5a5a75a6;
   border-radius: 50px;
   transition: 0.3s;
 }
 
-.logoutButton:hover {
-	background: #5a5a75d7;
+.logoutButton:hover{
+	color: #ffffff;
+  background-color: #5a5a75d7;
   transition: 0.3s;
 }
 
