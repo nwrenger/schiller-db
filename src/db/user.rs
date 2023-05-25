@@ -47,18 +47,33 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
     )?)
 }
 
-/// Returns all roles from the user table
+use std::collections::HashSet;
+
+/// Returns all roles from the user table without duplicates
 pub fn all_roles(db: &Database) -> Result<Vec<String>> {
     let mut stmt = db.con.prepare(
         "select \
         role \
-        from user",
+        from user \
+        order by role",
     )?;
+
     let mut rows = stmt.query([])?;
     let mut roles = Vec::new();
+    let mut seen_roles = HashSet::new();
+
     while let Some(row) = rows.next()? {
-        roles.push(row.get(0).unwrap());
+        let role: String = row.get(0).unwrap();
+
+        // Check if the role has already been seen
+        if seen_roles.contains(&role) {
+            continue; // Skip the duplicate role
+        }
+
+        roles.push(role.clone());
+        seen_roles.insert(role);
     }
+
     Ok(roles)
 }
 
