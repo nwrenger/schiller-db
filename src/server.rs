@@ -144,7 +144,7 @@ pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
     )
 )]
 #[get("/stats")]
-pub async fn stats(auth: Auth<CriminalReadOnly>) -> Json<Result<Stats>> {
+pub async fn stats(auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
     warn!("GET /stats: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))

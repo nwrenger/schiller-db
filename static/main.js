@@ -8,12 +8,13 @@ if (!auth || !all_roles_s || !user) {
 
 let all_roles = JSON.parse(all_roles_s);
 
-var toggler = document.getElementsByClassName("caret");
+var list = document.getElementById("myUL");
 var i;
 
-for (i = 0; i < toggler.length; i++) {
-    toggler[i].addEventListener("click", function () {
-        this.parentElement.querySelector(".nested").classList.toggle("active");
-        this.classList.toggle("caret-down");
-    });
+for (i = 0; i < all_roles.length; i++) {
+    var node = document.createElement("li");
+    var data = document.createTextNode(all_roles[i]);
+    node.className = "role";
+    node.appendChild(data);
+    list.appendChild(node);
 }
