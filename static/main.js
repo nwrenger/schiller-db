@@ -23,3 +23,11 @@ function logout() {
     localStorage.clear()
     window.open("login.html", "_self");
 }
+
+function absence() {
+    document.getElementById("error").textContent = "Missing Permissions for Absence!";
+}
+
+function criminal() {
+    document.getElementById("error").textContent = "Missing Permissions for Criminal!";
+}

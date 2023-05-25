@@ -11,7 +11,7 @@
 <body>
     <div class="top-navbar">
         <a href="">SNDI</a>
-        <button type="button" onclick=logout() class="logout-button">Logout</button>
+        <button type="button" onclick=logout() class="log-button">Logout</button>
     </div>
     <div class="main-container">
         <div class="left-sidebar">
@@ -27,11 +27,14 @@
                 <input type="text" id="surname" name="surname" class="default-input" value="Mustermann">
                 <input type="text" id="account" name="account" class="default-input" value="max.mustermann">
                 <input type="text" id="role" name="role" class="default-input" value="Jahrgang 12">
+                <button type="button" onclick=criminal()
+                    class="view-button">Strafregister</button>
+                <button type="button" onclick=absence()
+                    class="view-button">Abwesenheit</button>
+                </div>
+            <div class="error" id="error">
+                Click to interact!
             </div>
-            <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')"
-                class="view-button">Strafregister</button>
-            <button type="button" onclick="alert('Dazu bist du nicht berechtigt!')"
-                class="view-button">Abwesenheit</button>
         </div>
     </div>
     <script src="main.js"></script>

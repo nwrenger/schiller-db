@@ -42,10 +42,10 @@ body {
 }
 
 /*------------ idk aber die transition is eher kacke ------------*/
-.logout-button {
-	padding: 1.3em 2.7em;
-	margin-right: 20px;
+button {
+	padding: 1.3em 3em;
 	font-size: 12px;
+	margin: 20px;
 	text-transform: uppercase;
 	letter-spacing: 2.5px;
 	font-weight: 500;
@@ -53,7 +53,9 @@ body {
 	background-color: #fff;
 	border: none;
 	border-radius: 45px;
-	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+			box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	-webkit-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 	cursor: pointer;
 	outline: none;
@@ -61,15 +63,20 @@ body {
 
 /*------------ effekte kinda nice ------------*/
 
-.logout-button:hover {
+.log-button:hover {
 	background-color: #23c483;
-	box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+	-webkit-box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+			box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
 	color: #fff;
-	transform: translateY(-7px);
+	-webkit-transform: translateY(-7px);
+		-ms-transform: translateY(-7px);
+			transform: translateY(-7px);
 }
 
-.logout-button:active {
-	transform: translateY(-1px);
+.log-button:active {
+	-webkit-transform: translateY(-1px);
+	-ms-transform: translateY(-1px);
+		transform: translateY(-1px);
 }
 
 /*------------ main part of page ------------*/
@@ -145,30 +152,32 @@ body {
 }
 
 .view-button {
-    max-width: 1130px;
-    width: calc(60% + 80px + 50px);
-	font-weight: 500;
-	font-size: 32px;
-	text-decoration: none;
-    padding: 10px 20px;
-	margin: 25px 25px;
-	border: none;
-	background: #5352ed;
-	color: #ffffff;
-	border-radius: 50px;
+	margin-right: 50px;
+	margin-left: 40px;
 }
 
 .view-button:hover {
-	background: #3742fa;
-	transition: 0.3s;
-    cursor: pointer;
+	background-color: #2333c4;
+	-webkit-box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
+			box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
+	color: #fff;
+	-webkit-transform: translateY(-7px);
+		-ms-transform: translateY(-7px);
+			transform: translateY(-7px);
+}
+
+.view-button:active {
+	-webkit-transform: translateY(-1px);
+	-ms-transform: translateY(-1px);
+		transform: translateY(-1px);
 }
 
 /*------------ for login.html ------------*/
 .loginwin {
 	background-color: #a4b0be;
 	margin: auto;
-	margin-top: 100px;
+	margin-top: 50px;
+	margin-bottom: 50px;
 	width: 50%;
 	height: 630px;
 	border: none;
@@ -176,7 +185,7 @@ body {
 }
 
 .loginimg {
-	margin: 24px;
+	margin: 20px;
 	width: 30%;
 	border-radius: 50%;
 }
@@ -192,8 +201,8 @@ body {
 	padding-bottom: 10px;
 	padding-left: 30px;
 	padding-right: 30px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: 10px;
+	margin-bottom: 20px;
 
 	border: none;
 	-webkit-appearance: none;
@@ -203,36 +212,6 @@ body {
 	background: #ffffff;
 	color: #2f3542;
 	border-radius: 50px;
-}
-
-.loginbutton {
-	width: 50%;
-
-	text-align: left;
-	font-weight: 500;
-	font-size: 24px;
-	text-decoration: none;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 30px;
-	padding-right: 30px;
-	margin-top: 25px;
-	margin-bottom: 5px;
-
-	border: none;
-	-webkit-appearance: none;
-	-ms-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	color: #ffffff;
-	background-color: #7bed9f;
-	border-radius: 50px;
-}
-
-.loginbutton:hover {
-	color: #ffffff;
-	background-color: #2ed573;
-	transition: 0.2s;
 }
 
 .loginlabel {
@@ -256,8 +235,11 @@ body {
 }
 
 .error {
-	margin-top: 5px;
 	color: red;
 	font-weight: bold;
 	font-size: x-large;
+}
+
+.error :focus-visible {
+
 }
