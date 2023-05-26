@@ -12,8 +12,6 @@ async function handleLoginSubmit() {
         },
     });
 
-    console.log(response);
-    
     if (response.status === 200) {
         var all_roles = await response.json();
         window.localStorage.setItem("user", user)
@@ -22,6 +20,9 @@ async function handleLoginSubmit() {
         //get with getItem and clear at logout completely with clear
         window.open("/", "_self")
     } else {
-        document.getElementById("error").hidden = false;
+        let all_elements = document.getElementsByTagName("input");
+        for (i = 0; i < all_elements.length; i++) {
+            all_elements.item(i).classList.add("error-login");
+        }
     }
 }

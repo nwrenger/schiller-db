@@ -25,9 +25,9 @@ function logout() {
 }
 
 function absence() {
-    document.getElementById("error").textContent = "Missing Permissions for Absence!";
+    document.getElementById("error-main").textContent = "Missing Permissions for Absence!";
 }
 
 function criminal() {
-    document.getElementById("error").textContent = "Missing Permissions for Criminal!";
+    document.getElementById("error-main").textContent = "Missing Permissions for Criminal!";
 }

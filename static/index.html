@@ -8,11 +8,12 @@
     <title>SNDI</title>
 </head>
 
+<header>
+    <a href="">SNDI</a>
+    <button type="button" onclick=logout() class="log-button">Logout</button>
+</header>
+
 <body>
-    <div class="top-navbar">
-        <a href="">SNDI</a>
-        <button type="button" onclick=logout() class="log-button">Logout</button>
-    </div>
     <div class="main-container">
         <div class="left-sidebar">
             <div class="rolelist-div">
@@ -21,7 +22,7 @@
         </div>
         <div class="input-mask">
             <h1 class="account-name">forename.surname</h1>
-
+            
             <div class="input-container">
                 <input type="text" id="forename" name="forename" class="default-input" value="Max">
                 <input type="text" id="surname" name="surname" class="default-input" value="Mustermann">
@@ -30,13 +31,11 @@
             </div>
             <div class="input-container">
                 <button type="button" onclick=criminal()
-                    class="view-button">Strafregister</button>
+                class="view-button">Strafregister</button>
                 <button type="button" onclick=absence()
-                    class="view-button">Abwesenheit</button>
+                class="view-button">Abwesenheiten</button>
             </div>
-            <div class="error" id="error">
-                Click to interact!
-            </div>
+            <div class="error-main" id="error-main"></div>
         </div>
     </div>
     <script src="main.js"></script>

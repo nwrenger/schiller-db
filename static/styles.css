@@ -10,7 +10,8 @@
 
 /*------------ 100% percent for containing elements ------------*/
 html,
-body {
+body,
+header {
 	width: 100%;
 	height: 100%;
 }
@@ -21,17 +22,16 @@ body {
 }
 
 /*------------ top bar ------------*/
-.top-navbar {
+header {
 	width: 100%;
-	height: 10%;
+	height: 80px;
 	display: flex;
-    align-items: center;
 	justify-content: space-between;
 	background-color: #2f3542;
 
 }
 
-.top-navbar > a {
+header > a {
 	margin-left: 20px;
 	text-align: center;
 	font-weight: 500;
@@ -41,7 +41,10 @@ body {
 	color: #ffffff;
 }
 
-/*------------ idk aber die transition is eher kacke ------------*/
+header > button {
+	margin: 15px;
+}
+
 button {
 	padding: 1.3em 3em;
 	font-size: 12px;
@@ -99,7 +102,7 @@ button {
 .rolelist-div {
 	overflow: auto;
 	width: 100%;
-	height: 800px;
+	height: 100%;
 }
 
 .role {
@@ -116,10 +119,11 @@ button {
 
 /*------------ input mask ------------*/
 .input-mask {
-	height: 100%;
+	width: 60%;
+	height: 80%;
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+	padding-top: 10%;
     align-items: center;
     flex-direction: column;
 }
@@ -173,24 +177,24 @@ button {
 }
 
 /*------------ for login.html ------------*/
-.loginwin {
+.login-win {
 	background-color: #a4b0be;
 	margin: auto;
 	margin-top: 50px;
 	margin-bottom: 50px;
 	width: 50%;
-	height: 630px;
+	height: 50%;
 	border: none;
 	border-radius: 50px;
 }
 
-.loginimg {
+.login-img {
 	margin: 20px;
 	width: 30%;
 	border-radius: 50%;
 }
 
-.logininput {
+.login-input {
 	width: 50%;
 
 	text-align: left;
@@ -203,18 +207,15 @@ button {
 	padding-right: 30px;
 	margin-top: 10px;
 	margin-bottom: 20px;
-
-	border: none;
-	-webkit-appearance: none;
-	-ms-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	background: #ffffff;
+	
+	border: 1px solid #ffffff;
 	color: #2f3542;
 	border-radius: 50px;
+	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+		box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.loginlabel {
+.login-label {
 	text-align: left;
 	font-weight: 500;
 	font-size: 20px;
@@ -222,20 +223,32 @@ button {
 	color: #2f3542;
 }
 
-.logincontainer {
+.login-container {
 	text-align: center;
 	justify-content: center;
 }
 
-.logindiv {
+.login-div {
 	margin-left: 50px;
 	margin-right: 50px;
 	margin-top: 12px;
 	margin-bottom: 12px;
 }
 
-.error {
+.error-main {
 	color: red;
 	font-weight: bold;
 	font-size: x-large;
+	justify-content: center;
+	text-align: center;
+}
+
+.error-login { 
+	background: #ffe6ee;
+	border: 1px solid #b1395fbc;
+}
+
+.error-login:hover {
+	border: 1px solid #b1395f;
+	transition: 0.3s all ease 0s;
 }

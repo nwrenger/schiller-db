@@ -6,34 +6,31 @@
 
 <title>SNDI</title>
 </head>
+<header>
+    <a href="">SNDI</a>
+</header>
 <body style="background-color: #57606f;">
-    <div class="top-navbar">
-        <a href="">SNDI</a>
-    </div>
-<div class="bottomPart">
-    <div class="loginwin">
-        <img src="img/img_avatar2.png" class="loginimg">
+    <div class="bottomPart">
+        <div class="login-win">
+        <img src="img/img_avatar2.png" class="login-img">
         
         <form action="javascript:handleLoginSubmit()">
-            <div class="logincontainer">
-                <div class="logindiv">
-                    <label for="user" class="loginlabel"><b>Username</b></label><br>
-                <input type="text" placeholder="Enter Username" name="user" required class="logininput"><br>
-            </div>
-            
-            <div class="logindiv">
-                <label for="password" class="loginlabel"><b>Password</b></label><br>
-                <input type="password" placeholder="Enter Password" name="password" required class="logininput"><br>
-                <div>
-                    <button type="submit" class="log-button">Login</button>
-                    <div class="error" id="error" hidden>
-                        Wrong Credentials!
-                    </div>
-                </div>      
-            </div>
-        </form>
+            <div class="login-container">
+                <div class="login-div">
+                    <label for="user" class="login-label"><b>Username</b></label><br>
+                    <input type="text" placeholder="Enter Username" name="user" required class="login-input"><br>
+                </div>
+                
+                <div class="login-div">
+                    <label for="password" class="login-label"><b>Password</b></label><br>
+                    <input type="password" placeholder="Enter Password" name="password" required class="login-input"><br>
+                    <div>
+                        <button type="submit" class="log-button">Login</button>
+                    </div>      
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 <script src="login.js"></script>
 
