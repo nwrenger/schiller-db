@@ -8,10 +8,10 @@ if (!auth || !current_user) {
 // this will get the data on reload, it will fetch new data
 async function get_data(url) {
     const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-            'Authorization': 'Basic ' + auth,
-            'Content-Type': 'application/json; charset=utf-8'
+            "Authorization": "Basic " + auth,
+            "Content-Type": "application/json; charset=utf-8"
         },
     });
 

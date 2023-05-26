@@ -3,12 +3,12 @@ async function handleLoginSubmit() {
     var password = document.getElementsByName("password")[0].value;
     var auth = btoa(current_user + ":" + password)
     // getting all roles
-    const url = '/stats';
+    const url = "/stats";
     const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-            'Authorization': 'Basic ' + auth,
-            'Content-Type': 'application/json; charset=utf-8'
+            "Authorization": "Basic " + auth,
+            "Content-Type": "application/json; charset=utf-8"
         },
     });
 
