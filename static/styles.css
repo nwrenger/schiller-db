@@ -255,3 +255,22 @@ button {
 	border: 1px solid #b1395f;
 	transition: 0.3s all ease 0s;
 }
+
+/* Mobile Integration */
+@media only screen and (max-width: 1024px) {
+	/* Main Page */
+	.left-sidebar {
+		display: none;
+	}
+	/* Todo: Add left-sidebar-mobile */
+
+	/* Log In Screen */
+	.login-win {
+		width: 85%;
+		height: 85%;
+	}
+	.login-div {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+}
