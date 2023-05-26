@@ -1,7 +1,7 @@
 async function handleLoginSubmit() {
-    var user = document.getElementsByName("user")[0].value;
+    var current_user = document.getElementsByName("user")[0].value;
     var password = document.getElementsByName("password")[0].value;
-    var auth = btoa(user + ":" + password)
+    var auth = btoa(current_user + ":" + password)
     // getting all roles
     const url = '/stats';
     const response = await fetch(url, {
@@ -14,7 +14,7 @@ async function handleLoginSubmit() {
 
     if (response.status === 200) {
         //get with getItem and clear at logout completely with clear
-        window.localStorage.setItem("user", user)
+        window.localStorage.setItem("current_user", current_user)
         window.localStorage.setItem("auth", auth);
 
         window.open("/", "_self")

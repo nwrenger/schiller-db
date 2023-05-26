@@ -1,7 +1,7 @@
 const auth = localStorage.getItem("auth");
-const user = localStorage.getItem("user");
+const current_user = localStorage.getItem("current_user");
 
-if (!auth || !user) {
+if (!auth || !current_user) {
     window.open("login.html", "_self");
 }
 
