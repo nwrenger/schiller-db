@@ -6,8 +6,7 @@ if (!auth || !user) {
 }
 
 // this will get the data on reload, it will fetch new data
-async function get_roles() {
-    const url = '/user/all_roles';
+async function get_data(url) {
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -15,31 +14,17 @@ async function get_roles() {
             'Content-Type': 'application/json; charset=utf-8'
         },
     });
-    
-    let all_roles = await response.json();
-    
-    return all_roles["Ok"];
-}
 
-// this will get the data on reload, it will fetch new data
-async function get_stats() {
-    const url2 = '/stats';
-    const response2 = await fetch(url2, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Basic ' + auth,
-            'Content-Type': 'application/json; charset=utf-8'
-        },
-    });
-    let stats = await response2.json();
-    return stats["Ok"];
+    let data = await response.json();
+
+    return data["Ok"];
 }
 
 async function UserList() {
-    let all_roles = await get_roles();
+    let all_roles = await get_data("/user/all_roles");
     var list = document.getElementById("myUL");
     var i;
-    
+
     for (i = 0; i < all_roles.length; i++) {
         var node = document.createElement("li");
         var data = document.createTextNode(all_roles[i]);
@@ -47,8 +32,8 @@ async function UserList() {
         node.appendChild(data);
         list.appendChild(node);
     }
-  }
-  
+}
+
 function logout() {
     localStorage.clear()
     window.open("login.html", "_self");
@@ -60,6 +45,6 @@ function absence() {
 
 function criminal() {
     document.getElementById("error-main").textContent = "Missing Permissions for Criminal!";
-    }
-    
+}
+
 UserList();
