@@ -22,7 +22,7 @@ async function get_data(url) {
 
 async function UserList() {
     let all_roles = await get_data("/user/all_roles");
-    var list = document.getElementById("myUL");
+    var list = document.getElementById("rolelist");
     var i;
 
     for (i = 0; i < all_roles.length; i++) {
