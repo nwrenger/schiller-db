@@ -107,15 +107,20 @@ button {
 
 .role {
 	font-size: x-large;
-	cursor: context-menu;
-	-webkit-user-select: none;
-	/* Safari 3.1+ */
-	-moz-user-select: none;
-	/* Firefox 2+ */
-	-ms-user-select: none;
-	/* IE 10+ */
-	user-select: none;
+	background-color: #979da7;
+	border-bottom: #000;
+	cursor: pointer;
 }
+
+.role:hover {
+	background-color: #a4b0be88;
+	transition: 0.3s all ease 0s;
+}
+
+.role:active {
+	background-color: #a4b0be;
+}
+
 
 /*------------ input mask ------------*/
 .input-mask {
