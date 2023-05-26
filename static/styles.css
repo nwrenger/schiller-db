@@ -18,7 +18,7 @@ header {
 
 /*------------ dear leo, no colors in the html ------------*/
 body {
-    background-color: #a4b0be;
+	background-color: #a4b0be;
 }
 
 /*------------ top bar ------------*/
@@ -31,7 +31,7 @@ header {
 
 }
 
-header > a {
+header>a {
 	margin-left: 20px;
 	text-align: center;
 	font-weight: 500;
@@ -41,7 +41,7 @@ header > a {
 	color: #ffffff;
 }
 
-header > button {
+header>button {
 	margin: 15px;
 }
 
@@ -57,7 +57,7 @@ button {
 	border: none;
 	border-radius: 45px;
 	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-			box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 	-webkit-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 	cursor: pointer;
@@ -69,17 +69,17 @@ button {
 .log-button:hover {
 	background-color: #23c483;
 	-webkit-box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
-			box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+	box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
 	color: #fff;
 	-webkit-transform: translateY(-7px);
-		-ms-transform: translateY(-7px);
-			transform: translateY(-7px);
+	-ms-transform: translateY(-7px);
+	transform: translateY(-7px);
 }
 
 .log-button:active {
 	-webkit-transform: translateY(-1px);
 	-ms-transform: translateY(-1px);
-		transform: translateY(-1px);
+	transform: translateY(-1px);
 }
 
 /*------------ main part of page ------------*/
@@ -87,14 +87,14 @@ button {
 	width: 100%;
 	height: 90%;
 	display: flex;
-    justify-content: center;
-    align-items: center;
+	justify-content: center;
+	align-items: center;
 }
 
 /*------------ left sidebar ------------*/
 .left-sidebar {
-    width: 15%;
-    min-width: 210px;
+	width: 15%;
+	min-width: 210px;
 	height: 100%;
 	background-color: #747d8c;
 }
@@ -121,36 +121,36 @@ button {
 .input-mask {
 	width: 60%;
 	height: 80%;
-    flex-grow: 1;
-    display: flex;
+	flex-grow: 1;
+	display: flex;
 	padding-top: 10%;
-    align-items: center;
-    flex-direction: column;
+	align-items: center;
+	flex-direction: column;
 }
 
 .account-name {
 	color: #ffffff;
 	font-size: 32px;
-    display: flex;
+	display: flex;
 }
 
 .input-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 .default-input {
 	width: 30%;
-    min-width: 300px;
-    max-width: 500px;
+	min-width: 300px;
+	max-width: 500px;
 	font-weight: 500;
 	font-size: 32px;
-    padding: 10px 20px;
+	padding: 10px 20px;
 	margin: 25px 25px;
 	border: none;
-    outline: none;
+	outline: none;
 	border-radius: 50px;
 	color: #2f3542;
 	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -165,17 +165,17 @@ button {
 .view-button:hover {
 	background-color: #2333c4;
 	-webkit-box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
-			box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
+	box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
 	color: #fff;
 	-webkit-transform: translateY(-7px);
-		-ms-transform: translateY(-7px);
-			transform: translateY(-7px);
+	-ms-transform: translateY(-7px);
+	transform: translateY(-7px);
 }
 
 .view-button:active {
 	-webkit-transform: translateY(-1px);
 	-ms-transform: translateY(-1px);
-		transform: translateY(-1px);
+	transform: translateY(-1px);
 }
 
 /*------------ for login.html ------------*/
@@ -209,13 +209,13 @@ button {
 	padding-right: 30px;
 	margin-top: 10px;
 	margin-bottom: 20px;
-	
+
 	border: 1px solid #ffffff;
 	outline: none;
 	color: #2f3542;
 	border-radius: 50px;
 	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-		box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .login-label {
@@ -246,7 +246,7 @@ button {
 	text-align: center;
 }
 
-.error-login { 
+.error-login {
 	background: #ffe6ee;
 	border: 1px solid #b1395fbc;
 }
@@ -258,10 +258,12 @@ button {
 
 /* Mobile Integration */
 @media only screen and (max-width: 1024px) {
+
 	/* Main Page */
 	.left-sidebar {
 		display: none;
 	}
+
 	/* Todo: Add left-sidebar-mobile */
 
 	/* Log In Screen */
@@ -269,6 +271,7 @@ button {
 		width: 85%;
 		height: 85%;
 	}
+
 	.login-div {
 		margin-left: 10px;
 		margin-right: 10px;
