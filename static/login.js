@@ -13,25 +13,9 @@ async function handleLoginSubmit() {
     });
 
     if (response.status === 200) {
-        var all_roles = await response.json();
-
         //get with getItem and clear at logout completely with clear
         window.localStorage.setItem("user", user)
         window.localStorage.setItem("auth", auth);
-        window.localStorage.setItem("all_roles", JSON.stringify(all_roles["Ok"]));
-
-        window.sessionStorage.setItem("recent", true);
-        
-        const url2 = '/stats';
-        const response2 = await fetch(url2, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Basic ' + auth,
-                'Content-Type': 'application/json; charset=utf-8'
-            },
-        });
-        var stats = await response2.json();
-        window.localStorage.setItem("stats", JSON.stringify(stats["Ok"]));
 
         window.open("/", "_self")
     } else {
