@@ -70,4 +70,10 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Swagger UI Integration
 - [x] Testing, Fixing, etc.
 - [x] Logging? Why not!
-- [ ] Network test (After [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal) is finished with the UI)
+- [ ] SideBar -> User
+- [ ] Main Input Container -> Stats when nothing and User when one is selected -> include changing and adding them
+- [ ] Login -> Top a the current Logout Button make a profile menu
+- [ ] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
+- [ ] Absence Management Popup and Searching
+- [ ] Criminal Management Popup and Searching
+- [ ] Network test after wa are finished with the UI)
