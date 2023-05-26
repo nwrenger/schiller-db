@@ -72,7 +72,7 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Logging? Why not!
 - [ ] SideBar -> User
 - [ ] Main Input Container -> Stats when nothing and User when one is selected -> include changing and adding them
-- [ ] Login -> Top a the current Logout Button make a profile menu
+- [ ] Login -> at the current Logout Button make a profile menu
 - [ ] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
 - [ ] Absence Management Popup and Searching
 - [ ] Criminal Management Popup and Searching
