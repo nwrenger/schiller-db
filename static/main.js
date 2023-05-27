@@ -8,7 +8,7 @@ if (!auth || !current_user) {
 // Data Pool
 const dataPool = {
     roles: [],
-    users: {},
+    users: [],
     stats: {}
 };
 
@@ -122,13 +122,13 @@ function logout() {
 function absence() {
     const error = document.getElementById("error-main");
     error.hidden = false;
-    error.textContent = "Missing Permissions for Absence!";
+    error.textContent = "Absence is not yet implemented!";
 }
 
 function criminal() {
     const error = document.getElementById("error-main");
     error.hidden = false;
-    error.textContent = "Missing Permissions for Criminal!";
+    error.textContent = "Criminal is not yet implemented!";
 }
 
 function back() {
