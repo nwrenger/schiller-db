@@ -17,13 +17,18 @@ async function get_data(url) {
 
     let data = await response.json();
 
-    return data["Ok"];
+    if (response.status === 200) {
+        return data["Ok"];
+    } else {
+        // Todo: Error handling
+        return data["Err"];
+    }
 }
 
 async function UserList() {
     let all_roles = await get_data("/user/all_roles");
     var list = document.getElementById("rolelist");
-    var i;
+    var activeElement = null;
 
     for (i = 0; i < all_roles.length; i++) {
         var node = document.createElement("li");
@@ -31,6 +36,19 @@ async function UserList() {
         node.className = "role";
         node.appendChild(data);
         list.appendChild(node);
+        
+        node.addEventListener("click", async function() {
+            var role = this.textContent;
+            
+            if (activeElement !== null) {
+                activeElement.classList.remove("active");
+            }
+            this.classList.add("active");
+            activeElement = this;
+
+            let data = await get_data("/user/search?role=" + role);
+            console.log("Clicked, data:" + JSON.stringify(data));
+        });
     }
 }
 

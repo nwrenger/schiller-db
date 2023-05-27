@@ -107,21 +107,19 @@ button {
 
 .role {
 	font-size: x-large;
-	background-color: #979da7;
-	border-bottom: #000;
 	cursor: pointer;
+	transition: 0.3s all ease 0s;
 }
 
 /* Check if the media can hover */
 @media (hover: hover) {
 	.role:hover {
-		background-color: #a4b0be88;
-		transition: 0.3s all ease 0s;
+		background-color: #a4b0be8a;
 	}
+}
 
-	.role:active {
-		background-color: #a4b0be;
-	}
+.role.active {
+	background-color: #a4b0be;
 }
 
 /*------------ input mask ------------*/
