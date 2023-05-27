@@ -102,7 +102,56 @@ button {
 .rolelist-div {
 	overflow: scroll;
 	width: 100%;
-	height: 100%;
+	font-size: large;
+	height: calc(100% - 65px);
+}
+
+.search-div {
+	height: 65px;
+	flex-wrap: wrap;
+	display: flex;
+	background-color: #5e6672;
+}
+
+select {
+	width: calc(26% - 4px);
+
+	text-align: left;
+	font-weight: 500;
+	font-size: 24px;
+	text-decoration: none;
+	padding: 2px;
+	margin-top: 2%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
+
+	border: 5px solid #ffffff;
+	border-radius: 45px;
+
+	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search {
+	width: calc(66% - 20px);
+
+	text-align: left;
+	font-weight: 500;
+	font-size: 24px;
+	text-decoration: none;
+	padding: 10px;
+	margin-top: 2%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
+
+	border: 1px solid #ffffff;
+	outline: none;
+	color: #2f3542;
+	border-radius: 50px;
+	-webkit-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .back-button {
@@ -114,8 +163,8 @@ button {
 @media (hover: hover) {
 	.back-button:hover {
 		background-color: #e41818;
-		-webkit-box-shadow: 0px 15px 20px #ce3131;
-		box-shadow: 0px 15px 20px #ce3131;
+		-webkit-box-shadow: 0px 3px 8px #ce3131;
+		box-shadow: 0px 3px 8px #ce3131;
 		color: #fff;
 		-webkit-transform: translateY(-2px);
 		-ms-transform: translateY(-2px);

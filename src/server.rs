@@ -169,21 +169,6 @@ pub async fn fetch_user(auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>
     Json(db::user::fetch(&db, id))
 }
 
-#[utoipa::path(
-    responses(
-        (status = 200, description = "Got all Roles", body = Vec<String>),
-        (status = 401, description = "Unauthorized to get all Roles", body = Error, example = json!({"Err": Error::Unauthorized})),
-    ),
-    security (
-        ("authorization" = []),
-    )
-)]
-#[get("/user/all_roles")]
-pub async fn all_roles(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
-    warn!("GET /user/all_roles: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::user::all_roles(&db))
-}
 
 #[utoipa::path(
     responses(
@@ -211,6 +196,22 @@ pub async fn search_user(
         UserSearch::new(name.unwrap_or_default(), role.unwrap_or("%")),
         offset.unwrap_or_default(),
     ))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Got all Roles", body = Vec<String>),
+        (status = 401, description = "Unauthorized to get all Roles", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/user/all_roles")]
+pub async fn all_roles(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+    warn!("GET /user/all_roles: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::user::all_roles(&db))
 }
 
 #[utoipa::path(
@@ -315,6 +316,22 @@ pub async fn search_absence(
     warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::search(&db, text.unwrap_or_default()))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Got all Dates", body = Vec<String>),
+        (status = 401, description = "Unauthorized to get all Dates", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/absence/all_dates")]
+pub async fn all_dates(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+    warn!("GET /user/all_roles: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::absence::all_dates(&db))
 }
 
 #[utoipa::path(

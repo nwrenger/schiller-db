@@ -21,6 +21,16 @@
                 <ul id="rolelist"></ul>
                 <ul id="userlist"></ul>
             </div>
+            <form action="javascript:search()">
+                <div class="search-div">
+                    <input type="text" placeholder="Search" class="search" id="search">
+                    <select id="search-select" name="search-select" class="search-select">
+                        <option value="" onclick=normal()>All</option>
+                        <option value="absence" onclick=absence()>Absence</option>
+                        <option value="criminals" onclick=criminals()>Criminals</option>
+                    </select>
+                </div>
+            </form>
         </div>
         <div class="input-mask" id="input-mask">
             <h1 class="title">Data:</h1>
@@ -32,8 +42,8 @@
                 <input type="text" id="role" name="role" class="default-input" value="Jahrgang 12">
             </div>
             <div class="input-container">
-                <button type="button" onclick=criminal() class="view-button">Strafregister</button>
-                <button type="button" onclick=absence() class="view-button">Abwesenheiten</button>
+                <button type="button" onclick=criminalsButton() class="view-button">Strafregister</button>
+                <button type="button" onclick=absenceButton() class="view-button">Abwesenheiten</button>
             </div>
             <div class="error-main" id="error-main"></div>
         </div>

@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::db::project::{DBIter, Database, Error, FromRow, Result};
 
 use chrono::NaiveDate;
@@ -42,6 +44,35 @@ pub fn fetch(db: &Database, account: &str, date: NaiveDate) -> Result<Absence> {
         Absence::from_row,
     )?)
 }
+
+/// Returns all dates from the absence table without duplicates
+pub fn all_dates(db: &Database) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "select \
+        date \
+        from absence \
+        order by date",
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut dates = Vec::new();
+    let mut seen_dates = HashSet::new();
+
+    while let Some(row) = rows.next()? {
+        let role: String = row.get(0).unwrap();
+
+        // Check if the role has already been seen
+        if seen_dates.contains(&role) {
+            continue; // Skip the duplicate role
+        }
+
+        dates.push(role.clone());
+        seen_dates.insert(role);
+    }
+
+    Ok(dates)
+}
+
 
 /// Performes a simple absence search with the given `text`.
 pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
