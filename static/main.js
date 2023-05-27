@@ -121,18 +121,24 @@ function logout() {
 }
 
 function absence() {
-    document.getElementById("error-main").textContent = "Missing Permissions for Absence!";
+    const error = document.getElementById("error-main");
+    error.hidden = false;
+    error.textContent = "Missing Permissions for Absence!";
 }
 
 function criminal() {
-    document.getElementById("error-main").textContent = "Missing Permissions for Criminal!";
+    const error = document.getElementById("error-main");
+    error.hidden = false;
+    error.textContent = "Missing Permissions for Criminal!";
 }
 
 function back() {
     const roles = document.getElementById("rolelist");
     const backButton = document.getElementById("back-button");
+    const error = document.getElementById("error-main");
     roles.hidden = false;
     backButton.hidden = true;
+    error.hidden = true;
     clearUserList();
     stats();
 }
