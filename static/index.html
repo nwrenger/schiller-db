@@ -22,8 +22,8 @@
                 <ul id="userlist"></ul>
             </div>
         </div>
-        <div class="input-mask">
-            <h1 class="account-name">Data:</h1>
+        <div class="input-mask" id="input-mask">
+            <h1 class="title">Data:</h1>
 
             <div class="input-container">
                 <input type="text" id="forename" name="forename" class="default-input" value="Max">
@@ -36,6 +36,32 @@
                 <button type="button" onclick=absence() class="view-button">Abwesenheiten</button>
             </div>
             <div class="error-main" id="error-main"></div>
+        </div>
+        <div class="stats-container" id="stats-container">
+            <div class="stats-item">
+                <h2>Name</h2>
+                <p id="stat1"></p>
+            </div>
+            <div class="stats-item">
+                <h2>Version</h2>
+                <p id="stat2"></p>
+            </div>
+            <div class="stats-item">
+                <h2>Developers</h2>
+                <p id="stat3"></p>
+            </div>
+            <div class="stats-item">
+                <h2>Repository</h2>
+                <p><a id="stat4" target="_blank"></a></p>
+            </div>
+            <div class="stats-item">
+                <h2>Description</h2>
+                <p id="stat5"></p>
+            </div>
+            <div class="stats-item">
+                <h2>Total Users</h2>
+                <p id="stat6"></p>
+            </div>
         </div>
     </div>
     <script src="main.js"></script>

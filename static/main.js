@@ -82,8 +82,10 @@ function initializeUserList() {
                 userNode.className = "entry";
                 userNode.appendChild(userTextNode);
                 userListElement.appendChild(userNode);
-
+                
                 userNode.addEventListener("click", async function () {
+                    document.getElementById("input-mask").style.display = "flex";
+                    document.getElementById("stats-container").style.display = "none";
                     const buttons = document.getElementsByClassName("view-button");
                     for (const button of buttons) {
                         button.hidden = false;
@@ -135,6 +137,7 @@ function back() {
     const roles = document.getElementById("rolelist");
     const backButton = document.getElementById("back-button");
     const error = document.getElementById("error-main");
+    document.getElementById("input-mask").style.display = "none";
     roles.hidden = false;
     backButton.hidden = true;
     error.hidden = true;
@@ -144,14 +147,16 @@ function back() {
 
 async function stats() {
     const statsData = dataPool.stats;
-    const buttons = document.getElementsByClassName("view-button");
-    for (const button of buttons) {
-        button.hidden = true;
-    }
-    document.getElementById("forename").value = statsData.name;
-    document.getElementById("surname").value = statsData.version;
-    document.getElementById("account").value = statsData.repo;
-    document.getElementById("role").value = statsData.description;
+    
+    document.getElementById("stats-container").style.display = "flex";
+
+    document.getElementById("stat1").textContent = statsData.name;
+    document.getElementById("stat2").textContent = statsData.version;
+    document.getElementById("stat3").textContent = statsData.developer;
+    document.getElementById("stat4").textContent = statsData.repo;
+    document.getElementById("stat4").href = statsData.repo;
+    document.getElementById("stat5").textContent = statsData.description;
+    document.getElementById("stat6").textContent = statsData.users;
 }
 
 // Initialize the data pool and UI
