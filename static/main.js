@@ -150,9 +150,11 @@ async function stats() {
     
     document.getElementById("stats-container").style.display = "flex";
 
+    const devs = statsData.developer.split(":");
+
     document.getElementById("stat1").textContent = statsData.name;
     document.getElementById("stat2").textContent = statsData.version;
-    document.getElementById("stat3").textContent = statsData.developer;
+    document.getElementById("stat3").textContent = devs[0] + " and " + devs[1];
     document.getElementById("stat4").textContent = statsData.repo;
     document.getElementById("stat4").href = statsData.repo;
     document.getElementById("stat5").textContent = statsData.description;
