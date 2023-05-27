@@ -105,6 +105,30 @@ button {
 	height: 100%;
 }
 
+.back-button {
+	font-size: 8px;
+	margin: 4px;
+	padding: 0.6em 2em;
+}
+
+@media (hover: hover) {
+	.back-button:hover {
+		background-color: #e41818;
+		-webkit-box-shadow: 0px 15px 20px #ce3131;
+		box-shadow: 0px 15px 20px #ce3131;
+		color: #fff;
+		-webkit-transform: translateY(-2px);
+		-ms-transform: translateY(-2px);
+		transform: translateY(-2px);
+	}
+
+	.back-button:active {
+		-webkit-transform: translateY(-1px);
+		-ms-transform: translateY(-1px);
+		transform: translateY(-1px);
+	}
+}
+
 .role {
 	font-size: x-large;
 	cursor: pointer;
