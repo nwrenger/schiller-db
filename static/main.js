@@ -27,8 +27,7 @@ async function get_data(url) {
     if (response.status === 200) {
         return data["Ok"];
     } else {
-        // Todo: Error handling
-        return data["Err"];
+        throw(data["Err"]);
     }
 }
 
