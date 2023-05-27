@@ -268,6 +268,10 @@ button {
 		display: none;
 	}
 
+	.input-mask {
+		height: 95%;
+	}
+
 	/* Todo: Add left-sidebar-mobile */
 
 	/* Log In Screen */
