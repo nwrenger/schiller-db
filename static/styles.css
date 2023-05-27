@@ -132,6 +132,7 @@ button {
 .entry {
 	font-size: x-large;
 	cursor: pointer;
+	user-select: none;
 	transition: 0.3s all ease 0s;
 }
 
