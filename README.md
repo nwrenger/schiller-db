@@ -13,13 +13,13 @@ Just run the binary/executable file provided in the release. Make sure it's in t
 ## Architecture - Including SNDI
 
 This application follows the 3-tier principle.
-* **UI Layer:** Developed by my friend. Getting the Data from Server Calls. It's named SNDI.
+* **UI Layer:** Getting the Data from Server Calls. It's named SNDI.
 * **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration. It's named SNDM.
 * **Database Layer:** The SQLite database that stores the persistent data specific to a project.
 
 ### UI Layer - SNDI
 
-Developed by [BoettcherDasOriginal](https://github.com/BoettcherDasOriginal). Further explanation are coming soon (when development is finished).
+Developed by me and a few others (look to contributions). Further explanation are coming soon (when development is finished).
 
 ### Application/Server Layer - SNDM
 
