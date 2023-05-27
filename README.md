@@ -78,4 +78,4 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [ ] Absence Management Popup and Searching
 - [ ] Criminal Management Popup and Searching
 - [ ] Integration for Mobile
-- [ ] Network test (after wa are finished with the UI)
+- [ ] Network test (after we are finished with the UI)
