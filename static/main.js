@@ -64,7 +64,7 @@ function initializeUserList() {
     for (const role of dataPool.roles) {
         const node = document.createElement("li");
         const data = document.createTextNode(role);
-        node.className = "role";
+        node.className = "entry";
         node.appendChild(data);
         list.appendChild(node);
 
@@ -79,7 +79,7 @@ function initializeUserList() {
             for (const user of userList) {
                 const userNode = document.createElement("li");
                 const userTextNode = document.createTextNode(user.account);
-                userNode.className = "role";
+                userNode.className = "entry";
                 userNode.appendChild(userTextNode);
                 userListElement.appendChild(userNode);
 
@@ -89,7 +89,7 @@ function initializeUserList() {
                         button.hidden = false;
                     }
 
-                    const activeElement = document.querySelector(".role.active");
+                    const activeElement = document.querySelector(".entry.active");
                     if (activeElement !== null) {
                         activeElement.classList.remove("active");
                     }

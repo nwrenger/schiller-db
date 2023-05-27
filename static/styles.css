@@ -129,7 +129,7 @@ button {
 	}
 }
 
-.role {
+.entry {
 	font-size: x-large;
 	cursor: pointer;
 	transition: 0.3s all ease 0s;
@@ -137,12 +137,12 @@ button {
 
 /* Check if the media can hover */
 @media (hover: hover) {
-	.role:hover {
+	.entry:hover {
 		background-color: #a4b0be8a;
 	}
 }
 
-.role.active {
+.entry.active {
 	background-color: #a4b0be;
 }
 
