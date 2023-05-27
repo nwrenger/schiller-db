@@ -217,37 +217,37 @@ button {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	align-items: center; /* Align items to the top */
-	flex-direction: row; /* Change direction to row */
-  }
-  
-  .stats-item {
-	text-align: center;
-	flex-basis: 48%; /* Adjust the width of each stat item */
-	margin-bottom: 20px;
-  }
+	align-items: center;
+	flex-direction: row;
+}
 
-  .stats-item h2 {
+.stats-item {
+	text-align: center;
+	flex-basis: 48%;
+	margin-bottom: 20px;
+}
+
+.stats-item h2 {
 	font-size: 24px;
 	font-weight: 500;
 	color: #2f3542;
-  }
-  
-  .stats-item p {
+}
+
+.stats-item p {
 	margin-top: 10px;
 	font-size: 16px;
 	color: #6c757d;
-  }
-  
-  .stats-item a {
+}
+
+.stats-item a {
 	color: #337ab7;
 	text-decoration: none;
 	font-weight: bold;
-  }
-  
-  .stats-item a:hover {
+}
+
+.stats-item a:hover {
 	text-decoration: underline;
-  }
+}
 
 
 /*------------ for login.html ------------*/
