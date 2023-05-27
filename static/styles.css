@@ -212,7 +212,7 @@ button {
 /*------------ Stats -----------*/
 .stats-container {
 	width: 60%;
-	height: 60%;
+	height: 70%;
 	flex-grow: 1;
 	display: flex;
 	flex-wrap: wrap;
