@@ -106,7 +106,7 @@ pub fn search(db: &Database, params: UserSearch, offset: usize) -> Result<Vec<Us
             or surname like '%'||?1||'%') \
         and role like ?2 \
         order by account \
-        limit 100 offset ?3",
+        limit 200 offset ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
         params.name.trim(),
