@@ -141,8 +141,17 @@ function createUserList(list, node) {
             }
     
             this.classList.add("active");
-    
-            updateUserUI(user);
+            if (user.role) {
+                updateUserUI(user);
+            } else {
+                const current_user = await get_data("user/fetch/" + user.account)
+                .catch((error) => {
+                    console.log("Error on fetching User:", error);
+                    error.hidden = false;
+                    error.textContent = error;
+                });
+                updateUserUI(current_user);
+            }
         });
         node.appendChild(userListElement);
     }
