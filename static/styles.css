@@ -28,7 +28,6 @@ header {
 	display: flex;
 	justify-content: space-between;
 	background-color: #2f3542;
-
 }
 
 header>a {
@@ -64,22 +63,23 @@ button {
 	outline: none;
 }
 
-/*------------ effekte kinda nice ------------*/
+/* Check if the media can hover */
+@media (hover: hover) {
+	.log-button:hover {
+		background-color: #23c483;
+		-webkit-box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+		box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+		color: #fff;
+		-webkit-transform: translateY(-7px);
+		-ms-transform: translateY(-7px);
+		transform: translateY(-7px);
+	}
 
-.log-button:hover {
-	background-color: #23c483;
-	-webkit-box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
-	box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
-	color: #fff;
-	-webkit-transform: translateY(-7px);
-	-ms-transform: translateY(-7px);
-	transform: translateY(-7px);
-}
-
-.log-button:active {
-	-webkit-transform: translateY(-1px);
-	-ms-transform: translateY(-1px);
-	transform: translateY(-1px);
+	.log-button:active {
+		-webkit-transform: translateY(-1px);
+		-ms-transform: translateY(-1px);
+		transform: translateY(-1px);
+	}
 }
 
 /*------------ main part of page ------------*/
@@ -112,15 +112,17 @@ button {
 	cursor: pointer;
 }
 
-.role:hover {
-	background-color: #a4b0be88;
-	transition: 0.3s all ease 0s;
-}
+/* Check if the media can hover */
+@media (hover: hover) {
+	.role:hover {
+		background-color: #a4b0be88;
+		transition: 0.3s all ease 0s;
+	}
 
-.role:active {
-	background-color: #a4b0be;
+	.role:active {
+		background-color: #a4b0be;
+	}
 }
-
 
 /*------------ input mask ------------*/
 .input-mask {
@@ -166,20 +168,23 @@ button {
 	margin-left: 85px;
 }
 
-.view-button:hover {
-	background-color: #2333c4;
-	-webkit-box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
-	box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
-	color: #fff;
-	-webkit-transform: translateY(-7px);
-	-ms-transform: translateY(-7px);
-	transform: translateY(-7px);
-}
+/* Check if the media can hover */
+@media (hover: hover) {
+	.view-button:hover {
+		background-color: #2333c4;
+		-webkit-box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
+		box-shadow: 0px 15px 20px rgba(46, 104, 229, 0.4);
+		color: #fff;
+		-webkit-transform: translateY(-7px);
+		-ms-transform: translateY(-7px);
+		transform: translateY(-7px);
+	}
 
-.view-button:active {
-	-webkit-transform: translateY(-1px);
-	-ms-transform: translateY(-1px);
-	transform: translateY(-1px);
+	.view-button:active {
+		-webkit-transform: translateY(-1px);
+		-ms-transform: translateY(-1px);
+		transform: translateY(-1px);
+	}
 }
 
 /*------------ for login.html ------------*/
