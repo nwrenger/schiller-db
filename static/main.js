@@ -8,16 +8,6 @@ if (!auth || !current_user) {
 var errorAbsenceList = "Nothing here Yet!"
 var errorCriminalList = "Nothing here Yet!"
 
-// Data Pool
-const dataPool = {
-    roles: [],
-    users: [],
-    absences: [],
-    criminals: [],
-    dates: [],
-    stats: {}
-  };
-
 const nestedList = document.getElementById("nested-list");
 const userList = document.getElementById("user-list");
 
@@ -40,43 +30,6 @@ async function get_data(url) {
     }
 }
 
-// Fetches and populates the user data pool
-async function populateUserDataPool() {
-    // Fetch roles
-    const roles = await get_data("/user/all_roles");
-    dataPool.roles = roles;
-
-
-    // Fetch users
-    for (const role of roles) {
-        const users = await get_data(`/user/search?role=${role}`);
-        dataPool.users[role] = users;
-    }
-
-    // Fetch stats
-    const stats = await get_data("/stats");
-    dataPool.stats = stats;
-}
-
-// Fetches and populates the user data pool
-async function populateAbsenceDataPool() {
-  // Fetch absences
-  const dates = await get_data("/absence/all_dates");
-  dataPool.dates = dates;
-
-  for (const date of dates) {
-    const absences = await get_data(`/absence/search?text=${date}`);
-    dataPool.absences[date] = absences;
-  }
-}
-
-// Fetches and populates the user data pool
-async function populateCriminalDataPool() {
-  // Fetch criminals
-  const criminals = await get_data("/criminal/search");
-  dataPool.criminals = criminals;
-}
-
 // Updates the UI with user data
 function updateUserUI(data) {
     document.getElementById("forename").value = data.forename;
@@ -86,21 +39,22 @@ function updateUserUI(data) {
 }
 
 // Initializes the user list for roles UI
-function roleUserList() {
-    for (const role of dataPool.roles) {
+async function roleUserList() {
+    const roles = await get_data("/user/all_roles");
+    for (const role of roles) {
         const node = document.createElement("li");
         const data = document.createTextNode(role);
         node.className = "entry";
         node.appendChild(data);
         nestedList.appendChild(node);
 
-        node.addEventListener("click", function () {
+        node.addEventListener("click", async function () {
             const role = this.textContent;
             document.getElementById("back-button").hidden = false;
             nestedList.hidden = true;
             userList.hidden = false;
 
-            const users = dataPool.users[role];
+            const users = await get_data(`/user/search?role=${role}`);
             createUserList(users, userList);
         });
     }
@@ -108,7 +62,9 @@ function roleUserList() {
 
 // Initializes the user list for the dates
 async function absenceUserList() {
-    if (!Array.isArray(dataPool.dates) || !dataPool.dates.length) {
+    const dates = await get_data("/absence/all_dates");
+
+    if (!Array.isArray(dates) || !dates.length) {
         if (!nestedList.textContent) {
             nestedList.textContent = errorAbsenceList;
         }
@@ -116,7 +72,7 @@ async function absenceUserList() {
     }
     
     // Fetch users
-    for (const date of dataPool.dates) {
+    for (const date of dates) {
         const node = document.createElement("li");
         const data = document.createTextNode(date);
         node.className = "entry";
@@ -129,7 +85,7 @@ async function absenceUserList() {
             nestedList.hidden = true;
             userList.hidden = false;
             
-            const absences = dataPool.absences[date];
+            const absences = await get_data(`/absence/search?text=${date}`);
             for (const account of absences) {
                 const role = await get_data("/user/fetch/" + account.account);
                 createUserList(absences, userList, role.role + "/", errorAbsenceList);
@@ -220,6 +176,7 @@ function criminalsButton() {
 function back() {
     reset();
     select();
+    stats();
 }
 
 function reset() {
@@ -228,11 +185,11 @@ function reset() {
     const error = document.getElementById("error-main");
     search.value = "";
     document.getElementById("input-mask").style.display = "none";
+    document.getElementById("stats-container").style.display = "flex";
     backButton.hidden = true;
     error.hidden = true;
     clearNestedList();
     clearUserList();
-    stats();
 }
 
 async function search() {
@@ -276,9 +233,7 @@ function defaultSearch(data) {
 }
 
 async function stats() {
-    const statsData = dataPool.stats;
-
-    document.getElementById("stats-container").style.display = "flex";
+    const statsData = await get_data("/stats");
 
     const devs = statsData.developer.split(":");
 
@@ -294,11 +249,11 @@ async function stats() {
 function select() {
     var select = document.getElementById("search-select").value;
     if (select === "") {
-        normal();
+        loadUser();
     } else if (select === "absence") {
-        absence();
+        loadAbsence();
     } else if (select === "criminals") {
-        criminals();
+        loadCriminal();
     }
 }
 
@@ -319,31 +274,40 @@ async function absence() {
 
 async function criminals() {
     reset();
-    createUserList(dataPool.criminals, userList, null, errorCriminalList);
+    const criminals = await get_data("/criminal/search");
+    createUserList(criminals, userList, null, errorCriminalList);
     nestedList.hidden = true;
     userList.hidden = false;
 }
 
-// Initialize the user data pool and default UI
-populateUserDataPool()
-    .then(() => {
+function loadUser() {
+    // Initialize the user data and default UI
+    try {
         stats();
         normal();
-    })
-    .catch((error) => {
-        window.open("login.html", "_self");
-        console.error("Error populating data pool:", error);
-    });
-// Initialize the absence data pool
-populateAbsenceDataPool()
-    .catch((error) => {
-        console.error("Error populating absence data pool:", error);
-        errorAbsenceList = error;
-    });
 
-// Initialize the criminal data pool
-populateCriminalDataPool()
-    .catch((error) => {
-        console.error("Error populating criminal data pool:", error);
-        errorCriminalList = error;
-    });
+    } catch (error) {
+            window.open("login.html", "_self");
+            console.error("Error populating data pool:", error);
+    }
+}
+
+function loadAbsence() {
+    // Initialize the absence data
+    absence()
+        .catch((error) => {
+            console.error("Error populating criminal data pool:", error);
+            errorCriminalList = error;
+        });
+}
+
+function loadCriminal() {
+    // Initialize the criminal data
+    criminals()
+        .catch((error) => {
+            console.error("Error populating criminal data pool:", error);
+            errorCriminalList = error;
+        });
+}
+
+loadUser();
