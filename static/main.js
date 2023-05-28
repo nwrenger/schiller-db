@@ -269,7 +269,7 @@ async function absence() {
 async function criminals() {
     reset();
     const criminals = await get_data("/criminal/search");
-    createUserList(criminals, userList, null, errorCriminalList);
+    createUserList(criminals, userList, errorCriminalList);
     nestedList.hidden = true;
     userList.hidden = false;
 }
