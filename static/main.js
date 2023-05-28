@@ -5,9 +5,6 @@ if (!auth || !current_user) {
     window.open("login.html", "_self");
 }
 
-var errorAbsenceList = "Nothing here Yet!"
-var errorCriminalList = "Nothing here Yet!"
-
 const nestedList = document.getElementById("nested-list");
 const userList = document.getElementById("user-list");
 
@@ -66,7 +63,7 @@ async function absenceUserList() {
 
     if (!Array.isArray(dates) || !dates.length) {
         if (!nestedList.textContent) {
-            nestedList.textContent = errorAbsenceList;
+            nestedList.textContent = "No Results!";
         }
         return;
     }
@@ -86,18 +83,18 @@ async function absenceUserList() {
             userList.hidden = false;
             
             const absences = await get_data(`/absence/search?text=${date}`);
-            createUserList(absences, userList, errorAbsenceList);
+            createUserList(absences, userList);
         });
     }
 }
 
 
-function createUserList(list, node, error) {
+function createUserList(list, node) {
     const userListElement = document.createElement("ul");
 
     if (!Array.isArray(list) || !list.length) {
-        if (!userList.textContent && error) {
-            userList.textContent = error;
+        if (!userList.textContent) {
+            userList.textContent = "No Results!";
         }
         return;
     }
@@ -125,14 +122,17 @@ function createUserList(list, node, error) {
                 const current_user = await get_data("user/fetch/" + user.account)
                     .catch((error) => {
                         console.log("Error on fetching User:", error);
-                        error.hidden = false;
-                        error.textContent = error;
+                        error(error);
                     });
                 updateUserUI(current_user);
             }
         });
         node.appendChild(userListElement);
     }
+}
+
+function error(error) {
+    alert("An error ocurred:", error);
 }
 
 // Clears the user list UI
@@ -194,21 +194,21 @@ async function search() {
         const data = await get_data(`/user/search?name=${text}`)
             .catch((error) => {
                 console.log("Error on search User:", error);
-                userList.textContent = error;
+                error(error);
             });
         defaultSearch(data);
     } else if (select === "absence") {
         const data = await get_data(`/absence/search?text=${text}`)
             .catch((error) => {
                 console.log("Error on search User:", error);
-                userList.textContent = error;
+                error(error);
             });
         defaultSearch(data);
     } else if (select === "criminals") {
         const data = await get_data(`/criminal/search?text=${text}`)
             .catch((error) => {
                 console.log("Error on search User:", error);
-                userList.textContent = error;
+                error(error);
             });
         defaultSearch(data);
     }
@@ -268,8 +268,12 @@ async function absence() {
 
 async function criminals() {
     reset();
-    const criminals = await get_data("/criminal/search");
-    createUserList(criminals, userList, errorCriminalList);
+    const criminals = await get_data("/criminal/search")
+        .catch((error) => {
+            console.log("Error Criminal Search", error);
+            error(error);
+        });
+    createUserList(criminals, userList);
     nestedList.hidden = true;
     userList.hidden = false;
 }
@@ -281,8 +285,9 @@ function loadUser() {
         normal();
 
     } catch (error) {
-            window.open("login.html", "_self");
-            console.error("Error populating data pool:", error);
+        console.error("Error populating data pool:", error);
+        error(error);
+        window.open("login.html", "_self");
     }
 }
 
@@ -291,7 +296,7 @@ function loadAbsence() {
     absence()
         .catch((error) => {
             console.error("Error populating criminal data pool:", error);
-            errorCriminalList = error;
+            error(error);
         });
 }
 
@@ -300,7 +305,7 @@ function loadCriminal() {
     criminals()
         .catch((error) => {
             console.error("Error populating criminal data pool:", error);
-            errorCriminalList = error;
+            error(error);
         });
 }
 
