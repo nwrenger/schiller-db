@@ -71,11 +71,11 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Testing, Fixing, etc.
 - [x] Logging? Why not!
 - [x] SideBar -> User
-- [x] Searching
+- [x] Searching (including absence, criminal, user)
 - [ ] Main Input Container -> Stats when nothing and User when one is selected -> include changing and adding them
 - [ ] Login -> at the current Logout Button make a profile menu
 - [ ] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
-- [ ] Absence Management Popup and Searching
-- [ ] Criminal Management Popup and Searching
+- [ ] Absence Management Popup
+- [ ] Criminal Management Popup
 - [ ] Integration for Mobile
 - [ ] Network test (after we are finished with the UI)
