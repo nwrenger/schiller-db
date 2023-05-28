@@ -87,6 +87,7 @@ function roleUserList() {
 async function absenceUserList() {
     // Fetch dates
     const dates = await get_data("/absence/all_dates");
+    const users = await get_data("/absence/search");
 
     if (!Array.isArray(dates) || !dates.length) {
         if (!nestedList.textContent) {
@@ -109,20 +110,27 @@ async function absenceUserList() {
         node.appendChild(data);
         nestedList.appendChild(node);
 
-        node.addEventListener("click", function () {
+        node.addEventListener("click", async function () {
             const date = this.textContent;
             document.getElementById("back-button").hidden = false;
             nestedList.hidden = true;
             userList.hidden = false;
 
             const absences = dataPool.absences[date];
-            createUserList(absences, userList);
+            for (const account of users) {
+                const role = await get_data("/user/fetch/" + account.account);
+                createUserList(absences, userList, role.role + "/");
+            }
         });
     }
 }
 
-function createUserList(list, node) {
+function createUserList(list, node, extra) {
     const userListElement = document.createElement("ul");
+    
+    if (!extra) {
+        extra = "";
+    }
 
     if (!Array.isArray(list) || !list.length) {
         if (!userList.textContent) {
@@ -133,7 +141,7 @@ function createUserList(list, node) {
 
     for (const user of list) {
         const userNode = document.createElement("li");
-        const userTextNode = document.createTextNode(user.account);
+        const userTextNode = document.createTextNode(extra + user.account);
         userNode.className = "entry";
         userNode.appendChild(userTextNode);
         userListElement.appendChild(userNode);
@@ -197,21 +205,20 @@ function criminalsButton() {
 }
 
 function back() {
+    reset();
+    select();
+}
+
+function reset() {
     const search = document.getElementById("search");
-    const select = document.getElementById("search-select").value;
     const backButton = document.getElementById("back-button");
     const error = document.getElementById("error-main");
     search.value = "";
-    if (select === "") {
-        normal();
-    } else if (select === "absence") {
-        absence();
-    } else if (select === "criminals") {
-        criminals();
-    }
     document.getElementById("input-mask").style.display = "none";
     backButton.hidden = true;
     error.hidden = true;
+    clearNestedList();
+    clearUserList();
     stats();
 }
 
@@ -284,8 +291,7 @@ function select() {
 }
 
 function normal() {
-    clearNestedList();
-    clearUserList();
+    reset();
     roleUserList();
     document.getElementById("search-select").value = "";
     nestedList.hidden = false;
@@ -293,8 +299,7 @@ function normal() {
 }
 
 async function absence() {
-    clearNestedList();
-    clearUserList();
+    reset();
     absenceUserList()
         .catch((error) => {
             console.log("Error on absenceUserList:", error)
@@ -305,8 +310,7 @@ async function absence() {
 }
 
 async function criminals() {
-    clearNestedList();
-    clearUserList();
+    reset();
     const data = await get_data(`/criminal/search`)
         .catch((error) => {
             console.log("Error on Criminal Search:", error)
