@@ -94,7 +94,7 @@ button {
 /*------------ left sidebar ------------*/
 .left-sidebar {
 	width: 15%;
-	min-width: 280px;
+	min-width: 300px;
 	height: 100%;
 	background-color: #747d8c;
 }
