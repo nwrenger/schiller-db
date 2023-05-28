@@ -328,7 +328,7 @@ pub async fn search_absence(
     )
 )]
 #[get("/absence/all_dates")]
-pub async fn all_dates(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+pub async fn all_dates(auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>> {
     warn!("GET /user/all_roles: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::all_dates(&db))
