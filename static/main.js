@@ -248,18 +248,14 @@ function normal() {
 
 async function absence() {
     reset();
-    absenceUserList()
+    absenceUserList();
     nestedList.hidden = false;
     userList.hidden = true;
 }
 
 async function criminals() {
     reset();
-    const criminals = await get_data("/criminal/search")
-        .catch((error) => {
-            console.log("Error Criminal Search", error);
-            error(error);
-        });
+    const criminals = await get_data("/criminal/search");
     createUserList(criminals, userList);
     nestedList.hidden = true;
     userList.hidden = false;
