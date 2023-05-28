@@ -23,7 +23,7 @@ async function get_data(url) {
     if (response.status === 200) {
         return data["Ok"];
     } else {
-        throw (data["Err"])
+        error(data["Err"])
     }
 }
 
@@ -119,11 +119,7 @@ function createUserList(list, node) {
             if (user.role) {
                 updateUserUI(user);
             } else {
-                const current_user = await get_data("user/fetch/" + user.account)
-                    .catch((error) => {
-                        console.log("Error on fetching User:", error);
-                        error(error);
-                    });
+                const current_user = await get_data("user/fetch/" + user.account);
                 updateUserUI(current_user);
             }
         });
@@ -132,7 +128,9 @@ function createUserList(list, node) {
 }
 
 function error(error) {
-    alert("An error ocurred:", error);
+    alert("An error ocurred: " + error);
+    console.log(error);
+    throw error;
 }
 
 // Clears the user list UI
@@ -191,25 +189,13 @@ async function search() {
     const select = document.getElementById("search-select").value;
     userList.hidden = false;
     if (select === "") {
-        const data = await get_data(`/user/search?name=${text}`)
-            .catch((error) => {
-                console.log("Error on search User:", error);
-                error(error);
-            });
+        const data = await get_data(`/user/search?name=${text}`);
         defaultSearch(data);
     } else if (select === "absence") {
-        const data = await get_data(`/absence/search?text=${text}`)
-            .catch((error) => {
-                console.log("Error on search User:", error);
-                error(error);
-            });
+        const data = await get_data(`/absence/search?text=${text}`);
         defaultSearch(data);
     } else if (select === "criminals") {
-        const data = await get_data(`/criminal/search?text=${text}`)
-            .catch((error) => {
-                console.log("Error on search User:", error);
-                error(error);
-            });
+        const data = await get_data(`/criminal/search?text=${text}`);
         defaultSearch(data);
     }
 }
@@ -243,17 +229,18 @@ async function stats() {
 function select() {
     var select = document.getElementById("search-select").value;
     if (select === "") {
-        loadUser();
+        normal();
     } else if (select === "absence") {
-        loadAbsence();
+        absence();
     } else if (select === "criminals") {
-        loadCriminal();
+        criminals();
     }
 }
 
 function normal() {
     reset();
-    roleUserList();
+    stats().catch(() => window.open("login.html", "_self"));
+    roleUserList().catch(() => window.open("login.html", "_self"));
     document.getElementById("search-select").value = "";
     nestedList.hidden = false;
     userList.hidden = true;
@@ -278,35 +265,5 @@ async function criminals() {
     userList.hidden = false;
 }
 
-function loadUser() {
-    // Initialize the user data and default UI
-    try {
-        stats();
-        normal();
 
-    } catch (error) {
-        console.error("Error populating data pool:", error);
-        error(error);
-        window.open("login.html", "_self");
-    }
-}
-
-function loadAbsence() {
-    // Initialize the absence data
-    absence()
-        .catch((error) => {
-            console.error("Error populating criminal data pool:", error);
-            error(error);
-        });
-}
-
-function loadCriminal() {
-    // Initialize the criminal data
-    criminals()
-        .catch((error) => {
-            console.error("Error populating criminal data pool:", error);
-            error(error);
-        });
-}
-
-loadUser();
+normal();
