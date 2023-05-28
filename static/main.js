@@ -107,9 +107,8 @@ function createUserList(list, node) {
         userListElement.appendChild(userNode);
 
         userNode.addEventListener("click", async function () {
-            document.getElementById("input-mask").style.display = "flex";
-            document.getElementById("stats-container").style.display = "none";
-
+            document.getElementById("stats-container").hidden = true;
+            document.getElementById("input").hidden = false;
             const activeElement = document.querySelector(".entry.active");
             if (activeElement !== null) {
                 activeElement.classList.remove("active");
@@ -172,14 +171,11 @@ function back() {
 }
 
 function reset() {
-    const search = document.getElementById("search");
-    const backButton = document.getElementById("back-button");
-    const error = document.getElementById("error-main");
-    search.value = "";
-    document.getElementById("input-mask").style.display = "none";
-    document.getElementById("stats-container").style.display = "flex";
-    backButton.hidden = true;
-    error.hidden = true;
+    document.getElementById("search").value = "";
+    document.getElementById("back-button").hidden = true;
+    document.getElementById("error-main").hidden = true;
+    document.getElementById("stats-container").hidden = false;
+    document.getElementById("input").hidden = true;
     clearNestedList();
     clearUserList();
 }

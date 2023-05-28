@@ -94,6 +94,7 @@ button {
 /*------------ left sidebar ------------*/
 .left-sidebar {
 	width: 15%;
+	flex: 0;
 	min-width: 300px;
 	height: 100%;
 	background-color: #747d8c;
@@ -197,11 +198,11 @@ select {
 }
 
 /*------------ input mask ------------*/
-.input-mask {
+.right-side {
 	width: 60%;
-	height: 60%;
+	height: 80%;
 	flex-grow: 1;
-	display: none;
+	display: flex;
 	align-items: center;
 	flex-direction: column;
 }
@@ -213,7 +214,6 @@ select {
 }
 
 .input-container {
-	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
@@ -261,12 +261,9 @@ select {
 
 /*------------ Stats -----------*/
 .stats-container {
-	width: 60%;
-	height: 70%;
-	flex-grow: 1;
-	display: flex;
+	flex: 1;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
 	flex-direction: row;
 }
