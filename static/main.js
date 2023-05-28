@@ -14,8 +14,8 @@ const dataPool = {
     stats: {}
 };
 
-const roleList = document.getElementById("rolelist");
-const userList = document.getElementById("userlist");
+const nestedList = document.getElementById("nested-list");
+const userList = document.getElementById("user-list");
 
 // Fetches data from the API
 async function get_data(url) {
@@ -69,12 +69,12 @@ function roleUserList() {
         const data = document.createTextNode(role);
         node.className = "entry";
         node.appendChild(data);
-        roleList.appendChild(node);
+        nestedList.appendChild(node);
 
         node.addEventListener("click", function () {
             const role = this.textContent;
             document.getElementById("back-button").hidden = false;
-            roleList.hidden = true;
+            nestedList.hidden = true;
             userList.hidden = false;
 
             const users = dataPool.users[role];
@@ -89,8 +89,8 @@ async function absenceUserList() {
     const dates = await get_data("/absence/all_dates");
 
     if (!Array.isArray(dates) || !dates.length) {
-        if (!roleList.textContent) {
-            roleList.textContent = "Nothing here Yet!";
+        if (!nestedList.textContent) {
+            nestedList.textContent = "Nothing here Yet!";
         }
         return;
     }
@@ -107,12 +107,12 @@ async function absenceUserList() {
         const data = document.createTextNode(date);
         node.className = "entry";
         node.appendChild(data);
-        roleList.appendChild(node);
+        nestedList.appendChild(node);
 
         node.addEventListener("click", function () {
             const date = this.textContent;
             document.getElementById("back-button").hidden = false;
-            roleList.hidden = true;
+            nestedList.hidden = true;
             userList.hidden = false;
 
             const absences = dataPool.absences[date];
@@ -172,9 +172,9 @@ function clearUserList() {
 }
 
 // Clears the roles list UI
-function clearRoleList() {
-    while (roleList.firstChild) {
-        roleList.firstChild.remove();
+function clearNestedList() {
+    while (nestedList.firstChild) {
+        nestedList.firstChild.remove();
     }
 }
 
@@ -247,7 +247,7 @@ function defaultSearch(data) {
     const backButton = document.getElementById("back-button");
     backButton.hidden = false;
     clearUserList();
-    roleList.hidden = true;
+    nestedList.hidden = true;
     if (!Array.isArray(data) || !data.length) {
         userList.textContent = "Nothing Found!";
         return;
@@ -284,28 +284,28 @@ function select() {
 }
 
 function normal() {
-    clearRoleList();
+    clearNestedList();
     clearUserList();
     roleUserList();
     document.getElementById("search-select").value = "";
-    roleList.hidden = false;
+    nestedList.hidden = false;
     userList.hidden = true;
 }
 
 async function absence() {
-    clearRoleList();
+    clearNestedList();
     clearUserList();
     absenceUserList()
         .catch((error) => {
             console.log("Error on absenceUserList:", error)
-            roleList.textContent = error;
+            nestedList.textContent = error;
         });
-    roleList.hidden = false;
+    nestedList.hidden = false;
     userList.hidden = true;
 }
 
 async function criminals() {
-    clearRoleList();
+    clearNestedList();
     clearUserList();
     const data = await get_data(`/criminal/search`)
         .catch((error) => {
@@ -313,7 +313,7 @@ async function criminals() {
             userList.textContent = error;
         });
     createUserList(data, userList);
-    roleList.hidden = true;
+    nestedList.hidden = true;
     userList.hidden = false;
 }
 
