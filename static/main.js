@@ -32,7 +32,7 @@ async function get_data(url) {
     if (response.status === 200) {
         return data["Ok"];
     } else {
-        throw(data["Err"])
+        throw (data["Err"])
     }
 }
 
@@ -42,13 +42,13 @@ async function populateDataPool() {
     const roles = await get_data("/user/all_roles");
     dataPool.roles = roles;
 
-    
+
     // Fetch users
     for (const role of roles) {
         const users = await get_data(`/user/search?role=${role}`);
         dataPool.users[role] = users;
     }
-    
+
     // Fetch stats
     const stats = await get_data("/stats");
     dataPool.stats = stats;
@@ -70,13 +70,13 @@ function roleUserList() {
         node.className = "entry";
         node.appendChild(data);
         roleList.appendChild(node);
-        
+
         node.addEventListener("click", function () {
             const role = this.textContent;
             document.getElementById("back-button").hidden = false;
             roleList.hidden = true;
             userList.hidden = false;
-            
+
             const users = dataPool.users[role];
             createUserList(users, userList);
         });
@@ -87,7 +87,7 @@ function roleUserList() {
 async function absenceUserList() {
     // Fetch dates
     const dates = await get_data("/absence/all_dates");
-        
+
     if (!Array.isArray(dates) || !dates.length) {
         if (!roleList.textContent) {
             roleList.textContent = "Nothing here Yet!";
@@ -114,7 +114,7 @@ async function absenceUserList() {
             document.getElementById("back-button").hidden = false;
             roleList.hidden = true;
             userList.hidden = false;
-            
+
             const absences = dataPool.absences[date];
             createUserList(absences, userList);
         });
@@ -137,26 +137,26 @@ function createUserList(list, node) {
         userNode.className = "entry";
         userNode.appendChild(userTextNode);
         userListElement.appendChild(userNode);
-        
+
         userNode.addEventListener("click", async function () {
             document.getElementById("input-mask").style.display = "flex";
             document.getElementById("stats-container").style.display = "none";
-    
+
             const activeElement = document.querySelector(".entry.active");
             if (activeElement !== null) {
                 activeElement.classList.remove("active");
             }
-    
+
             this.classList.add("active");
             if (user.role) {
                 updateUserUI(user);
             } else {
                 const current_user = await get_data("user/fetch/" + user.account)
-                .catch((error) => {
-                    console.log("Error on fetching User:", error);
-                    error.hidden = false;
-                    error.textContent = error;
-                });
+                    .catch((error) => {
+                        console.log("Error on fetching User:", error);
+                        error.hidden = false;
+                        error.textContent = error;
+                    });
                 updateUserUI(current_user);
             }
         });
@@ -225,7 +225,7 @@ async function search() {
                 console.log("Error on search User:", error);
                 userList.textContent = error;
             });
-            defaultSearch(data);
+        defaultSearch(data);
     } else if (select === "absence") {
         const data = await get_data(`/absence/search?text=${text}`)
             .catch((error) => {
@@ -258,7 +258,7 @@ function defaultSearch(data) {
 
 async function stats() {
     const statsData = dataPool.stats;
-    
+
     document.getElementById("stats-container").style.display = "flex";
 
     const devs = statsData.developer.split(":");
@@ -297,10 +297,10 @@ async function criminals() {
     clearRoleList();
     clearUserList();
     const data = await get_data(`/criminal/search`)
-    .catch((error) => {
-        console.log("Error on Criminal Search:", error)
-        userList.textContent = error;
-    });
+        .catch((error) => {
+            console.log("Error on Criminal Search:", error)
+            userList.textContent = error;
+        });
     createUserList(data, userList);
     roleList.hidden = true;
     userList.hidden = false;
