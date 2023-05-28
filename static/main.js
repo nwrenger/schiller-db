@@ -86,20 +86,14 @@ async function absenceUserList() {
             userList.hidden = false;
             
             const absences = await get_data(`/absence/search?text=${date}`);
-            for (const account of absences) {
-                const role = await get_data("/user/fetch/" + account.account);
-                createUserList(absences, userList, role.role + "/", errorAbsenceList);
-        }});
+            createUserList(absences, userList, errorAbsenceList);
+        });
     }
 }
 
 
-function createUserList(list, node, extra, error) {
+function createUserList(list, node, error) {
     const userListElement = document.createElement("ul");
-    
-    if (!extra) {
-        extra = "";
-    }
 
     if (!Array.isArray(list) || !list.length) {
         if (!userList.textContent && error) {
@@ -110,7 +104,7 @@ function createUserList(list, node, extra, error) {
 
     for (const user of list) {
         const userNode = document.createElement("li");
-        const userTextNode = document.createTextNode(extra + user.account);
+        const userTextNode = document.createTextNode(user.account);
         userNode.className = "entry";
         userNode.appendChild(userTextNode);
         userListElement.appendChild(userNode);
