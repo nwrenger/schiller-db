@@ -24,10 +24,10 @@
             <form action="javascript:search()">
                 <div class="search-div">
                     <input type="text" placeholder="Search" class="search" id="search">
-                    <select id="search-select" name="search-select" class="search-select">
-                        <option value="" onclick=normal()>All</option>
-                        <option value="absence" onclick=absence()>Absence</option>
-                        <option value="criminals" onclick=criminals()>Criminals</option>
+                    <select id="search-select" name="search-select" class="search-select" id="search-select" onchange=select()>
+                        <option value="">All</option>
+                        <option value="absence">Absence</option>
+                        <option value="criminals">Criminals</option>
                     </select>
                 </div>
             </form>

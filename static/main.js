@@ -272,6 +272,17 @@ async function stats() {
     document.getElementById("stat6").textContent = statsData.users;
 }
 
+function select() {
+    var select = document.getElementById("search-select").value;
+    if (select === "") {
+        normal();
+    } else if (select === "absence") {
+        absence();
+    } else if (select === "criminals") {
+        criminals();
+    }
+}
+
 function normal() {
     clearRoleList();
     clearUserList();
