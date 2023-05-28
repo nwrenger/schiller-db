@@ -169,7 +169,6 @@ pub async fn fetch_user(auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>
     Json(db::user::fetch(&db, id))
 }
 
-
 #[utoipa::path(
     responses(
         (status = 200, description = "Searched all Users", body = Vec<User>),

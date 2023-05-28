@@ -73,7 +73,6 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
     Ok(dates)
 }
 
-
 /// Performes a simple absence search with the given `text`.
 pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
     let mut stmt = db.con.prepare(
