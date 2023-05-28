@@ -87,6 +87,13 @@ function roleUserList() {
 async function absenceUserList() {
     // Fetch dates
     const dates = await get_data("/absence/all_dates");
+        
+    if (!Array.isArray(dates) || !dates.length) {
+        if (!roleList.textContent) {
+            roleList.textContent = "Nothing here Yet!";
+        }
+        return;
+    }
 
     dataPool.dates = dates;
     for (const date of dates) {
