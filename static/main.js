@@ -15,6 +15,7 @@ const user_container = document.getElementById("user-container");
 const absence_container = document.getElementById("absence-container");
 const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
+const get_user_button = document.getElementsByClassName("get-user");
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -38,10 +39,10 @@ async function request(url, type, json) {
 
     let data = await response.json();
 
-    if (response.status === 200) {
+    if (response.status === 200 && !data["Err"]) {
         return data["Ok"];
     } else {
-        error(data["Err"])
+        error(data["Err"]);
     }
 }
 
@@ -57,6 +58,7 @@ function showAbsence() {
     absence_container.hidden = false;
     criminal_container.hidden = true;
     user_container.hidden = true;
+    visibilityGetUser(false);
 }
 
 function showCriminal() {
@@ -64,6 +66,7 @@ function showCriminal() {
     absence_container.hidden = true;
     criminal_container.hidden = false;
     user_container.hidden = true;
+    visibilityGetUser(false);
 }
 
 // Updates the UI with user data
@@ -297,7 +300,7 @@ function reset() {
     }
 }
 
-function changeUser(kind, message) {
+function changeUser(otherKind, message) {
     forename.readOnly = false;
     surname.readOnly = false;
     account.readOnly = false;
@@ -308,12 +311,12 @@ function changeUser(kind, message) {
     button.id = "change-button"
     button.appendChild(textNode);
     user_container.appendChild(button);
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
         forename.readOnly = true;
         surname.readOnly = true;
         account.readOnly = true;
         role.readOnly = true;
-        request("user", kind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+        await request("user", otherKind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
         button.remove();
         reset();
     })
@@ -324,7 +327,8 @@ function changeUser(kind, message) {
     }
 }
 
-function changeAbsence(kind, message) {
+function changeAbsence(otherKind, message) {
+    visibilityGetUser(true);
     absence_account.readOnly = false;
     day.readOnly = false;
     time.readOnly = false;
@@ -334,11 +338,11 @@ function changeAbsence(kind, message) {
     button.id = "change-button"
     button.appendChild(textNode);
     absence_container.appendChild(button);
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
         absence_account.readOnly = true;
         day.readOnly = true;
         time.readOnly = true;
-        request("absence", kind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
+        await request("absence", otherKind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
         button.remove();
         reset();
     })
@@ -350,6 +354,7 @@ function changeAbsence(kind, message) {
 }
 
 function changeCriminal(otherKind, message) {
+    visibilityGetUser(true);
     criminal_account.readOnly = false;
     kind.readOnly = false;
     criminal_data.readOnly = false;
@@ -359,11 +364,11 @@ function changeCriminal(otherKind, message) {
     button.id = "change-button"
     button.appendChild(textNode);
     criminal_container.appendChild(button);
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
         criminal_account.readOnly = true;
         kind.readOnly = true;
         criminal_data.readOnly = true;
-        request("criminal", otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+        await request("criminal", otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
         button.remove();
         reset();
     })
@@ -372,6 +377,22 @@ function changeCriminal(otherKind, message) {
             button.remove();
         }
     }
+}
+
+function visibilityGetUser(bool) {
+    for (const button of get_user_button) {
+        button.hidden = bool;
+    }
+}
+
+async function getUser() {
+    const activeUser = document.querySelector(".list-group-item.list-group-item-action.active");
+    const user = await request("user/fetch/" + activeUser.textContent, "GET");
+    activeUser.classList.remove("active");
+    document.getElementById("cancel").hidden = true;
+    document.getElementById("edit").hidden = true;
+    document.getElementById("del").hidden = true;
+    showUser(user);
 }
 
 function add() {
@@ -421,14 +442,14 @@ function edit() {
     }
 }
 
-function del() {
+async function del() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     if (select === "User") {
-        request("user/" + activeElement.textContent, "DELETE");
+        await request("user/" + activeElement.textContent, "DELETE");
     } else if (select === "Absence") {
-        request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
+        await request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
     } else if (select === "Criminal") {
-        request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
+        await request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
     }
     reset();
 }
