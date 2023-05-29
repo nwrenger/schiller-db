@@ -376,46 +376,48 @@ function changeCriminal(otherKind, message) {
 
 function add() {
     document.getElementById("add").classList.add("active");
+    document.getElementById("edit").classList.remove("active");
     if (select === "User") {
         showUser();
         forename.value = "";
         surname.value = "";
         account.value = "";
         role.value = "";
-        changeUser("POST", "Add", "add");
+        changeUser("POST", "Add");
     } else if (select === "Absence") {
         showAbsence();
         absence_account.value = "";
         day.value = "";
         time.value = "";
-        changeAbsence("POST", "Add", "add");
+        changeAbsence("POST", "Add");
     } else if (select === "Criminal") {
         showCriminal();
         criminal_account.value = "";
         kind.value = "";
         data.value = "";
-        changeCriminal("POST", "Add", "add");
+        changeCriminal("POST", "Add");
     }
 }
 
 function edit() {
     document.getElementById("edit").classList.add("active");
+    document.getElementById("add").classList.remove("active");
     if (select === "User") {
         forename.value = current_data_user.forename;
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
-        changeUser("PUT", "Confirm", "edit");
+        changeUser("PUT", "Confirm");
     } else if (select === "Absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        changeAbsence("PUT", "Confirm", "edit");
+        changeAbsence("PUT", "Confirm");
     } else if (select === "Criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
-        changeCriminal("PUT", "Confirm", "edit");
+        changeCriminal("PUT", "Confirm");
     }
 }
 
