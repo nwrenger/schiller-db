@@ -34,6 +34,10 @@ html {
     flex-direction: column;
 }
 
+.hide-arrow::after {
+    display: none !important;
+}
+
 .sidebar-list {
     flex: 1;
     overflow-y: scroll;

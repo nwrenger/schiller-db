@@ -175,6 +175,14 @@ function criminalsButton() {
     error("Currently not Implemented!");
 }
 
+function profile() {
+    error("Currently not Implemented!");
+}
+
+function loginCreator() {
+    error("Currently not Implemented!");
+}
+
 function reset() {
     clearList();
     document.getElementById("stats-container").hidden = false;
