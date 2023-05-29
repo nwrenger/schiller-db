@@ -494,7 +494,12 @@ pub async fn update_criminal(
 ) -> Json<Result<()>> {
     warn!("PUT /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::update(&db, &criminal.account, &criminal.kind, &criminal))
+    Json(db::criminal::update(
+        &db,
+        &criminal.account,
+        &criminal.kind,
+        &criminal,
+    ))
 }
 
 #[utoipa::path(

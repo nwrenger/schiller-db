@@ -192,7 +192,7 @@ function createUserList(list, node, back) {
         backEntry.addEventListener("click", async function () {
             reset();
         })
-        document.scrollingElement.scrollTo(0,0);
+        document.scrollingElement.scrollTo(0, 0);
     }
 
     if (!Array.isArray(list) || !list.length) {
@@ -203,7 +203,7 @@ function createUserList(list, node, back) {
         }
         return;
     }
-    
+
 
     for (const user of list) {
         const userNode = document.createElement("li");
@@ -211,7 +211,7 @@ function createUserList(list, node, back) {
         userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
         node.appendChild(userNode);
-        
+
         userNode.addEventListener("click", async function () {
             const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
             if (activeElement !== null) {
@@ -313,7 +313,7 @@ function changeUser(kind, message) {
         surname.readOnly = true;
         account.readOnly = true;
         role.readOnly = true;
-        request("user", kind, JSON.stringify({forename: forename.value, surname: surname.value, account: account.value, role: role.value}))
+        request("user", kind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
         button.remove();
         reset();
     })
@@ -338,7 +338,7 @@ function changeAbsence(kind, message) {
         absence_account.readOnly = true;
         day.readOnly = true;
         time.readOnly = true;
-        request("absence", kind, JSON.stringify({account: absence_account.value, date: day.value, time: time.value}))
+        request("absence", kind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
         button.remove();
         reset();
     })
@@ -363,7 +363,7 @@ function changeCriminal(otherKind, message) {
         criminal_account.readOnly = true;
         kind.readOnly = true;
         criminal_data.readOnly = true;
-        request("criminal", otherKind, JSON.stringify({account: criminal_account.value, kind: kind.value, data: criminal_data.value}))
+        request("criminal", otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
         button.remove();
         reset();
     })

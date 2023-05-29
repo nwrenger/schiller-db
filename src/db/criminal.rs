@@ -97,14 +97,23 @@ pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
     }
     db.con.execute(
         "INSERT INTO criminal VALUES (?, ?, ?)",
-        rusqlite::params![criminal.account.trim(), criminal.kind.trim() ,criminal.data.trim()],
+        rusqlite::params![
+            criminal.account.trim(),
+            criminal.kind.trim(),
+            criminal.data.trim()
+        ],
     )?;
     Ok(())
 }
 
 /// Updates the criminal.
 /// This includes all its data.
-pub fn update(db: &Database, previous_account: &str, previous_kind: &str, criminal: &Criminal) -> Result<()> {
+pub fn update(
+    db: &Database,
+    previous_account: &str,
+    previous_kind: &str,
+    criminal: &Criminal,
+) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !criminal.is_valid() {
         return Err(Error::InvalidUser);
@@ -118,7 +127,13 @@ pub fn update(db: &Database, previous_account: &str, previous_kind: &str, crimin
     // update date
     transaction.execute(
         "update criminal set account=?, kind=?, data=? where account=? and kind=?",
-        rusqlite::params![criminal.account.trim(), criminal.kind.trim(), criminal.data.trim(), previous_account, previous_kind],
+        rusqlite::params![
+            criminal.account.trim(),
+            criminal.kind.trim(),
+            criminal.data.trim(),
+            previous_account,
+            previous_kind
+        ],
     )?;
 
     transaction.commit()?;
@@ -138,7 +153,10 @@ pub fn delete(db: &Database, account: &str, kind: &str) -> Result<()> {
     }
     let transaction = db.transaction()?;
     // remove date and presenters
-    transaction.execute("delete from criminal where account=? and kind=?", rusqlite::params![account, kind])?;
+    transaction.execute(
+        "delete from criminal where account=? and kind=?",
+        rusqlite::params![account, kind],
+    )?;
     transaction.commit()?;
     Ok(())
 }
