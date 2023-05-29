@@ -1,7 +1,7 @@
 const auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
 const sidebarList = document.getElementById("sidebar-list");
-var select = "All";
+var select = "User";
 
 if (!auth || !current_user) {
     window.open("login.html", "_self");
@@ -136,6 +136,8 @@ function createUserList(list, node, back) {
             }
             this.classList.add("active");
 
+            document.getElementById("edit").hidden = false;
+
             if (user.role) {
                 updateUserUI(user);
             } else {
@@ -185,10 +187,11 @@ function loginCreator() {
 
 function reset() {
     clearList();
+    document.getElementById("edit").hidden = true;
     document.getElementById("stats-container").hidden = false;
     document.getElementById("user-container").hidden = true;
     document.getElementById("search").value = "";
-    if (select === "All") {
+    if (select === "User") {
         roleUserList().catch(() => window.open("login.html", "_self"));
         stats();
     } else if (select === "Absences") {
@@ -198,9 +201,29 @@ function reset() {
     }
 }
 
+function add() {
+    if (select === "User") {
+        error("Currently not Implemented!")
+    } else if (select === "Absences") {
+        error("Currently not Implemented!")
+    } else if (select === "Criminals") {
+        error("Currently not Implemented!")
+    }
+}
+
+function edit() {
+    if (select === "User") {
+        error("Currently not Implemented!")
+    } else if (select === "Absences") {
+        error("Currently not Implemented!")
+    } else if (select === "Criminals") {
+        error("Currently not Implemented!")
+    }
+}
+
 async function search() {
     const text = document.getElementById("search").value;
-    if (select === "All") {
+    if (select === "User") {
         const data = await get_data(`/user/search?name=${text}`);
         createUserList(data, sidebarList, true);
     } else if (select === "Absences") {
@@ -236,8 +259,8 @@ function selecting(message, which) {
     document.getElementById(which).classList.add("active");
 }
 
-function selectAll() {
-    selecting("All", "all");
+function selectUser() {
+    selecting("User", "user");
     reset();
 }
 
@@ -251,4 +274,4 @@ function selectCriminals() {
     reset();
 }
 
-selectAll();
+selectUser();
