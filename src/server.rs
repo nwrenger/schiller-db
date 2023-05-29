@@ -369,9 +369,21 @@ pub async fn add_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Js
         ("authorization" = []),
     )
 )]
-#[put("/absence/<previous_account>/<previous_date>", format = "json", data = "<absence>")]
-pub async fn update_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>, previous_account: &str, previous_date: &str) -> Json<Result<()>> {
-    warn!("PUT /absence/{previous_account}/{previous_date} with data {absence:?}: {}", auth.user);
+#[put(
+    "/absence/<previous_account>/<previous_date>",
+    format = "json",
+    data = "<absence>"
+)]
+pub async fn update_absence(
+    auth: Auth<AbsenceWrite>,
+    absence: Json<Absence>,
+    previous_account: &str,
+    previous_date: &str,
+) -> Json<Result<()>> {
+    warn!(
+        "PUT /absence/{previous_account}/{previous_date} with data {absence:?}: {}",
+        auth.user
+    );
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let previous_date = match NaiveDate::parse_from_str(previous_date, "%Y-%m-%d") {
         Ok(previous_date) => previous_date,
@@ -431,7 +443,11 @@ pub async fn delete_absence(
     )
 )]
 #[get("/criminal/fetch/<account>/<kind>")]
-pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str, kind: &str) -> Json<Result<Criminal>> {
+pub async fn fetch_criminal(
+    auth: Auth<CriminalReadOnly>,
+    account: &str,
+    kind: &str,
+) -> Json<Result<Criminal>> {
     warn!("GET /criminal/fetch/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::fetch(&db, account, kind))
@@ -505,14 +521,21 @@ pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -
         ("authorization" = []),
     )
 )]
-#[put("/criminal/<previous_account>/<previous_kind>", format = "json", data = "<criminal>")]
+#[put(
+    "/criminal/<previous_account>/<previous_kind>",
+    format = "json",
+    data = "<criminal>"
+)]
 pub async fn update_criminal(
     auth: Auth<CriminalWrite>,
     previous_account: &str,
     previous_kind: &str,
     criminal: Json<Criminal>,
 ) -> Json<Result<()>> {
-    warn!("PUT /criminal/{previous_account}/{previous_kind} with data {criminal:?}: {}", auth.user);
+    warn!(
+        "PUT /criminal/{previous_account}/{previous_kind} with data {criminal:?}: {}",
+        auth.user
+    );
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::update(
         &db,
