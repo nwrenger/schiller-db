@@ -387,8 +387,8 @@ function visibilityGetUser(bool) {
 
 async function getUser() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
-    const user = await request("user/fetch/" + activeElement.textContent, "GET");
     activeElement.classList.remove("active");
+    const user = await request("user/fetch/" + activeElement.textContent, "GET");
     document.getElementById("cancel").hidden = true;
     document.getElementById("edit").hidden = true;
     document.getElementById("del").hidden = true;
@@ -396,6 +396,8 @@ async function getUser() {
 }
 
 function add() {
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    activeElement.classList.remove("active");
     document.getElementById("add").classList.add("active");
     document.getElementById("edit").classList.remove("active");
     if (select === "User") {
