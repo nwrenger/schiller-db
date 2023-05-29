@@ -77,6 +77,7 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [ ] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
 - [x] Absence Management
 - [x] Criminal Management
+- [ ] fix Add Button (currently a little bit buggy)
 - [ ] Better Criminal/Absence adding process
 - [x] Integration for Mobile
 - [ ] Network test (after we are finished with the UI)
