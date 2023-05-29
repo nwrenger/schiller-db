@@ -31,7 +31,7 @@ impl FromRow for Criminal {
 }
 
 /// Returns the criminal with the given `account`.
-pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
+pub fn fetch(db: &Database, account: &str, kind: &str) -> Result<Criminal> {
     Ok(db.con.query_row(
         "select \
         account, \
@@ -39,7 +39,7 @@ pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
         data \
         from criminal \
         where account=?",
-        [account],
+        rusqlite::params![account, kind],
         Criminal::from_row,
     )?)
 }

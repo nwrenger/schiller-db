@@ -301,6 +301,7 @@ function reset() {
 }
 
 function changeUser(otherKind, message) {
+    const previous_account = account.value;
     forename.readOnly = false;
     surname.readOnly = false;
     account.readOnly = false;
@@ -316,7 +317,7 @@ function changeUser(otherKind, message) {
         surname.readOnly = true;
         account.readOnly = true;
         role.readOnly = true;
-        await request("user", otherKind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+        await request("user/" + previous_account, otherKind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
         button.remove();
         reset();
     })
@@ -329,6 +330,8 @@ function changeUser(otherKind, message) {
 
 function changeAbsence(otherKind, message) {
     visibilityGetUser(true);
+    const previous_account = absence_account.value;
+    const previous_day = day.value;
     absence_account.readOnly = false;
     day.readOnly = false;
     time.readOnly = false;
@@ -342,7 +345,7 @@ function changeAbsence(otherKind, message) {
         absence_account.readOnly = true;
         day.readOnly = true;
         time.readOnly = true;
-        await request("absence", otherKind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
+        await request("absence/" + previous_account + "/" + previous_day, otherKind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
         button.remove();
         reset();
     })
@@ -355,6 +358,8 @@ function changeAbsence(otherKind, message) {
 
 function changeCriminal(otherKind, message) {
     visibilityGetUser(true);
+    const previous_account = criminal_account.value;
+    const previous_kind = kind.value;
     criminal_account.readOnly = false;
     kind.readOnly = false;
     criminal_data.readOnly = false;
@@ -368,7 +373,7 @@ function changeCriminal(otherKind, message) {
         criminal_account.readOnly = true;
         kind.readOnly = true;
         criminal_data.readOnly = true;
-        await request("criminal", otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+        await request("criminal/" + previous_account + "/" + previous_kind, otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
         button.remove();
         reset();
     })

@@ -238,15 +238,18 @@ pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()
         (status = 401, description = "Unauthorized to update a User", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
+    params(
+        ("id", description = "The unique user id")
+    ),
     security (
         ("authorization" = []),
     )
 )]
-#[put("/user", format = "json", data = "<user>")]
-pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()>> {
-    warn!("PUT /user with data {user:?}: {}", auth.user);
+#[put("/user/<id>", format = "json", data = "<user>")]
+pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>, id: &str) -> Json<Result<()>> {
+    warn!("PUT /user/{id} with data {user:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::user::update(&db, &user.account, &user))
+    Json(db::user::update(&db, id, &user))
 }
 
 #[utoipa::path(
@@ -353,23 +356,33 @@ pub async fn add_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Js
 
 #[utoipa::path(
     request_body = Absence,
-    responses(
+    responses (
         (status = 200, description = "Update an Absence sended successfully"),
         (status = 401, description = "Unauthorized to update an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+    ),
+    params(
+        ("previous_account", description = "The unique user account"),
+        ("previous_date", description = "The date")
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[put("/absence", format = "json", data = "<absence>")]
-pub async fn update_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Json<Result<()>> {
-    warn!("PUT /absence with data {absence:?}: {}", auth.user);
+#[put("/absence/<previous_account>/<previous_date>", format = "json", data = "<absence>")]
+pub async fn update_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>, previous_account: &str, previous_date: &str) -> Json<Result<()>> {
+    warn!("PUT /absence/{previous_account}/{previous_date} with data {absence:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    let previous_date = match NaiveDate::parse_from_str(previous_date, "%Y-%m-%d") {
+        Ok(previous_date) => previous_date,
+        Err(_) => {
+            return Json(Err(Error::InvalidDate));
+        }
+    };
     Json(db::absence::update(
         &db,
-        &absence.account,
-        absence.date,
+        previous_account,
+        previous_date,
         &absence,
     ))
 }
@@ -411,16 +424,17 @@ pub async fn delete_absence(
     ),
     params(
         ("account", description = "The unique user account"),
+        ("kind", description = "The kind of the crime"),
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[get("/criminal/fetch/<account>")]
-pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str) -> Json<Result<Criminal>> {
-    warn!("GET /criminal/fetch/{account}: {}", auth.user);
+#[get("/criminal/fetch/<account>/<kind>")]
+pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str, kind: &str) -> Json<Result<Criminal>> {
+    warn!("GET /criminal/fetch/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::fetch(&db, account))
+    Json(db::criminal::fetch(&db, account, kind))
 }
 
 #[utoipa::path(
@@ -483,21 +497,27 @@ pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -
         (status = 401, description = "Unauthorized to update a absence", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
+    params(
+        ("previous_account", description = "The unique user account"),
+        ("previous_kind", description = "The kind of the crime"),
+    ),
     security (
         ("authorization" = []),
     )
 )]
-#[put("/criminal", format = "json", data = "<criminal>")]
+#[put("/criminal/<previous_account>/<previous_kind>", format = "json", data = "<criminal>")]
 pub async fn update_criminal(
     auth: Auth<CriminalWrite>,
+    previous_account: &str,
+    previous_kind: &str,
     criminal: Json<Criminal>,
 ) -> Json<Result<()>> {
-    warn!("PUT /criminal with data {criminal:?}: {}", auth.user);
+    warn!("PUT /criminal/{previous_account}/{previous_kind} with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::update(
         &db,
-        &criminal.account,
-        &criminal.kind,
+        previous_account,
+        previous_kind,
         &criminal,
     ))
 }
@@ -509,7 +529,7 @@ pub async fn update_criminal(
     ),
     params(
         ("account", description = "The unique user account"),
-        ("kind", description = "The kind of the criminal"),
+        ("kind", description = "The kind of the crime"),
     ),
     security(
         ("authorization" = []),
@@ -517,7 +537,7 @@ pub async fn update_criminal(
 )]
 #[delete("/criminal/<account>/<kind>")]
 pub async fn delete_criminal(auth: Auth<UserWrite>, account: &str, kind: &str) -> Json<Result<()>> {
-    warn!("DELETE /criminal/{account}: {}", auth.user);
+    warn!("DELETE /criminal/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::delete(&db, account, kind))
 }
