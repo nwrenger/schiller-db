@@ -109,6 +109,7 @@ function createUserList(list, node, back) {
         backEntry.addEventListener("click", async function () {
             reset();
         })
+        document.scrollingElement.scrollTo(0,0);
     }
 
     if (!Array.isArray(list) || !list.length) {
@@ -119,6 +120,7 @@ function createUserList(list, node, back) {
         }
         return;
     }
+    
 
     for (const user of list) {
         const userNode = document.createElement("li");
@@ -126,10 +128,8 @@ function createUserList(list, node, back) {
         userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
         node.appendChild(userNode);
-
+        
         userNode.addEventListener("click", async function () {
-            // document.getElementById("stats-container").hidden = true;
-            // document.getElementById("input").hidden = false;
             const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
             if (activeElement !== null) {
                 activeElement.classList.remove("active");
