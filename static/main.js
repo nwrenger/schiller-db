@@ -396,10 +396,6 @@ async function getUser() {
 }
 
 function add() {
-    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
-    if (activeElement) {
-        activeElement.classList.remove("active");
-    }
     document.getElementById("add").classList.add("active");
     document.getElementById("edit").classList.remove("active");
     if (select === "User") {
