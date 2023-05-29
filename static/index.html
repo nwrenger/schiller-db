@@ -1,82 +1,150 @@
-<!DOCTYPE html>
-<html lang="de">
+<!doctype html>
+<html lang="de" data-bs-theme="dark">
 
 <head>
-    <link href="styles.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SNDI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="index.css" rel="stylesheet">
 </head>
 
-<header>
-    <a href="">SNDI</a>
-    <button type="button" onclick=logout() class="log-button">Logout</button>
-</header>
-
 <body>
-    <div class="main-container">
-        <div class="left-sidebar">
-            <div class="rolelist-div">
-                <button class="back-button" id="back-button" onclick=back() hidden>Back!</button>
-                <ul id="nested-list"></ul>
-                <ul id="user-list"></ul>
-            </div>
-            <form action="javascript:search()">
-                <div class="search-div">
-                    <input type="text" placeholder="Search" class="search" id="search">
-                    <select id="search-select" name="search-select" class="search-select" id="search-select" onchange=select()>
-                        <option value="">All</option>
-                        <option value="absence">Absence</option>
-                        <option value="criminals">Criminals</option>
-                    </select>
+    <div class="main">
+        <nav class="nav navbar bg-secondary-subtle">
+            <div class="container-fluid">
+                <a href="/" class="navbar-brand">SNDI</a>
+                <div class="d-flex">
+                    <button class="btn btn-outline-danger" onclick=logout()>Logout</button>
                 </div>
-            </form>
+            </div>
+        </nav>
+        <div class="sidebar bg-dark">
+            <ul class="sidebar-list list-group list-group-flush" id="sidebar-list"></ul>
+            <div class="sidebar-search input-group pb-1 px-1">
+                <input type="text" class="form-control" placeholder="Search" id="search" onkeypress=search()>
+                <button id="select-button" class="btn btn-outline-secondary dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">All</button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <h6 class="dropdown-header">Category</h6>
+                    </li>
+                    <li><a id="all" class="dropdown-item active" onclick=selectAll()>All</a></li>
+                    <li><a id="absences" class="dropdown-item" onclick=selectAbsences()>Absences</a></li>
+                    <li><a id="criminals" class="dropdown-item" onclick=selectCriminals()>Criminals</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="right-side" id="right-side">
-            <div id="input" hidden>
-                <h1 class="title">Data:</h1>
-    
-                <div class="input-container">
-                    <input type="text" id="forename" name="forename" class="default-input" value="Max">
-                    <input type="text" id="surname" name="surname" class="default-input" value="Mustermann">
-                    <input type="text" id="account" name="account" class="default-input" value="max.mustermann">
-                    <input type="text" id="role" name="role" class="default-input" value="Jahrgang 12">
+        <div class="mid p-3 bg-body-secondary">
+            <div id="user-container" hidden>
+                <div class="card-title row">
+                    <div class="col">
+                        <label for="forename" class="form-label">Forename</label>
+                        <input id="forename" type="text" class="form-control" placeholder="Forename"
+                            aria-label="Forename">
+                    </div>
+                    <div class="col">
+                        <label for="surname" class="form-label">Surname</label>
+                        <input id="surname" type="text" class="form-control" placeholder="Surname" aria-label="Surname">
+                    </div>
                 </div>
-                <div class="input-container">
-                    <button type="button" onclick=criminalsButton() class="view-button">Strafregister</button>
-                    <button type="button" onclick=absenceButton() class="view-button">Abwesenheiten</button>
+                <div class="row">
+                    <div class="col">
+                        <label for="account" class="form-label">Account</label>
+                        <input id="account" type="text" class="form-control" placeholder="Account" aria-label="Account">
+                    </div>
+                    <div class="col">
+                        <label for="group" class="form-label">Group</label>
+                        <input id="group" type="text" class="form-control" placeholder="Group" aria-label="Group">
+                    </div>
                 </div>
-                <div class="error-main" id="error-main"></div>
+                <div class="row justify-content-center">
+                    <button type="button" class="btn btn-outline-primary m-3" style="max-width: 120px;"
+                        onclick=absenceButton()>Strafregister</button>
+                    <button type="button" class="btn btn-outline-primary m-3" style="max-width: 160px;"
+                        onclick=criminalsButton()>Abwesenheiten</button>
+                </div>
             </div>
-            <div class="stats-container" id="stats-container">
-                <div class="stats-item">
-                    <h2>Name</h2>
-                    <p id="stat1"></p>
+            <div id="stats-container">
+                <div class="row p-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Name</h5>
+                                <p class="card-text" id="name"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Version</h5>
+                                <p class="card-text" id="version"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stats-item">
-                    <h2>Version</h2>
-                    <p id="stat2"></p>
+                <div class="row p-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Developers</h5>
+                                <p class="card-text" id="devs"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Repository</h5>
+                                <p class="card-text"><a target="_blank" id="repo">ss</a></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stats-item">
-                    <h2>Developers</h2>
-                    <p id="stat3"></p>
-                </div>
-                <div class="stats-item">
-                    <h2>Repository</h2>
-                    <p><a id="stat4" target="_blank"></a></p>
-                </div>
-                <div class="stats-item">
-                    <h2>Description</h2>
-                    <p id="stat5"></p>
-                </div>
-                <div class="stats-item">
-                    <h2>Total Users</h2>
-                    <p id="stat6"></p>
+                <div class="row p-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Description</h5>
+                                <p class="card-text" id="description"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Users</h5>
+                                <p class="card-text" id="users"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modal Dialog -->
+    <div class="modal fade" id="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Error</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
     <script src="main.js"></script>
+
 </body>
 
 </html>

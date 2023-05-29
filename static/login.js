@@ -1,6 +1,6 @@
 async function handleLoginSubmit() {
-    var current_user = document.getElementsByName("user")[0].value;
-    var password = document.getElementsByName("password")[0].value;
+    var current_user = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
     var auth = btoa(current_user + ":" + password)
     // getting all roles
     const url = "/stats";
@@ -19,9 +19,9 @@ async function handleLoginSubmit() {
 
         window.open("/", "_self")
     } else {
-        let all_elements = document.getElementsByTagName("input");
-        for (i = 0; i < all_elements.length; i++) {
-            all_elements.item(i).classList.add("error-login");
+        const all_elements = document.getElementsByTagName("input");
+        for (const element of all_elements) {
+            element.classList.add("is-invalid");
         }
     }
 }

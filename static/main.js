@@ -1,12 +1,12 @@
 const auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
+const sidebarList = document.getElementById("sidebar-list");
+var select = "All";
 
 if (!auth || !current_user) {
     window.open("login.html", "_self");
 }
 
-const nestedList = document.getElementById("nested-list");
-const userList = document.getElementById("user-list");
 
 // Fetches data from the API
 async function get_data(url) {
@@ -29,72 +29,93 @@ async function get_data(url) {
 
 // Updates the UI with user data
 function updateUserUI(data) {
+    document.getElementById("stats-container").hidden = true;
+    document.getElementById("user-container").hidden = false;
+
     document.getElementById("forename").value = data.forename;
     document.getElementById("surname").value = data.surname;
     document.getElementById("account").value = data.account;
-    document.getElementById("role").value = data.role;
+    document.getElementById("group").value = data.role;
 }
 
 // Initializes the user list for roles UI
 async function roleUserList() {
+    clearList();
+
     const roles = await get_data("/user/all_roles");
     for (const role of roles) {
         const node = document.createElement("li");
         const data = document.createTextNode(role);
-        node.className = "entry";
+        node.className = "list-group-item list-group-item-action";
         node.appendChild(data);
-        nestedList.appendChild(node);
+        sidebarList.appendChild(node);
 
         node.addEventListener("click", async function () {
             const role = this.textContent;
-            document.getElementById("back-button").hidden = false;
-            nestedList.hidden = true;
-            userList.hidden = false;
+            // document.getElementById("back-button").hidden = false;
 
             const users = await get_data(`/user/search?role=${role}`);
-            createUserList(users, userList);
+            createUserList(users, sidebarList, true);
         });
     }
 }
 
 // Initializes the user list for the dates
 async function absenceUserList() {
+    clearList();
+
     const dates = await get_data("/absence/all_dates");
 
     if (!Array.isArray(dates) || !dates.length) {
-        if (!nestedList.textContent) {
-            nestedList.textContent = "No Results!";
+        if (!sidebarList.textContent) {
+            sidebarList.textContent = "No Results!";
         }
         return;
     }
-    
+
     // Fetch users
     for (const date of dates) {
         const node = document.createElement("li");
         const data = document.createTextNode(date);
-        node.className = "entry";
+        node.className = "list-group-item list-group-item-action";
         node.appendChild(data);
-        nestedList.appendChild(node);
-        
+        sidebarList.appendChild(node);
+
         node.addEventListener("click", async function () {
             const date = this.textContent;
-            document.getElementById("back-button").hidden = false;
-            nestedList.hidden = true;
-            userList.hidden = false;
-            
+
             const absences = await get_data(`/absence/search?text=${date}`);
-            createUserList(absences, userList);
+            createUserList(absences, sidebarList, true);
         });
     }
 }
 
+async function criminalUserList() {
+    clearList();
+    const criminals = await get_data("/criminal/search");
+    createUserList(criminals, sidebarList, false);
+}
 
-function createUserList(list, node) {
-    const userListElement = document.createElement("ul");
+function createUserList(list, node, back) {
+    clearList();
+
+    const backEntry = document.createElement("li");
+    if (back) {
+        const text = document.createTextNode("Back!");
+        backEntry.className = "list-group-item list-group-item-action list-group-item-danger";
+        backEntry.appendChild(text);
+        node.appendChild(backEntry);
+
+        backEntry.addEventListener("click", async function () {
+            reset();
+        })
+    }
 
     if (!Array.isArray(list) || !list.length) {
-        if (!userList.textContent) {
-            userList.textContent = "No Results!";
+        if (back) {
+            backEntry.textContent = "Back - No Results!";
+        } else {
+            sidebarList.textContent = "No Results!";
         }
         return;
     }
@@ -102,19 +123,19 @@ function createUserList(list, node) {
     for (const user of list) {
         const userNode = document.createElement("li");
         const userTextNode = document.createTextNode(user.account);
-        userNode.className = "entry";
+        userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
-        userListElement.appendChild(userNode);
+        node.appendChild(userNode);
 
         userNode.addEventListener("click", async function () {
-            document.getElementById("stats-container").hidden = true;
-            document.getElementById("input").hidden = false;
-            const activeElement = document.querySelector(".entry.active");
+            // document.getElementById("stats-container").hidden = true;
+            // document.getElementById("input").hidden = false;
+            const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
             if (activeElement !== null) {
                 activeElement.classList.remove("active");
             }
-
             this.classList.add("active");
+
             if (user.role) {
                 updateUserUI(user);
             } else {
@@ -122,27 +143,21 @@ function createUserList(list, node) {
                 updateUserUI(current_user);
             }
         });
-        node.appendChild(userListElement);
     }
 }
 
 function error(error) {
-    alert("An error ocurred: " + error);
+    const modal = new bootstrap.Modal(document.getElementById("dialog"));
+    document.getElementById("modal-body").textContent = error;
     console.log(error);
+    modal.toggle();
     throw error;
 }
 
 // Clears the user list UI
-function clearUserList() {
-    while (userList.firstChild) {
-        userList.firstChild.remove();
-    }
-}
-
-// Clears the roles list UI
-function clearNestedList() {
-    while (nestedList.firstChild) {
-        nestedList.firstChild.remove();
+function clearList() {
+    while (sidebarList.firstChild) {
+        sidebarList.firstChild.remove();
     }
 }
 
@@ -153,59 +168,40 @@ function logout() {
 }
 
 function absenceButton() {
-    const error = document.getElementById("error-main");
-    error.hidden = false;
-    error.textContent = "Absence is not yet implemented!";
+    error("Currently not Implemented!");
 }
 
 function criminalsButton() {
-    const error = document.getElementById("error-main");
-    error.hidden = false;
-    error.textContent = "Criminal is not yet implemented!";
-}
-
-function back() {
-    reset();
-    select();
-    stats();
+    error("Currently not Implemented!");
 }
 
 function reset() {
-    document.getElementById("search").value = "";
-    document.getElementById("back-button").hidden = true;
-    document.getElementById("error-main").hidden = true;
+    clearList();
     document.getElementById("stats-container").hidden = false;
-    document.getElementById("input").hidden = true;
-    clearNestedList();
-    clearUserList();
+    document.getElementById("user-container").hidden = true;
+    document.getElementById("search").value = "";
+    if (select === "All") {
+        roleUserList().catch(() => window.open("login.html", "_self"));
+        stats();
+    } else if (select === "Absences") {
+        absenceUserList();
+    } else if (select === "Criminals") {
+        criminalUserList();
+    }
 }
 
 async function search() {
     const text = document.getElementById("search").value;
-    const select = document.getElementById("search-select").value;
-    userList.hidden = false;
-    if (select === "") {
+    if (select === "All") {
         const data = await get_data(`/user/search?name=${text}`);
-        defaultSearch(data);
-    } else if (select === "absence") {
+        createUserList(data, sidebarList, true);
+    } else if (select === "Absences") {
         const data = await get_data(`/absence/search?text=${text}`);
-        defaultSearch(data);
-    } else if (select === "criminals") {
+        createUserList(data, sidebarList, true);
+    } else if (select === "Criminals") {
         const data = await get_data(`/criminal/search?text=${text}`);
-        defaultSearch(data);
+        createUserList(data, sidebarList, true);
     }
-}
-
-function defaultSearch(data) {
-    const backButton = document.getElementById("back-button");
-    backButton.hidden = false;
-    clearUserList();
-    nestedList.hidden = true;
-    if (!Array.isArray(data) || !data.length) {
-        userList.textContent = "Nothing Found!";
-        return;
-    }
-    createUserList(data, userList);
 }
 
 async function stats() {
@@ -213,49 +209,38 @@ async function stats() {
 
     const devs = statsData.developer.split(":");
 
-    document.getElementById("stat1").textContent = statsData.name;
-    document.getElementById("stat2").textContent = statsData.version;
-    document.getElementById("stat3").textContent = devs[0] + " and " + devs[1];
-    document.getElementById("stat4").textContent = statsData.repo;
-    document.getElementById("stat4").href = statsData.repo;
-    document.getElementById("stat5").textContent = statsData.description;
-    document.getElementById("stat6").textContent = statsData.users;
+    document.getElementById("name").textContent = statsData.name;
+    document.getElementById("version").textContent = statsData.version;
+    document.getElementById("devs").textContent = devs[0] + " and " + devs[1];
+    document.getElementById("repo").textContent = statsData.repo;
+    document.getElementById("repo").href = statsData.repo;
+    document.getElementById("description").textContent = statsData.description;
+    document.getElementById("users").textContent = statsData.users;
 }
 
-function select() {
-    var select = document.getElementById("search-select").value;
-    if (select === "") {
-        normal();
-    } else if (select === "absence") {
-        absence();
-    } else if (select === "criminals") {
-        criminals();
+function selecting(message, which) {
+    select = message;
+    document.getElementById("select-button").textContent = select;
+    const activeElement = document.querySelector(".dropdown-item.active");
+    if (activeElement !== null) {
+        activeElement.classList.remove("active");
     }
+    document.getElementById(which).classList.add("active");
 }
 
-function normal() {
+function selectAll() {
+    selecting("All", "all");
     reset();
-    stats().catch(() => window.open("login.html", "_self"));
-    roleUserList().catch(() => window.open("login.html", "_self"));
-    document.getElementById("search-select").value = "";
-    nestedList.hidden = false;
-    userList.hidden = true;
 }
 
-async function absence() {
+function selectAbsences() {
+    selecting("Absences", "absences");
     reset();
-    absenceUserList();
-    nestedList.hidden = false;
-    userList.hidden = true;
 }
 
-async function criminals() {
+function selectCriminals() {
+    selecting("Criminals", "criminals");
     reset();
-    const criminals = await get_data("/criminal/search");
-    createUserList(criminals, userList);
-    nestedList.hidden = true;
-    userList.hidden = false;
 }
 
-
-normal();
+selectAll();
