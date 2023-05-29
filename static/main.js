@@ -101,7 +101,7 @@ function createUserList(list, node, back) {
 
     const backEntry = document.createElement("li");
     if (back) {
-        const text = document.createTextNode("Back!");
+        const text = document.createTextNode("Back");
         backEntry.className = "list-group-item list-group-item-action list-group-item-danger";
         backEntry.appendChild(text);
         node.appendChild(backEntry);
