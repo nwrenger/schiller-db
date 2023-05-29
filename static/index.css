@@ -43,6 +43,10 @@ html {
     overflow-y: scroll;
 }
 
+.p-2 {
+    padding-left: 15px !important;
+}
+
 .sidebar-search {
     flex: 0;
 }

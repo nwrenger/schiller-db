@@ -220,6 +220,7 @@ function createUserList(list, node, back) {
             this.classList.add("active");
 
             document.getElementById("edit").hidden = false;
+            document.getElementById("cancel").hidden  = false;
             document.getElementById("del").hidden = false;
 
             for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
@@ -228,7 +229,6 @@ function createUserList(list, node, back) {
 
             document.getElementById("add").classList.remove("active");
             document.getElementById("edit").classList.remove("active");
-            document.getElementById("del").classList.remove("active");
 
             current_data_user = user;
             if (select === "User") {
@@ -279,8 +279,8 @@ function reset() {
     clearList();
     document.getElementById("add").classList.remove("active");
     document.getElementById("edit").classList.remove("active");
-    document.getElementById("del").classList.remove("active");
     document.getElementById("edit").hidden = true;
+    document.getElementById("cancel").hidden = true;
     document.getElementById("del").hidden = true;
     absence_container.hidden = true;
     criminal_container.hidden = true;
@@ -431,6 +431,20 @@ function del() {
         request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
     }
     reset();
+}
+
+function cancel() {
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    activeElement.classList.remove("active");
+    document.getElementById("add").classList.remove("active");
+    document.getElementById("edit").classList.remove("active");
+    document.getElementById("edit").hidden = true;
+    document.getElementById("cancel").hidden = true;
+    document.getElementById("del").hidden = true;
+    absence_container.hidden = true;
+    criminal_container.hidden = true;
+    stats_container.hidden = false;
+    user_container.hidden = true;
 }
 
 async function search() {
