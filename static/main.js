@@ -9,6 +9,7 @@ const criminal_account = document.getElementById("criminal-account");
 const role = document.getElementById("role");
 const day = document.getElementById("day");
 const time = document.getElementById("time");
+const kind = document.getElementById("kind");
 const criminal_data = document.getElementById("data");
 const user_container = document.getElementById("user-container");
 const absence_container = document.getElementById("absence-container");
@@ -16,6 +17,7 @@ const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
 var select = "User";
 var current_date = "";
+var current_kind = "";
 var current_data_user = {};
 
 if (!auth || !current_user) {
@@ -88,6 +90,7 @@ function updateCriminalUI(data) {
     showCriminal();
 
     criminal_account.value = data.account;
+    kind.value = data.kind;
     criminal_data.value = data.data;
 }
 
@@ -147,8 +150,33 @@ async function absenceUserList() {
 
 async function criminalUserList() {
     clearList();
-    const criminals = await request("/criminal/search", "GET");
-    createUserList(criminals, sidebarList, false);
+
+    const kinds = await request("/criminal/all_kinds", "GET");
+
+    if (!Array.isArray(kinds) || !kinds.length) {
+        if (!sidebarList.textContent) {
+            sidebarList.textContent = "No Results!";
+        }
+        return;
+    }
+
+    // Fetch users
+    for (const kind of kinds) {
+        const node = document.createElement("li");
+        const data = document.createTextNode(kind);
+        node.className = "list-group-item list-group-item-action";
+        node.appendChild(data);
+        sidebarList.appendChild(node);
+
+        node.addEventListener("click", async function () {
+            const kind = this.textContent;
+
+            current_kind = kind;
+
+            const criminals = await request(`/criminal/search?text=${kind}`, "GET");
+            createUserList(criminals, sidebarList, true);
+        });
+    }
 }
 
 function createUserList(list, node, back) {
@@ -216,6 +244,7 @@ function createUserList(list, node, back) {
 
 function error(error) {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
+    document.getElementById("staticBackdropLabel").textContent = "Error"
     document.getElementById("modal-body").textContent = error;
     console.log(error);
     modal.toggle();
@@ -236,7 +265,10 @@ function logout() {
 }
 
 function profile() {
-    error("Currently not Implemented!");
+    const modal = new bootstrap.Modal(document.getElementById("dialog"));
+    document.getElementById("staticBackdropLabel").textContent = "Info"
+    document.getElementById("modal-body").textContent = "The current user account is " + current_user;
+    modal.toggle();
 }
 
 function loginCreator() {
@@ -317,8 +349,9 @@ function changeAbsence(kind, message) {
     }
 }
 
-function changeCriminal(kind, message) {
+function changeCriminal(otherKind, message) {
     criminal_account.readOnly = false;
+    kind.readOnly = false;
     criminal_data.readOnly = false;
     const button = document.createElement("button")
     const textNode = document.createTextNode(message);
@@ -328,8 +361,9 @@ function changeCriminal(kind, message) {
     criminal_container.appendChild(button);
     button.addEventListener("click", function () {
         criminal_account.readOnly = true;
+        kind.readOnly = true;
         criminal_data.readOnly = true;
-        request("criminal", kind, JSON.stringify({account: criminal_account.value, data: criminal_data.value}))
+        request("criminal", otherKind, JSON.stringify({account: criminal_account.value, kind: kind.value, data: criminal_data.value}))
         button.remove();
         reset();
     })
@@ -358,6 +392,7 @@ function add() {
     } else if (select === "Criminal") {
         showCriminal();
         criminal_account.value = "";
+        kind.value = "";
         data.value = "";
         changeCriminal("POST", "Add", "add");
     }
@@ -378,8 +413,9 @@ function edit() {
         changeAbsence("PUT", "Confirm", "edit");
     } else if (select === "Criminal") {
         criminal_account.value = current_data_user.account;
+        kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
-        changeUser("PUT", "Confirm", "edit");
+        changeCriminal("PUT", "Confirm", "edit");
     }
 }
 
@@ -390,7 +426,7 @@ function del() {
     } else if (select === "Absence") {
         request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
     } else if (select === "Criminal") {
-        request("criminal/" + activeElement.textContent, "DELETE");
+        request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
     }
     reset();
 }

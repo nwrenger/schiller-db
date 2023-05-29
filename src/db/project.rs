@@ -35,6 +35,7 @@ pub enum Error {
     NothingFound,
     /// Specific errors
     InvalidDate,
+    InvalidKind,
     InvalidUser,
     /// Server specific errors
     Unauthorized,
@@ -192,8 +193,10 @@ pub fn create(db: &Database) -> Result<()> {
         primary key (account, date)); \
     \
     create table criminal ( \
-        account text not null primary key, \
-        data text not null);
+        account text not null, \
+        kind text not null, \
+        data text not null, \
+        primary key (account, kind));
     \
     create table login ( \
         user text not null primary key, \

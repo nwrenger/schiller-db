@@ -425,6 +425,22 @@ pub async fn fetch_criminal(auth: Auth<CriminalReadOnly>, account: &str) -> Json
 
 #[utoipa::path(
     responses(
+        (status = 200, description = "Got all Kinds", body = Vec<String>),
+        (status = 401, description = "Unauthorized to get all Kinds", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/criminal/all_kinds")]
+pub async fn all_kinds(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+    warn!("GET /user/all_kinds: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::criminal::all_kinds(&db))
+}
+
+#[utoipa::path(
+    responses(
         (status = 200, description = "Searched all criminals", body = Vec<Criminal>),
         (status = 401, description = "Unauthorized to search all criminals", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
@@ -478,7 +494,7 @@ pub async fn update_criminal(
 ) -> Json<Result<()>> {
     warn!("PUT /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::update(&db, &criminal.account, &criminal))
+    Json(db::criminal::update(&db, &criminal.account, &criminal.kind, &criminal))
 }
 
 #[utoipa::path(
@@ -488,16 +504,17 @@ pub async fn update_criminal(
     ),
     params(
         ("account", description = "The unique user account"),
+        ("kind", description = "The kind of the criminal"),
     ),
     security(
         ("authorization" = []),
     )
 )]
-#[delete("/criminal/<account>")]
-pub async fn delete_criminal(auth: Auth<UserWrite>, account: &str) -> Json<Result<()>> {
+#[delete("/criminal/<account>/<kind>")]
+pub async fn delete_criminal(auth: Auth<UserWrite>, account: &str, kind: &str) -> Json<Result<()>> {
     warn!("DELETE /criminal/{account}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::delete(&db, account))
+    Json(db::criminal::delete(&db, account, kind))
 }
 
 #[utoipa::path(

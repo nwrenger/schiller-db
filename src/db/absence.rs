@@ -59,15 +59,15 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
     let mut seen_dates = HashSet::new();
 
     while let Some(row) = rows.next()? {
-        let role: String = row.get(0).unwrap();
+        let date: String = row.get(0).unwrap();
 
-        // Check if the role has already been seen
-        if seen_dates.contains(&role) {
-            continue; // Skip the duplicate role
+        // Check if the date has already been seen
+        if seen_dates.contains(&date) {
+            continue; // Skip the duplicate date
         }
 
-        dates.push(role.clone());
-        seen_dates.insert(role);
+        dates.push(date.clone());
+        seen_dates.insert(date);
     }
 
     Ok(dates)

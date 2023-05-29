@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -8,6 +10,7 @@ use crate::db::project::{DBIter, Database, Error, FromRow, Result};
 #[cfg_attr(test, derive(PartialEq, Default))]
 pub struct Criminal {
     pub account: String,
+    pub kind: String,
     pub data: String,
 }
 
@@ -21,6 +24,7 @@ impl FromRow for Criminal {
     fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Criminal> {
         Ok(Criminal {
             account: row.get("account")?,
+            kind: row.get("kind")?,
             data: row.get("data")?,
         })
     }
@@ -31,6 +35,7 @@ pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
     Ok(db.con.query_row(
         "select \
         account, \
+        kind, \
         data \
         from criminal \
         where account=?",
@@ -39,15 +44,45 @@ pub fn fetch(db: &Database, account: &str) -> Result<Criminal> {
     )?)
 }
 
+/// Returns all kinds from the criminal table without duplicates
+pub fn all_kinds(db: &Database) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "select \
+        kind \
+        from criminal \
+        order by kind",
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut kinds = Vec::new();
+    let mut seen_kinds = HashSet::new();
+
+    while let Some(row) = rows.next()? {
+        let kind: String = row.get(0).unwrap();
+
+        // Check if the kind has already been seen
+        if seen_kinds.contains(&kind) {
+            continue; // Skip the duplicate kind
+        }
+
+        kinds.push(kind.clone());
+        seen_kinds.insert(kind);
+    }
+
+    Ok(kinds)
+}
+
 /// Performes a simple criminal search with the given `text`.
 pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
+        kind, \
         data \
         \
         from criminal \
         where account like '%'||?1||'%' \
+        or kind like '%'||?1||'%' \
         or data like '%'||?1||'%' \
         order by account",
     )?;
@@ -61,25 +96,29 @@ pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
         return Err(Error::InvalidUser);
     }
     db.con.execute(
-        "INSERT INTO criminal VALUES (?, ?)",
-        rusqlite::params![criminal.account.trim(), criminal.data,],
+        "INSERT INTO criminal VALUES (?, ?, ?)",
+        rusqlite::params![criminal.account.trim(), criminal.kind.trim() ,criminal.data.trim()],
     )?;
     Ok(())
 }
 
 /// Updates the criminal.
 /// This includes all its data.
-pub fn update(db: &Database, previous_account: &str, criminal: &Criminal) -> Result<()> {
+pub fn update(db: &Database, previous_account: &str, previous_kind: &str, criminal: &Criminal) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !criminal.is_valid() {
         return Err(Error::InvalidUser);
+    }
+    let previous_kind = previous_kind.trim();
+    if previous_kind.is_empty() {
+        return Err(Error::InvalidKind);
     }
 
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update criminal set account=?, data=? where account=?",
-        rusqlite::params![criminal.account, criminal.data, previous_account,],
+        "update criminal set account=?, kind=?, data=? where account=? and kind=?",
+        rusqlite::params![criminal.account.trim(), criminal.kind.trim(), criminal.data.trim(), previous_account, previous_kind],
     )?;
 
     transaction.commit()?;
@@ -88,14 +127,18 @@ pub fn update(db: &Database, previous_account: &str, criminal: &Criminal) -> Res
 
 /// Deletes the criminal.
 /// This includes all its data.
-pub fn delete(db: &Database, account: &str) -> Result<()> {
+pub fn delete(db: &Database, account: &str, kind: &str) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {
         return Err(Error::InvalidUser);
     }
+    let kind = kind.trim();
+    if kind.is_empty() {
+        return Err(Error::InvalidKind);
+    }
     let transaction = db.transaction()?;
     // remove date and presenters
-    transaction.execute("delete from criminal where account=?", [account])?;
+    transaction.execute("delete from criminal where account=? and kind=?", rusqlite::params![account, kind])?;
     transaction.commit()?;
     Ok(())
 }
@@ -111,6 +154,7 @@ mod tests {
 
         let criminal = Criminal {
             account: "foo".to_string(),
+            kind: "Destroy".to_string(),
             data: "Car Destroyed".into(),
         };
         criminal::add(&db, &criminal).unwrap();
@@ -122,6 +166,7 @@ mod tests {
         criminal::update(
             &db,
             &criminal.account,
+            &criminal.kind,
             &Criminal {
                 data: "Car Stolen".into(),
                 ..criminal.clone()
@@ -132,7 +177,7 @@ mod tests {
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].data, "Car Stolen".to_string());
 
-        criminal::delete(&db, &criminal.account).unwrap();
+        criminal::delete(&db, &criminal.account, &criminal.kind).unwrap();
         let result = criminal::search(&db, "").unwrap();
         assert_eq!(result.len(), 0);
     }
