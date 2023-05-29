@@ -223,7 +223,7 @@ function createUserList(list, node, back) {
             this.classList.add("active");
 
             document.getElementById("edit").hidden = false;
-            document.getElementById("cancel").hidden  = false;
+            document.getElementById("cancel").hidden = false;
             document.getElementById("del").hidden = false;
 
             for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
