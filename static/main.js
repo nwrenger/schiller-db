@@ -1,8 +1,22 @@
 const auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
 const sidebarList = document.getElementById("sidebar-list");
+const forename = document.getElementById("forename");
+const surname = document.getElementById("surname");
+const account = document.getElementById("account");
+const absence_account = document.getElementById("absence-account");
+const criminal_account = document.getElementById("criminal-account");
+const role = document.getElementById("role");
+const day = document.getElementById("day");
+const time = document.getElementById("time");
+const criminal_data = document.getElementById("data");
+const user_container = document.getElementById("user-container");
+const absence_container = document.getElementById("absence-container");
+const criminal_container = document.getElementById("criminal-container");
+const stats_container = document.getElementById("stats-container");
 var select = "User";
 var current_date = "";
+var current_data_user = {};
 
 if (!auth || !current_user) {
     window.open("login.html", "_self");
@@ -10,13 +24,14 @@ if (!auth || !current_user) {
 
 
 // Makes Requests from/to the API
-async function request(url, type) {
+async function request(url, type, json) {
     const response = await fetch(url, {
         method: type,
         headers: {
             "Authorization": "Basic " + auth,
             "Content-Type": "application/json; charset=utf-8"
         },
+        body: json,
     });
 
     let data = await response.json();
@@ -28,15 +43,52 @@ async function request(url, type) {
     }
 }
 
+function showUser() {
+    stats_container.hidden = true;
+    absence_container.hidden = true;
+    criminal_container.hidden = true;
+    user_container.hidden = false;
+}
+
+function showAbsence() {
+    stats_container.hidden = true;
+    absence_container.hidden = false;
+    criminal_container.hidden = true;
+    user_container.hidden = true;
+}
+
+function showCriminal() {
+    stats_container.hidden = true;
+    absence_container.hidden = true;
+    criminal_container.hidden = false;
+    user_container.hidden = true;
+}
+
 // Updates the UI with user data
 function updateUserUI(data) {
-    document.getElementById("stats-container").hidden = true;
-    document.getElementById("user-container").hidden = false;
+    showUser();
 
-    document.getElementById("forename").value = data.forename;
-    document.getElementById("surname").value = data.surname;
-    document.getElementById("account").value = data.account;
-    document.getElementById("group").value = data.role;
+    forename.value = data.forename;
+    surname.value = data.surname;
+    account.value = data.account;
+    role.value = data.role;
+}
+
+// Updates the UI with absence data
+function updateAbsenceUI(data) {
+    showAbsence();
+
+    absence_account.value = data.account;
+    day.value = data.date;
+    time.value = data.time;
+}
+
+// Updates the UI with criminal data
+function updateCriminalUI(data) {
+    showCriminal();
+
+    criminal_account.value = data.account;
+    criminal_data.value = data.data;
 }
 
 // Initializes the user list for roles UI
@@ -142,11 +194,21 @@ function createUserList(list, node, back) {
             document.getElementById("edit").hidden = false;
             document.getElementById("del").hidden = false;
 
-            if (user.role) {
+            for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
+                button.remove();
+            }
+
+            document.getElementById("add").classList.remove("active");
+            document.getElementById("edit").classList.remove("active");
+            document.getElementById("del").classList.remove("active");
+
+            current_data_user = user;
+            if (select === "User") {
                 updateUserUI(user);
-            } else {
-                const current_user = await request("user/fetch/" + user.account, "GET");
-                updateUserUI(current_user);
+            } else if (select === "Absence") {
+                updateAbsenceUI(user);
+            } else if (select === "Criminal") {
+                updateCriminalUI(user);
             }
         });
     }
@@ -173,14 +235,6 @@ function logout() {
     window.open("login.html", "_self");
 }
 
-function absenceButton() {
-    error("Currently not Implemented!");
-}
-
-function criminalsButton() {
-    error("Currently not Implemented!");
-}
-
 function profile() {
     error("Currently not Implemented!");
 }
@@ -191,38 +245,141 @@ function loginCreator() {
 
 function reset() {
     clearList();
+    document.getElementById("add").classList.remove("active");
+    document.getElementById("edit").classList.remove("active");
+    document.getElementById("del").classList.remove("active");
     document.getElementById("edit").hidden = true;
     document.getElementById("del").hidden = true;
-    document.getElementById("stats-container").hidden = false;
-    document.getElementById("user-container").hidden = true;
+    absence_container.hidden = true;
+    criminal_container.hidden = true;
+    stats_container.hidden = false;
+    user_container.hidden = true;
     document.getElementById("search").value = "";
     if (select === "User") {
         roleUserList().catch(() => window.open("login.html", "_self"));
         stats();
-    } else if (select === "Absences") {
+    } else if (select === "Absence") {
         absenceUserList();
-    } else if (select === "Criminals") {
+    } else if (select === "Criminal") {
         criminalUserList();
     }
 }
 
+function changeUser(kind, message) {
+    forename.readOnly = false;
+    surname.readOnly = false;
+    account.readOnly = false;
+    role.readOnly = false;
+    const button = document.createElement("button")
+    const textNode = document.createTextNode(message);
+    button.className = "btn btn-outline-danger m-3";
+    button.id = "change-button"
+    button.appendChild(textNode);
+    user_container.appendChild(button);
+    button.addEventListener("click", function () {
+        forename.readOnly = true;
+        surname.readOnly = true;
+        account.readOnly = true;
+        role.readOnly = true;
+        request("user", kind, JSON.stringify({forename: forename.value, surname: surname.value, account: account.value, role: role.value}))
+        button.remove();
+        reset();
+    })
+    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
+        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
+            button.remove();
+        }
+    }
+}
+
+function changeAbsence(kind, message) {
+    absence_account.readOnly = false;
+    day.readOnly = false;
+    time.readOnly = false;
+    const button = document.createElement("button")
+    const textNode = document.createTextNode(message);
+    button.className = "btn btn-outline-danger m-3";
+    button.id = "change-button"
+    button.appendChild(textNode);
+    absence_container.appendChild(button);
+    button.addEventListener("click", function () {
+        absence_account.readOnly = true;
+        day.readOnly = true;
+        time.readOnly = true;
+        request("absence", kind, JSON.stringify({account: absence_account.value, date: day.value, time: time.value}))
+        button.remove();
+        reset();
+    })
+    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
+        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
+            button.remove();
+        }
+    }
+}
+
+function changeCriminal(kind, message) {
+    criminal_account.readOnly = false;
+    criminal_data.readOnly = false;
+    const button = document.createElement("button")
+    const textNode = document.createTextNode(message);
+    button.className = "btn btn-outline-danger m-3";
+    button.id = "change-button"
+    button.appendChild(textNode);
+    criminal_container.appendChild(button);
+    button.addEventListener("click", function () {
+        criminal_account.readOnly = true;
+        criminal_data.readOnly = true;
+        request("criminal", kind, JSON.stringify({account: criminal_account.value, data: criminal_data.value}))
+        button.remove();
+        reset();
+    })
+    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
+        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
+            button.remove();
+        }
+    }
+}
+
 function add() {
+    document.getElementById("add").classList.add("active");
     if (select === "User") {
-        error("Currently not Implemented!")
-    } else if (select === "Absences") {
-        error("Currently not Implemented!")
-    } else if (select === "Criminals") {
-        error("Currently not Implemented!")
+        showUser();
+        forename.value = "";
+        surname.value = "";
+        account.value = "";
+        role.value = "";
+        changeUser("POST", "Add", "add");
+    } else if (select === "Absence") {
+        showAbsence();
+        absence_account.value = "";
+        day.value = "";
+        time.value = "";
+        changeAbsence("POST", "Add", "add");
+    } else if (select === "Criminal") {
+        showCriminal();
+        criminal_account.value = "";
+        data.value = "";
+        changeCriminal("POST", "Add", "add");
     }
 }
 
 function edit() {
+    document.getElementById("edit").classList.add("active");
     if (select === "User") {
-        error("Currently not Implemented!")
-    } else if (select === "Absences") {
-        error("Currently not Implemented!")
-    } else if (select === "Criminals") {
-        error("Currently not Implemented!")
+        forename.value = current_data_user.forename;
+        surname.value = current_data_user.surname;
+        account.value = current_data_user.account;
+        role.value = current_data_user.role;
+        changeUser("PUT", "Confirm", "edit");
+    } else if (select === "Absence") {
+        absence_account.value = current_data_user.account;
+        day.value = current_data_user.date;
+        time.value = current_data_user.time;
+        changeAbsence("PUT", "Confirm", "edit");
+    } else if (select === "Criminal") {
+        criminal_account.value = current_data_user.account;
+        criminal_data.value = current_data_user.data;
+        changeUser("PUT", "Confirm", "edit");
     }
 }
 
@@ -230,9 +387,9 @@ function del() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     if (select === "User") {
         request("user/" + activeElement.textContent, "DELETE");
-    } else if (select === "Absences") {
+    } else if (select === "Absence") {
         request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
-    } else if (select === "Criminals") {
+    } else if (select === "Criminal") {
         request("criminal/" + activeElement.textContent, "DELETE");
     }
     reset();
@@ -243,10 +400,10 @@ async function search() {
     if (select === "User") {
         const data = await request(`/user/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
-    } else if (select === "Absences") {
+    } else if (select === "Absence") {
         const data = await request(`/absence/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
-    } else if (select === "Criminals") {
+    } else if (select === "Criminal") {
         const data = await request(`/criminal/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
     }
@@ -281,13 +438,13 @@ function selectUser() {
     reset();
 }
 
-function selectAbsences() {
-    selecting("Absences", "absences");
+function selectAbsence() {
+    selecting("Absence", "absence");
     reset();
 }
 
-function selectCriminals() {
-    selecting("Criminals", "criminals");
+function selectCriminal() {
+    selecting("Criminal", "criminal");
     reset();
 }
 

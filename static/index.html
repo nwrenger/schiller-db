@@ -40,7 +40,7 @@
         <div class="sidebar bg-dark">
             <div class="bg-dark-subtle">
                 <div class="btn-group p-2">
-                    <button class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add()>
+                    <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add()>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
                         </svg>                                        
@@ -72,8 +72,8 @@
                         <h6 class="dropdown-header">Category</h6>
                     </li>
                     <li><a id="user" class="dropdown-item active" onclick=selectUser()>User</a></li>
-                    <li><a id="absences" class="dropdown-item" onclick=selectAbsences()>Absences</a></li>
-                    <li><a id="criminals" class="dropdown-item" onclick=selectCriminals()>Criminals</a></li>
+                    <li><a id="absence" class="dropdown-item" onclick=selectAbsence()>Absence</a></li>
+                    <li><a id="criminal" class="dropdown-item" onclick=selectCriminal()>Criminal</a></li>
                 </ul>
             </div>
         </div>
@@ -98,12 +98,46 @@
                             readonly>
                     </div>
                     <div class="col">
-                        <label for="group" class="form-label">Group</label>
-                        <input id="group" type="text" class="form-control" placeholder="Group" aria-label="Group"
+                        <label for="role" class="form-label">Role</label>
+                        <input id="role" type="text" class="form-control" placeholder="Group" aria-label="Group"
                             readonly>
                     </div>
                 </div>
-                <button class="btn btn-outline-danger m-3" type="button" aria-expanded="false" hidden>Confirm</button>
+            </div>
+            <div id="absence-container" hidden>
+                <div class="card-title row">
+                    <div class="col">
+                        <label for="absence-account" class="form-label">Account</label>
+                        <input id="absence-account" type="text" class="form-control" placeholder="Forename"
+                            aria-label="Forename" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="day" class="form-label">Day</label>
+                        <input id="day" type="text" class="form-control" placeholder="Surname" aria-label="Surname"
+                            readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="time" class="form-label">Time</label>
+                        <input id="time" type="text" class="form-control" placeholder="Account" aria-label="Account"
+                            readonly>
+                    </div>
+                </div>
+            </div>
+            <div id="criminal-container">
+                <div class="card-title row">
+                    <div class="col">
+                        <label for="criminal-account" class="form-label">Account</label>
+                        <input id="criminal-account" type="text" class="form-control" placeholder="Forename"
+                            aria-label="Forename" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="data" class="form-label">Data</label>
+                        <input id="data" type="text" class="form-control" placeholder="Surname" aria-label="Surname"
+                            readonly>
+                    </div>
+                </div>
             </div>
             <div id="stats-container">
                 <div class="row p-3">
