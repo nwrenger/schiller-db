@@ -386,13 +386,13 @@ function visibilityGetUser(bool) {
 }
 
 async function getUser() {
-    const activeUser = document.querySelector(".list-group-item.list-group-item-action.active");
-    const user = await request("user/fetch/" + activeUser.textContent, "GET");
-    activeUser.classList.remove("active");
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    const user = await request("user/fetch/" + activeElement.textContent, "GET");
+    activeElement.classList.remove("active");
     document.getElementById("cancel").hidden = true;
     document.getElementById("edit").hidden = true;
     document.getElementById("del").hidden = true;
-    showUser(user);
+    updateUserUI(user);
 }
 
 function add() {
