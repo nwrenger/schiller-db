@@ -2,16 +2,17 @@ const auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
 const sidebarList = document.getElementById("sidebar-list");
 var select = "User";
+var current_date = "";
 
 if (!auth || !current_user) {
     window.open("login.html", "_self");
 }
 
 
-// Fetches data from the API
-async function get_data(url) {
+// Makes Requests from/to the API
+async function request(url, type) {
     const response = await fetch(url, {
-        method: "GET",
+        method: type,
         headers: {
             "Authorization": "Basic " + auth,
             "Content-Type": "application/json; charset=utf-8"
@@ -42,7 +43,7 @@ function updateUserUI(data) {
 async function roleUserList() {
     clearList();
 
-    const roles = await get_data("/user/all_roles");
+    const roles = await request("/user/all_roles", "GET");
     for (const role of roles) {
         const node = document.createElement("li");
         const data = document.createTextNode(role);
@@ -54,7 +55,7 @@ async function roleUserList() {
             const role = this.textContent;
             // document.getElementById("back-button").hidden = false;
 
-            const users = await get_data(`/user/search?role=${role}`);
+            const users = await request(`/user/search?role=${role}`, "GET");
             createUserList(users, sidebarList, true);
         });
     }
@@ -64,7 +65,7 @@ async function roleUserList() {
 async function absenceUserList() {
     clearList();
 
-    const dates = await get_data("/absence/all_dates");
+    const dates = await request("/absence/all_dates", "GET");
 
     if (!Array.isArray(dates) || !dates.length) {
         if (!sidebarList.textContent) {
@@ -84,7 +85,9 @@ async function absenceUserList() {
         node.addEventListener("click", async function () {
             const date = this.textContent;
 
-            const absences = await get_data(`/absence/search?text=${date}`);
+            current_date = date;
+
+            const absences = await request(`/absence/search?text=${date}`, "GET");
             createUserList(absences, sidebarList, true);
         });
     }
@@ -92,7 +95,7 @@ async function absenceUserList() {
 
 async function criminalUserList() {
     clearList();
-    const criminals = await get_data("/criminal/search");
+    const criminals = await request("/criminal/search", "GET");
     createUserList(criminals, sidebarList, false);
 }
 
@@ -142,7 +145,7 @@ function createUserList(list, node, back) {
             if (user.role) {
                 updateUserUI(user);
             } else {
-                const current_user = await get_data("user/fetch/" + user.account);
+                const current_user = await request("user/fetch/" + user.account, "GET");
                 updateUserUI(current_user);
             }
         });
@@ -224,31 +227,33 @@ function edit() {
 }
 
 function del() {
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     if (select === "User") {
-        error("Currently not Implemented!")
+        request("user/" + activeElement.textContent, "DELETE");
     } else if (select === "Absences") {
-        error("Currently not Implemented!")
+        request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
     } else if (select === "Criminals") {
-        error("Currently not Implemented!")
+        request("criminal/" + activeElement.textContent, "DELETE");
     }
+    reset();
 }
 
 async function search() {
     const text = document.getElementById("search").value;
     if (select === "User") {
-        const data = await get_data(`/user/search?name=${text}`);
+        const data = await request(`/user/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
     } else if (select === "Absences") {
-        const data = await get_data(`/absence/search?text=${text}`);
+        const data = await request(`/absence/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
     } else if (select === "Criminals") {
-        const data = await get_data(`/criminal/search?text=${text}`);
+        const data = await request(`/criminal/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
     }
 }
 
 async function stats() {
-    const statsData = await get_data("/stats");
+    const statsData = await request("/stats", "GET");
 
     const devs = statsData.developer.split(":");
 
