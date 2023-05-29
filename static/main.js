@@ -137,6 +137,7 @@ function createUserList(list, node, back) {
             this.classList.add("active");
 
             document.getElementById("edit").hidden = false;
+            document.getElementById("del").hidden = false;
 
             if (user.role) {
                 updateUserUI(user);
@@ -188,6 +189,7 @@ function loginCreator() {
 function reset() {
     clearList();
     document.getElementById("edit").hidden = true;
+    document.getElementById("del").hidden = true;
     document.getElementById("stats-container").hidden = false;
     document.getElementById("user-container").hidden = true;
     document.getElementById("search").value = "";
@@ -212,6 +214,16 @@ function add() {
 }
 
 function edit() {
+    if (select === "User") {
+        error("Currently not Implemented!")
+    } else if (select === "Absences") {
+        error("Currently not Implemented!")
+    } else if (select === "Criminals") {
+        error("Currently not Implemented!")
+    }
+}
+
+function del() {
     if (select === "User") {
         error("Currently not Implemented!")
     } else if (select === "Absences") {
