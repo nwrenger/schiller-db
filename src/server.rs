@@ -463,7 +463,7 @@ pub async fn fetch_criminal(
     )
 )]
 #[get("/criminal/all_kinds")]
-pub async fn all_kinds(auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+pub async fn all_kinds(auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
     warn!("GET /user/all_kinds: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::all_kinds(&db))
