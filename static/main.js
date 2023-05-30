@@ -22,6 +22,7 @@ const addButton = document.getElementById("add");
 const editButton = document.getElementById("edit");
 const deleteButton = document.getElementById("del");
 const cancelButton = document.getElementById("cancel");
+const loginCreatorDropdown = document.getElementById("login-creator");
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -41,6 +42,7 @@ function updateDisabling() {
             addButton.disabled = true;
             editButton.disabled = true;
             deleteButton.disabled = true;
+            loginCreatorDropdown.disabled = true;
         }
     } else if (select === "Absence") {
         if (permissions.access_absence === "ReadOnly" || permissions.access_absence === "None") {
