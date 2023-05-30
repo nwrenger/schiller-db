@@ -386,7 +386,7 @@ function changeAbsence(otherKind) {
     } else if (otherKind === "POST") {
         buttonAdd.hidden = false;
         buttonConfirm.hidden = true;
-    }    
+    }
 }
 
 async function buttonAddAbsence() {
@@ -419,7 +419,7 @@ function changeCriminal(otherKind) {
     } else if (otherKind === "POST") {
         buttonAdd.hidden = false;
         buttonConfirm.hidden = true;
-    }  
+    }
 }
 
 async function buttonAddCriminal() {

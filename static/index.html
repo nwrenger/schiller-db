@@ -24,16 +24,15 @@
                                 <path
                                     d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
                             </svg>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <h6 class="dropdown-header">Profile</h6>
-                            </li>
-                            <li><button class="dropdown-item" type="button" onclick=currentUser()>Current User</button>
-                            </li>
-                            <li><button class="dropdown-item" type="button" onclick=loginCreator()>Create
-                                    Logins</button></li>
-                            <li><button class="dropdown-item" type="button" onclick=logout()>Logout</button></li>
+                        </button <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <h6 class="dropdown-header">Profile</h6>
+                        </li>
+                        <li><button class="dropdown-item" type="button" onclick=currentUser()>Current User</button>
+                        </li>
+                        <li><button class="dropdown-item" type="button" onclick=loginCreator()>Create
+                                Logins</button></li>
+                        <li><button class="dropdown-item" type="button" onclick=logout()>Logout</button></li>
                         </ul>
                     </div>
                 </div>
@@ -43,7 +42,8 @@
         <div class="sidebar bg-dark">
             <div class="bg-dark-subtle">
                 <div class="btn-group p-2">
-                    <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add() title="Add">
+                    <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add()
+                        title="Add">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -127,8 +127,10 @@
                             readonly>
                     </div>
                 </div>
-                <button id="user-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddUser() hidden>Add</button>
-                <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser() hidden>Confirm</button>
+                <button id="user-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddUser()
+                    hidden>Add</button>
+                <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser()
+                    hidden>Confirm</button>
             </div>
             <div id="absence-container" hidden>
                 <div class="card-title row">
@@ -154,8 +156,10 @@
                         <input id="time" type="text" class="form-control" placeholder="Time" aria-label="Time" readonly>
                     </div>
                 </div>
-                <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence() hidden>Add</button>
-                <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence() hidden>Confirm</button>
+                <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence()
+                    hidden>Add</button>
+                <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence()
+                    hidden>Confirm</button>
                 <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user"
                     style="max-width: 160px;" onclick=getUser()>Get User</button>
             </div>
@@ -183,8 +187,10 @@
                         <input id="data" type="text" class="form-control" placeholder="Data" aria-label="Data" readonly>
                     </div>
                 </div>
-                <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal() hidden>Add</button>
-                <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal() hidden>Confirm</button>
+                <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal()
+                    hidden>Add</button>
+                <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal()
+                    hidden>Confirm</button>
                 <button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
                     onclick=getUser()>Get User</button>
             </div>
