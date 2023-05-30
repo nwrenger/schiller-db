@@ -110,7 +110,7 @@ async function roleUserList() {
 
         node.addEventListener("click", async function () {
             const role = this.textContent;
-            // document.getElementById("back-button").hidden = false;
+            cancel();
 
             const users = await request(`/user/search?role=${role}`, "GET");
             createUserList(users, sidebarList, true);
@@ -141,6 +141,7 @@ async function absenceUserList() {
 
         node.addEventListener("click", async function () {
             const date = this.textContent;
+            cancel();
 
             current_date = date;
 
@@ -172,6 +173,7 @@ async function criminalUserList() {
 
         node.addEventListener("click", async function () {
             const kind = this.textContent;
+            cancel();
 
             current_kind = kind;
 
