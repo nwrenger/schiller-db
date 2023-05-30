@@ -242,13 +242,13 @@ function createUserList(list, node, back) {
             }
             this.classList.add("active");
 
+            allReadOnly();
+
             document.getElementById("edit").hidden = false;
             document.getElementById("cancel").hidden = false;
             document.getElementById("del").hidden = false;
 
-            document.getElementById("user-change-button").hidden = true;
-            document.getElementById("absence-change-button").hidden = true;
-            document.getElementById("criminal-change-button").hidden = true;
+            hideAllButtons();
 
             document.getElementById("add").classList.remove("active");
             document.getElementById("edit").classList.remove("active");
@@ -317,9 +317,8 @@ async function deleteLogin() {
 
 function reset() {
     clearList();
-    document.getElementById("user-change-button").hidden = true;
-    document.getElementById("absence-change-button").hidden = true;
-    document.getElementById("criminal-change-button").hidden = true;
+    allReadOnly();
+    hideAllButtons();
     document.getElementById("criminal-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("add").classList.remove("active");
@@ -339,24 +338,33 @@ function reset() {
     }
 }
 
-function changeUser(otherKind, message) {
-    const previous_account = account.value;
+function changeUser(otherKind) {
     forename.readOnly = false;
     surname.readOnly = false;
     account.readOnly = false;
     role.readOnly = false;
-    const button = document.getElementById("user-change-button");
-    console.log(button);
-    button.hidden = false;
-    button.textContent = message;
-    button.addEventListener("click", async function () {
-        forename.readOnly = true;
-        surname.readOnly = true;
-        account.readOnly = true;
-        role.readOnly = true;
-        await request("user/" + previous_account, otherKind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
-        reset();
-    })
+    const buttonAdd = document.getElementById("user-add-button");
+    const buttonConfirm = document.getElementById("user-confirm-button");
+    if (otherKind === "PUT") {
+        buttonAdd.hidden = true;
+        buttonConfirm.hidden = false;
+    } else if (otherKind === "POST") {
+        buttonAdd.hidden = false;
+        buttonConfirm.hidden = true;
+    }
+}
+
+async function buttonAddUser() {
+    userReadOnly();
+    await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    reset();
+}
+
+async function buttonConfirmUser() {
+    const previous_account = account.value;
+    userReadOnly();
+    await request("user/" + previous_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    reset();
 }
 
 function formatDate(date) {
@@ -364,48 +372,70 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-function changeAbsence(otherKind, message) {
+function changeAbsence(otherKind) {
     visibilityGetUser(true);
-    const previous_account = absence_account.value;
-    const previous_day = day.value;
     document.getElementById("absence-select-button").disabled = false;
     absence_account.readOnly = false;
     day.readOnly = false;
     time.readOnly = false;
-    const button = document.getElementById("absence-change-button");
-    console.log(button);
-    button.hidden = false;
-    button.textContent = message;
-    button.addEventListener("click", async function () {
-        document.getElementById("absence-select-button").disabled = true;
-        absence_account.readOnly = true;
-        day.readOnly = true;
-        time.readOnly = true;
-        await request("absence/" + previous_account + "/" + previous_day, otherKind, JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
-        reset();
-    })
+    const buttonAdd = document.getElementById("absence-add-button");
+    const buttonConfirm = document.getElementById("absence-confirm-button");
+    if (otherKind === "PUT") {
+        buttonAdd.hidden = true;
+        buttonConfirm.hidden = false;
+    } else if (otherKind === "POST") {
+        buttonAdd.hidden = false;
+        buttonConfirm.hidden = true;
+    }    
 }
 
-function changeCriminal(otherKind, message) {
+async function buttonAddAbsence() {
+    document.getElementById("absence-select-button").disabled = true;
+    absenceReadOnly();
+    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    reset();
+}
+
+async function buttonConfirmAbsence() {
+    const previous_account = absence_account.value;
+    const previous_day = day.value;
+    document.getElementById("absence-select-button").disabled = true;
+    absenceReadOnly();
+    await request("absence/" + previous_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    reset();
+}
+
+function changeCriminal(otherKind) {
     visibilityGetUser(true);
-    const previous_account = criminal_account.value;
-    const previous_kind = kind.value;
     criminal_account.readOnly = false;
     kind.readOnly = false;
     criminal_data.readOnly = false;
     document.getElementById("criminal-select-button").disabled = false;
-    const button = document.getElementById("criminal-change-button");
-    console.log(button);
-    button.hidden = false;
-    button.textContent = message;
-    button.addEventListener("click", async function () {
-        document.getElementById("criminal-select-button").disabled = true;
-        criminal_account.readOnly = true;
-        kind.readOnly = true;
-        criminal_data.readOnly = true;
-        await request("criminal/" + previous_account + "/" + previous_kind, otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
-        reset();
-    })
+    const buttonAdd = document.getElementById("criminal-add-button");
+    const buttonConfirm = document.getElementById("criminal-confirm-button");
+    if (otherKind === "PUT") {
+        buttonAdd.hidden = true;
+        buttonConfirm.hidden = false;
+    } else if (otherKind === "POST") {
+        buttonAdd.hidden = false;
+        buttonConfirm.hidden = true;
+    }  
+}
+
+async function buttonAddCriminal() {
+    document.getElementById("criminal-select-button").disabled = true;
+    criminalReadOnly();
+    await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    reset();
+}
+
+async function buttonConfirmCriminal() {
+    const previous_account = criminal_account.value;
+    const previous_kind = kind.value;
+    document.getElementById("criminal-select-button").disabled = true;
+    criminalReadOnly();
+    await request("criminal/" + previous_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    reset();
 }
 
 function visibilityGetUser(bool) {
@@ -481,6 +511,40 @@ async function del() {
         await request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
     }
     reset();
+}
+
+function allReadOnly() {
+    userReadOnly();
+    absenceReadOnly();
+    criminalReadOnly();
+}
+
+function userReadOnly() {
+    forename.readOnly = true;
+    surname.readOnly = true;
+    account.readOnly = true;
+    role.readOnly = true;
+}
+
+function absenceReadOnly() {
+    absence_account.readOnly = true;
+    day.readOnly = true;
+    time.readOnly = true;
+}
+
+function criminalReadOnly() {
+    criminal_account.readOnly = true;
+    kind.readOnly = true;
+    criminal_data.readOnly = true;
+}
+
+function hideAllButtons() {
+    document.getElementById("user-add-button").hidden = true;
+    document.getElementById("absence-add-button").hidden = true;
+    document.getElementById("criminal-add-button").hidden = true;
+    document.getElementById("user-confirm-button").hidden = true;
+    document.getElementById("absence-confirm-button").hidden = true;
+    document.getElementById("criminal-confirm-button").hidden = true;
 }
 
 function cancel() {

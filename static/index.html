@@ -127,7 +127,8 @@
                             readonly>
                     </div>
                 </div>
-                <button id="user-change-button" class="btn btn-outline-danger m-3" hidden></button>
+                <button id="user-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddUser() hidden>Add</button>
+                <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser() hidden>Confirm</button>
             </div>
             <div id="absence-container" hidden>
                 <div class="card-title row">
@@ -153,7 +154,8 @@
                         <input id="time" type="text" class="form-control" placeholder="Time" aria-label="Time" readonly>
                     </div>
                 </div>
-                <button id="absence-change-button" class="btn btn-outline-danger m-3" hidden></button>
+                <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence() hidden>Add</button>
+                <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence() hidden>Confirm</button>
                 <button type="button" class="btn btn-outline-primary m-3 justify-content-center get-user"
                     style="max-width: 160px;" onclick=getUser()>Get User</button>
             </div>
@@ -181,7 +183,8 @@
                         <input id="data" type="text" class="form-control" placeholder="Data" aria-label="Data" readonly>
                     </div>
                 </div>
-                <button id="criminal-change-button" class="btn btn-outline-danger m-3" hidden></button>
+                <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal() hidden>Add</button>
+                <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal() hidden>Confirm</button>
                 <button type="button" class="btn btn-outline-primary m-3 get-user" style="max-width: 160px;"
                     onclick=getUser()>Get User</button>
             </div>
