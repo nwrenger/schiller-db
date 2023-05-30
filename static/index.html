@@ -96,9 +96,9 @@
                     <li>
                         <h6 class="dropdown-header">Category</h6>
                     </li>
-                    <li><button id="user" class="dropdown-item active" onclick=selectUser()>User</button></li>
-                    <li><button id="absence" class="dropdown-item" onclick=selectAbsence()>Absence</button></li>
-                    <li><button id="criminal" class="dropdown-item" onclick=selectCriminal()>Criminal</button></li>
+                    <li><button id="user" class="dropdown-item active" onclick="selecting('User', 'user')">User</button></li>
+                    <li><button id="absence" class="dropdown-item" onclick="selecting('Absence', 'absence')">Absence</button></li>
+                    <li><button id="criminal" class="dropdown-item" onclick="selecting('Criminal', 'criminal')">Criminal</button></li>
                 </ul>
             </div>
         </div>
@@ -139,7 +139,7 @@
                         <label for="absence-select" class="form-label">Account</label>
                         <div class="input-group mb-3 absence-select">
                             <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick=absenceSelect()
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="nodeSelect('absence-select-dropdown', 'absence-account')"
                                 disabled>Select</button>
                             <ul id="absence-select-dropdown" class="dropdown-menu"></ul>
                             <input id="absence-account" type="text" class="form-control" placeholder="Account"
@@ -170,7 +170,7 @@
                         <label for="criminal-select" class="form-label">Account</label>
                         <div class="input-group mb-3 criminal-select">
                             <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick=criminalSelect()
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="nodeSelect('criminal-select-dropdown', 'criminal-account')"
                                 disabled>Select</button>
                             <ul id="criminal-select-dropdown" class="dropdown-menu"></ul>
                             <input id="criminal-account" type="text" class="form-control" placeholder="Account"
@@ -204,7 +204,7 @@
                             <div class="input-group mb-3 login-users">
                                 <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                    onclick=loginAddSelect()>Select</button>
+                                    onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">Select</button>
                                 <ul id="login-add-select-dropdown" class="dropdown-menu"></ul>
                                 <input id="login-add-user" type="text" class="form-control" placeholder="User"
                                     aria-label="User">
@@ -254,7 +254,7 @@
                         <div class="input-group mb-3 login-users">
                             <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick=loginDeleteSelect()>Select</button>
+                                onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">Select</button>
                             <ul id="login-delete-select-dropdown" class="dropdown-menu"></ul>
                             <input id="login-delete-user" type="text" class="form-control" placeholder="User"
                                 aria-label="User">

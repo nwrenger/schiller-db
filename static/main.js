@@ -17,6 +17,9 @@ const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
 const login_container = document.getElementById("login-container");
 const get_user_button = document.getElementsByClassName("get-user");
+const editButton = document.getElementById("edit");
+const deleteButton = document.getElementById("del");
+const cancelButton = document.getElementById("cancel");
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -47,51 +50,27 @@ async function request(url, type, json) {
     }
 }
 
-function showStats() {
-    stats_container.hidden = false;
-    absence_container.hidden = true;
-    criminal_container.hidden = true;
-    user_container.hidden = true;
-    login_container.hidden = true;
-}
-
-function showUser() {
-    stats_container.hidden = true;
-    absence_container.hidden = true;
-    criminal_container.hidden = true;
-    user_container.hidden = false;
-    login_container.hidden = true;
-}
-
-function showLogin() {
-    stats_container.hidden = true;
-    absence_container.hidden = true;
-    criminal_container.hidden = true;
-    user_container.hidden = true;
-    login_container.hidden = false;
-}
-
-function showAbsence() {
-    stats_container.hidden = true;
-    absence_container.hidden = false;
-    criminal_container.hidden = true;
-    user_container.hidden = true;
-    login_container.hidden = true;
-    visibilityGetUser(false);
-}
-
-function showCriminal() {
-    stats_container.hidden = true;
-    absence_container.hidden = true;
-    criminal_container.hidden = false;
-    user_container.hidden = true;
-    login_container.hidden = true;
-    visibilityGetUser(false);
+/**state[0] = stats_container.
+ * state[1] = absence_container.
+ * state[2] = criminal_container.
+ * state[3] = user_container.
+ * state[4] = login_container.
+ * state[5] = visibilityGetUser.
+*/
+function show(state, getUser) {
+    stats_container.hidden = state[0];
+    absence_container.hidden = state[1];
+    criminal_container.hidden = state[2];
+    user_container.hidden = state[3];
+    login_container.hidden = state[4];
+    if (getUser) {
+        visibilityGetUser(state[5]);
+    }
 }
 
 // Updates the UI with user data
 function updateUserUI(data) {
-    showUser();
+    show([true, true, true, false, true]);
 
     forename.value = data.forename;
     surname.value = data.surname;
@@ -101,7 +80,7 @@ function updateUserUI(data) {
 
 // Updates the UI with absence data
 function updateAbsenceUI(data) {
-    showAbsence();
+    show([true, false, true, true, true, false], true);
 
     absence_account.value = data.account;
     day.value = data.date;
@@ -110,7 +89,7 @@ function updateAbsenceUI(data) {
 
 // Updates the UI with criminal data
 function updateCriminalUI(data) {
-    showCriminal();
+    show([true, true, false, true, true, false], true);
 
     criminal_account.value = data.account;
     kind.value = data.kind;
@@ -119,9 +98,9 @@ function updateCriminalUI(data) {
 
 // Initializes the user list for roles UI
 async function roleUserList() {
-    clearList();
-
     const roles = await request("/user/all_roles", "GET");
+
+    clearList();
     for (const role of roles) {
         const node = document.createElement("li");
         const data = document.createTextNode(role);
@@ -202,7 +181,7 @@ async function criminalUserList() {
     }
 }
 
-function createUserList(list, node, back) {
+function createUserList(nestedList, node, back) {
     clearList();
 
     const backEntry = document.createElement("li");
@@ -218,7 +197,7 @@ function createUserList(list, node, back) {
         document.scrollingElement.scrollTo(0, 0);
     }
 
-    if (!Array.isArray(list) || !list.length) {
+    if (!Array.isArray(nestedList) || !nestedList.length) {
         if (back) {
             backEntry.textContent = "Back - No Results!";
         } else {
@@ -227,8 +206,7 @@ function createUserList(list, node, back) {
         return;
     }
 
-
-    for (const user of list) {
+    for (const user of nestedList) {
         const userNode = document.createElement("li");
         const userTextNode = document.createTextNode(user.account);
         userNode.className = "list-group-item list-group-item-action";
@@ -242,16 +220,16 @@ function createUserList(list, node, back) {
             }
             this.classList.add("active");
 
-            allReadOnly();
+            allReadOnly(true);
 
-            document.getElementById("edit").hidden = false;
-            document.getElementById("cancel").hidden = false;
-            document.getElementById("del").hidden = false;
+            editButton.hidden = false;
+            cancelButton.hidden = false;
+            deleteButton.hidden = false;
 
             hideAllButtons();
 
             document.getElementById("add").classList.remove("active");
-            document.getElementById("edit").classList.remove("active");
+            edit.classList.remove("active");
 
             current_data_user = user;
             if (select === "User") {
@@ -296,7 +274,7 @@ function currentUser() {
 
 function loginCreator() {
     reset();
-    showLogin();
+    show([true, true, true, true, false])
 }
 
 async function addLogin() {
@@ -317,16 +295,9 @@ async function deleteLogin() {
 
 function reset() {
     clearList();
-    allReadOnly();
+    allReadOnly(true);
     hideAllButtons();
-    document.getElementById("criminal-select-button").disabled = true;
-    document.getElementById("absence-select-button").disabled = true;
-    document.getElementById("add").classList.remove("active");
-    document.getElementById("edit").classList.remove("active");
-    document.getElementById("edit").hidden = true;
-    document.getElementById("cancel").hidden = true;
-    document.getElementById("del").hidden = true;
-    showStats();
+    cancel();
     document.getElementById("search").value = "";
     if (select === "User") {
         roleUserList().catch(() => window.open("login.html", "_self"));
@@ -338,20 +309,19 @@ function reset() {
     }
 }
 
-function changeUser(otherKind) {
-    forename.readOnly = false;
-    surname.readOnly = false;
-    account.readOnly = false;
-    role.readOnly = false;
-    const buttonAdd = document.getElementById("user-add-button");
-    const buttonConfirm = document.getElementById("user-confirm-button");
-    if (otherKind === "PUT") {
-        buttonAdd.hidden = true;
-        buttonConfirm.hidden = false;
-    } else if (otherKind === "POST") {
-        buttonAdd.hidden = false;
-        buttonConfirm.hidden = true;
+function cancel() {
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    if (activeElement) {
+        activeElement.classList.remove("active");
     }
+    document.getElementById("add").classList.remove("active");
+    editButton.classList.remove("active");
+    editButton.hidden = true;
+    cancelButton.hidden = true;
+    deleteButton.hidden = true;
+    document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("absence-select-button").disabled = true;
+    show([false, true, true, true, true])
 }
 
 async function buttonAddUser() {
@@ -372,22 +342,6 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-function changeAbsence(otherKind) {
-    visibilityGetUser(true);
-    document.getElementById("absence-select-button").disabled = false;
-    absence_account.readOnly = false;
-    day.readOnly = false;
-    time.readOnly = false;
-    const buttonAdd = document.getElementById("absence-add-button");
-    const buttonConfirm = document.getElementById("absence-confirm-button");
-    if (otherKind === "PUT") {
-        buttonAdd.hidden = true;
-        buttonConfirm.hidden = false;
-    } else if (otherKind === "POST") {
-        buttonAdd.hidden = false;
-        buttonConfirm.hidden = true;
-    }
-}
 
 async function buttonAddAbsence() {
     document.getElementById("absence-select-button").disabled = true;
@@ -405,22 +359,6 @@ async function buttonConfirmAbsence() {
     reset();
 }
 
-function changeCriminal(otherKind) {
-    visibilityGetUser(true);
-    criminal_account.readOnly = false;
-    kind.readOnly = false;
-    criminal_data.readOnly = false;
-    document.getElementById("criminal-select-button").disabled = false;
-    const buttonAdd = document.getElementById("criminal-add-button");
-    const buttonConfirm = document.getElementById("criminal-confirm-button");
-    if (otherKind === "PUT") {
-        buttonAdd.hidden = true;
-        buttonConfirm.hidden = false;
-    } else if (otherKind === "POST") {
-        buttonAdd.hidden = false;
-        buttonConfirm.hidden = true;
-    }
-}
 
 async function buttonAddCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
@@ -438,6 +376,23 @@ async function buttonConfirmCriminal() {
     reset();
 }
 
+function showChange(otherKind, selectId, addId, confirmId) {
+    visibilityGetUser(true);
+    allReadOnly(false);
+    if (selectId) {
+        document.getElementById(selectId).disabled = false;
+    }
+    const buttonAdd = document.getElementById(addId);
+    const buttonConfirm = document.getElementById(confirmId);
+    if (otherKind === "PUT") {
+        buttonAdd.hidden = true;
+        buttonConfirm.hidden = false;
+    } else if (otherKind === "POST") {
+        buttonAdd.hidden = false;
+        buttonConfirm.hidden = true;
+    }
+}
+
 function visibilityGetUser(bool) {
     for (const button of get_user_button) {
         button.hidden = bool;
@@ -448,56 +403,56 @@ async function getUser() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     activeElement.classList.remove("active");
     const user = await request("user/fetch/" + activeElement.textContent, "GET");
-    document.getElementById("cancel").hidden = true;
-    document.getElementById("edit").hidden = true;
-    document.getElementById("del").hidden = true;
+    cancelButton.hidden = true;
+    editButton.hidden = true;
+    deleteButton.hidden = true;
     updateUserUI(user);
 }
 
 function add() {
     document.getElementById("add").classList.add("active");
-    document.getElementById("edit").classList.remove("active");
+    editButton.classList.remove("active");
     if (select === "User") {
-        showUser();
+        show([true, true, true, false, true]);
         forename.value = "";
         surname.value = "";
         account.value = "";
         role.value = "";
-        changeUser("POST", "Add");
+        showChange("POST", "", "user-add-button", "user-confirm-button");
     } else if (select === "Absence") {
-        showAbsence();
+        show([true, false, true, true, true, false], true);
         absence_account.value = "";
         day.value = "";
         time.value = "";
-        changeAbsence("POST", "Add");
+        showChange("POST", "absence-select-button", "absence-add-button", "absence-confirm-button");
     } else if (select === "Criminal") {
-        showCriminal();
+        show([true, true, false, true, true, false], true);
         criminal_account.value = "";
         kind.value = "";
         data.value = "";
-        changeCriminal("POST", "Add");
+        showChange("POST", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
 }
 
 function edit() {
-    document.getElementById("edit").classList.add("active");
+    editButton.classList.add("active");
     document.getElementById("add").classList.remove("active");
     if (select === "User") {
         forename.value = current_data_user.forename;
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
-        changeUser("PUT", "Confirm");
+        showChange("PUT", "", "user-add-button", "user-confirm-button");
     } else if (select === "Absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        changeAbsence("PUT", "Confirm");
+        showChange("PUT", "absence-select-button", "absence-add-button", "absence-confirm-button");
     } else if (select === "Criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
-        changeCriminal("PUT", "Confirm");
+        showChange("PUT", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
 }
 
@@ -513,29 +468,29 @@ async function del() {
     reset();
 }
 
-function allReadOnly() {
-    userReadOnly();
-    absenceReadOnly();
-    criminalReadOnly();
+function allReadOnly(value) {
+    userReadOnly(value);
+    absenceReadOnly(value);
+    criminalReadOnly(value);
 }
 
-function userReadOnly() {
-    forename.readOnly = true;
-    surname.readOnly = true;
-    account.readOnly = true;
-    role.readOnly = true;
+function userReadOnly(value) {
+    forename.readOnly = value;
+    surname.readOnly = value;
+    account.readOnly = value;
+    role.readOnly = value;
 }
 
-function absenceReadOnly() {
-    absence_account.readOnly = true;
-    day.readOnly = true;
-    time.readOnly = true;
+function absenceReadOnly(value) {
+    absence_account.readOnly = value;
+    day.readOnly = value;
+    time.readOnly = value;
 }
 
-function criminalReadOnly() {
-    criminal_account.readOnly = true;
-    kind.readOnly = true;
-    criminal_data.readOnly = true;
+function criminalReadOnly(value) {
+    criminal_account.readOnly = value;
+    kind.readOnly = value;
+    criminal_data.readOnly = value;
 }
 
 function hideAllButtons() {
@@ -547,18 +502,6 @@ function hideAllButtons() {
     document.getElementById("criminal-confirm-button").hidden = true;
 }
 
-function cancel() {
-    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
-    activeElement.classList.remove("active");
-    document.getElementById("add").classList.remove("active");
-    document.getElementById("edit").classList.remove("active");
-    document.getElementById("edit").hidden = true;
-    document.getElementById("cancel").hidden = true;
-    document.getElementById("del").hidden = true;
-    document.getElementById("criminal-select-button").disabled = true;
-    document.getElementById("absence-select-button").disabled = true;
-    showStats();
-}
 
 async function search() {
     const text = document.getElementById("search").value;
@@ -605,32 +548,10 @@ function clearSelect(node) {
     items.forEach(item => item.remove());
 }
 
-
-async function loginAddSelect() {
-    const parent = document.getElementById("login-add-select-dropdown");
+function nodeSelect(parentId, inputId) {
+    const parent = document.getElementById(parentId);
+    const input = document.getElementById(inputId);
     clearSelect(parent);
-    const input = document.getElementById("login-add-user");
-    createSelectList(parent, input);
-}
-
-async function loginDeleteSelect() {
-    const parent = document.getElementById("login-delete-select-dropdown");
-    clearSelect(parent);
-    const input = document.getElementById("login-delete-user");
-    createSelectList(parent, input);
-}
-
-async function absenceSelect() {
-    const parent = document.getElementById("absence-select-dropdown");
-    clearSelect(parent);
-    const input = document.getElementById("absence-account");
-    createSelectList(parent, input);
-}
-
-async function criminalSelect() {
-    const parent = document.getElementById("criminal-select-dropdown");
-    clearSelect(parent);
-    const input = document.getElementById("criminal-account");
     createSelectList(parent, input);
 }
 
@@ -656,21 +577,7 @@ function selecting(message, which) {
         activeElement.classList.remove("active");
     }
     document.getElementById(which).classList.add("active");
-}
-
-function selectUser() {
-    selecting("User", "user");
     reset();
 }
 
-function selectAbsence() {
-    selecting("Absence", "absence");
-    reset();
-}
-
-function selectCriminal() {
-    selecting("Criminal", "criminal");
-    reset();
-}
-
-selectUser();
+selecting("User", "user");
