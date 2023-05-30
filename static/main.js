@@ -37,7 +37,7 @@ function updateDisabling() {
     editButton.disabled = false;
     deleteButton.disabled = false;
     if (select === "User") {
-        if (permissions.access_user === "ReadOnly" ||  permissions.access_user === "None") {
+        if (permissions.access_user === "ReadOnly" || permissions.access_user === "None") {
             addButton.disabled = true;
             editButton.disabled = true;
             deleteButton.disabled = true;
