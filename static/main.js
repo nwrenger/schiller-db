@@ -280,6 +280,8 @@ function loginCreator() {
 
 function reset() {
     clearList();
+    document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("absence-select-button").disabled = true;
     document.getElementById("add").classList.remove("active");
     document.getElementById("edit").classList.remove("active");
     document.getElementById("edit").hidden = true;
@@ -328,10 +330,16 @@ function changeUser(otherKind, message) {
     }
 }
 
+function formatDate(date) {
+    const [year, month, day] = date.split('-');
+    return `${year}-${month}-${day}`;
+}
+
 function changeAbsence(otherKind, message) {
     visibilityGetUser(true);
     const previous_account = absence_account.value;
     const previous_day = day.value;
+    document.getElementById("absence-select-button").disabled = false;
     absence_account.readOnly = false;
     day.readOnly = false;
     time.readOnly = false;
@@ -342,10 +350,11 @@ function changeAbsence(otherKind, message) {
     button.appendChild(textNode);
     absence_container.appendChild(button);
     button.addEventListener("click", async function () {
+        document.getElementById("absence-select-button").disabled = true;
         absence_account.readOnly = true;
         day.readOnly = true;
         time.readOnly = true;
-        await request("absence/" + previous_account + "/" + previous_day, otherKind, JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
+        await request("absence/" + previous_account + "/" + previous_day, otherKind, JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
         button.remove();
         reset();
     })
@@ -363,6 +372,7 @@ function changeCriminal(otherKind, message) {
     criminal_account.readOnly = false;
     kind.readOnly = false;
     criminal_data.readOnly = false;
+    document.getElementById("criminal-select-button").disabled = false;
     const button = document.createElement("button")
     const textNode = document.createTextNode(message);
     button.className = "btn btn-outline-danger m-3";
@@ -370,6 +380,7 @@ function changeCriminal(otherKind, message) {
     button.appendChild(textNode);
     criminal_container.appendChild(button);
     button.addEventListener("click", async function () {
+        document.getElementById("criminal-select-button").disabled = true;
         criminal_account.readOnly = true;
         kind.readOnly = true;
         criminal_data.readOnly = true;
@@ -467,6 +478,8 @@ function cancel() {
     document.getElementById("edit").hidden = true;
     document.getElementById("cancel").hidden = true;
     document.getElementById("del").hidden = true;
+    document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("absence-select-button").disabled = true;
     absence_container.hidden = true;
     criminal_container.hidden = true;
     stats_container.hidden = false;
@@ -485,6 +498,47 @@ async function search() {
         const data = await request(`/criminal/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
     }
+}
+
+function createSelectList(node, text_field, data) {
+    clearSelect(node);
+    for (const user of data) {
+        const aUser = document.createElement("a");
+        const userTextNode = document.createTextNode(user.account);
+        aUser.className = "dropdown-item";
+        aUser.appendChild(userTextNode);
+        const userNode = document.createElement("li")
+        userNode.className = "parent-dropdown-item"
+        userNode.appendChild(aUser);
+        node.appendChild(userNode);
+
+        userNode.addEventListener("click", async function () {
+            text_field.value = this.textContent;
+            clearSelect(node);
+        })
+    }
+}
+
+function clearSelect(node) {
+    const items = node.querySelectorAll(".parent-dropdown-item");
+    items.forEach(item => item.remove());
+}
+
+
+async function absenceSelect() {
+    const parent = document.getElementById("absence-select-dropdown");
+    clearSelect(parent);
+    const input = document.getElementById("absence-account");
+    const data = await request(`/user/search?name=${input.value}`, "GET");
+    createSelectList(parent, input, data.slice(0, 50));
+}
+
+async function criminalSelect() {
+    const parent = document.getElementById("criminal-select-dropdown");
+    clearSelect(parent);
+    const input = document.getElementById("criminal-account");
+    const data = await request(`/user/search?name=${input.value}`, "GET");
+    createSelectList(parent, input, data.slice(0, 50));
 }
 
 async function stats() {

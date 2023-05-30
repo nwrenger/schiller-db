@@ -29,8 +29,10 @@
                             <li>
                                 <h6 class="dropdown-header">Profile</h6>
                             </li>
-                            <li><button class="dropdown-item" type="button" onclick=currentUser()>Current User</button></li>
-                            <li><button class="dropdown-item" type="button" onclick=loginCreator()>Create Logins</button></li>
+                            <li><button class="dropdown-item" type="button" onclick=currentUser()>Current User</button>
+                            </li>
+                            <li><button class="dropdown-item" type="button" onclick=loginCreator()>Create
+                                    Logins</button></li>
                             <li><button class="dropdown-item" type="button" onclick=logout()>Logout</button></li>
                         </ul>
                     </div>
@@ -50,7 +52,8 @@
                     </button>
                 </div>
                 <div class="btn-group p-2">
-                    <button id="edit" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=edit() hidden>
+                    <button id="edit" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=edit()
+                        hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path
@@ -61,17 +64,24 @@
                     </button>
                 </div>
                 <div class="btn-group p-2">
-                    <button id="del" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=del() hidden>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
-                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
-                          </svg>
+                    <button id="del" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=del()
+                        hidden>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                        </svg>
                     </button>
                 </div>
                 <div class="btn-group p-2">
-                    <button id="cancel" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=cancel() hidden>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    <button id="cancel" class="btn btn-outline-danger" type="button" aria-expanded="false"
+                        onclick=cancel() hidden>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path
+                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
                         </svg>
                     </button>
                 </div>
@@ -121,13 +131,19 @@
             <div id="absence-container" hidden>
                 <div class="card-title row">
                     <div class="col">
-                        <label for="absence-account" class="form-label">Account</label>
-                        <input id="absence-account" type="text" class="form-control" placeholder="Account"
-                            aria-label="Account" readonly>
+                        <label for="absence-select" class="form-label">Account</label>
+                        <div class="input-group mb-3 absence-select">
+                            <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick=absenceSelect()
+                                disabled>Select</button>
+                            <ul id="absence-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="absence-account" type="text" class="form-control" placeholder="Account"
+                                aria-label="Account" readonly>
+                        </div>
                     </div>
-                    <div class="col">
-                        <label for="day" class="form-label">Day</label>
-                        <input id="day" type="text" class="form-control" placeholder="Day" aria-label="Day" readonly>
+                    <div class="col form-group">
+                        <label for="day" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="day" readonly>
                     </div>
                 </div>
                 <div class="row">
@@ -136,14 +152,21 @@
                         <input id="time" type="text" class="form-control" placeholder="Time" aria-label="Time" readonly>
                     </div>
                 </div>
-                <button type="button" class="btn btn-outline-primary m-3 justify-content-center get-user" style="max-width: 160px;" onclick=getUser()>Get User</button>
+                <button type="button" class="btn btn-outline-primary m-3 justify-content-center get-user"
+                    style="max-width: 160px;" onclick=getUser()>Get User</button>
             </div>
             <div id="criminal-container">
                 <div class="card-title row">
                     <div class="col">
-                        <label for="criminal-account" class="form-label">Account</label>
-                        <input id="criminal-account" type="text" class="form-control" placeholder="Account"
-                            aria-label="Account" readonly>
+                        <label for="criminal-select" class="form-label">Account</label>
+                        <div class="input-group mb-3 criminal-select">
+                            <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick=criminalSelect()
+                                disabled>Select</button>
+                            <ul id="criminal-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="criminal-account" type="text" class="form-control" placeholder="Account"
+                                aria-label="Account" readonly>
+                        </div>
                     </div>
                     <div class="col">
                         <label for="kind" class="form-label">Kind</label>
@@ -156,7 +179,8 @@
                         <input id="data" type="text" class="form-control" placeholder="Data" aria-label="Data" readonly>
                     </div>
                 </div>
-                <button type="button" class="btn btn-outline-primary m-3 get-user" style="max-width: 160px;" onclick=getUser()>Get User</button>
+                <button type="button" class="btn btn-outline-primary m-3 get-user" style="max-width: 160px;"
+                    onclick=getUser()>Get User</button>
             </div>
             <div id="stats-container">
                 <div class="row p-3">

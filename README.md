@@ -78,6 +78,6 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Absence Management
 - [x] Criminal Management
 - [ ] fix Add Button (currently a little bit buggy)
-- [ ] Better Criminal/Absence adding process
+- [x] Better Criminal/Absence adding process
 - [x] Integration for Mobile
 - [ ] Network test (after we are finished with the UI)
