@@ -43,7 +43,7 @@
         <div class="sidebar bg-dark">
             <div class="bg-dark-subtle">
                 <div class="btn-group p-2">
-                    <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add()>
+                    <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add() title="Add">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -53,7 +53,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="edit" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=edit()
-                        hidden>
+                        title="Edit" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path
@@ -65,7 +65,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="del" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=del()
-                        hidden>
+                        title="Delete" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -77,7 +77,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="cancel" class="btn btn-outline-danger" type="button" aria-expanded="false"
-                        onclick=cancel() hidden>
+                        onclick=cancel() title="Cancel" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-x-lg" viewBox="0 0 16 16">
                             <path
@@ -156,7 +156,7 @@
                 </div>
                 <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence() hidden>Add</button>
                 <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence() hidden>Confirm</button>
-                <button type="button" class="btn btn-outline-primary m-3 justify-content-center get-user"
+                <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user"
                     style="max-width: 160px;" onclick=getUser()>Get User</button>
             </div>
             <div id="criminal-container" hidden>
@@ -185,7 +185,7 @@
                 </div>
                 <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal() hidden>Add</button>
                 <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal() hidden>Confirm</button>
-                <button type="button" class="btn btn-outline-primary m-3 get-user" style="max-width: 160px;"
+                <button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
                     onclick=getUser()>Get User</button>
             </div>
             <div id="login-container" hidden>
