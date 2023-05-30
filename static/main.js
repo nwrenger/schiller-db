@@ -300,18 +300,18 @@ function loginCreator() {
 }
 
 async function addLogin() {
-    const account = document.getElementById("login-add-account").value;
+    const user = document.getElementById("login-add-user").value;
     const password = document.getElementById("login-add-password").value;
     const user_permissions = document.getElementById("login-add-user-permissions").value;
     const absence_permissions = document.getElementById("login-add-absence-permissions").value;
     const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
-    request("login", "POST", JSON.stringify({user: account, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions}))
+    request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }))
     reset();
 }
 
 async function deleteLogin() {
-    const account = document.getElementById("login-delete-account").value;
-    request("login/" + account, "DELETE");
+    const user = document.getElementById("login-delete-user").value;
+    request("login/" + user, "DELETE");
     reset();
 }
 
@@ -510,13 +510,15 @@ async function search() {
     }
 }
 
-function createSelectList(node, text_field, data) {
+async function createSelectList(node, text_field) {
+    const data = await request(`/user/search?name=${text_field.value}`, "GET")
+
     if (!Array.isArray(data) || !data.length) {
         node.textContent = "No Results!";
         return;
     }
     clearSelect(node);
-    for (const user of data) {
+    for (const user of data.slice(0, 50)) {
         const aUser = document.createElement("a");
         const userTextNode = document.createTextNode(user.account);
         aUser.className = "dropdown-item";
@@ -540,20 +542,32 @@ function clearSelect(node) {
 }
 
 
+async function loginAddSelect() {
+    const parent = document.getElementById("login-add-select-dropdown");
+    clearSelect(parent);
+    const input = document.getElementById("login-add-user");
+    createSelectList(parent, input);
+}
+
+async function loginDeleteSelect() {
+    const parent = document.getElementById("login-delete-select-dropdown");
+    clearSelect(parent);
+    const input = document.getElementById("login-delete-user");
+    createSelectList(parent, input);
+}
+
 async function absenceSelect() {
     const parent = document.getElementById("absence-select-dropdown");
     clearSelect(parent);
     const input = document.getElementById("absence-account");
-    const data = await request(`/user/search?name=${input.value}`, "GET");
-    createSelectList(parent, input, data.slice(0, 50));
+    createSelectList(parent, input);
 }
 
 async function criminalSelect() {
     const parent = document.getElementById("criminal-select-dropdown");
     clearSelect(parent);
     const input = document.getElementById("criminal-account");
-    const data = await request(`/user/search?name=${input.value}`, "GET");
-    createSelectList(parent, input, data.slice(0, 50));
+    createSelectList(parent, input);
 }
 
 async function stats() {
