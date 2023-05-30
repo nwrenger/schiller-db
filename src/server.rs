@@ -18,7 +18,7 @@ use std::{
 };
 use std::{env, marker::PhantomData};
 
-use crate::db::{self, user::UserSearch};
+use crate::db::{self, login::Permissions, user::UserSearch};
 use chrono::NaiveDate;
 
 use db::absence::Absence;
@@ -431,7 +431,7 @@ pub async fn delete_absence(
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Got a Criminal by a specific account", body = Criminal),
+        (status = 200, description = "Got a Criminal by a specific account and kind", body = Criminal),
         (status = 401, description = "Unauthorized to fetch a Criminal", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     params(
@@ -567,6 +567,25 @@ pub async fn delete_criminal(
     warn!("DELETE /criminal/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::delete(&db, account, kind))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Got a Permissions by a specific user", body = Criminal),
+        (status = 401, description = "Unauthorized to fetch Permissions", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    params(
+        ("user", description = "The unique user"),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/login/fetch/<user>")]
+pub async fn fetch_permission(auth: Auth<UserReadOnly>, user: &str) -> Json<Result<Permissions>> {
+    warn!("GET /login/fetch/{user}: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    Json(db::login::fetch_permission(&db, user))
 }
 
 #[utoipa::path(

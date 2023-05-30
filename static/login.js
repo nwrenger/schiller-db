@@ -3,7 +3,7 @@ async function handleLoginSubmit() {
     var password = document.getElementById("password").value;
     var auth = btoa(current_user + ":" + password)
     // getting all roles
-    const url = "/stats";
+    const url = "/login/fetch/" + current_user;
     const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -12,10 +12,13 @@ async function handleLoginSubmit() {
         },
     });
 
+    const data = await response.json();
+
     if (response.status === 200) {
         //get with getItem and clear at logout completely with clear
-        window.localStorage.setItem("current_user", current_user)
+        window.localStorage.setItem("current_user", current_user);
         window.localStorage.setItem("auth", auth);
+        window.localStorage.setItem("permissions", JSON.stringify(data["Ok"]));
 
         window.open("/", "_self")
     } else {

@@ -1,5 +1,6 @@
 const auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
+const permissions = JSON.parse(localStorage.getItem("permissions"));
 const sidebarList = document.getElementById("sidebar-list");
 const forename = document.getElementById("forename");
 const surname = document.getElementById("surname");
@@ -17,6 +18,7 @@ const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
 const login_container = document.getElementById("login-container");
 const get_user_button = document.getElementsByClassName("get-user");
+const addButton = document.getElementById("add");
 const editButton = document.getElementById("edit");
 const deleteButton = document.getElementById("del");
 const cancelButton = document.getElementById("cancel");
@@ -26,10 +28,34 @@ var current_kind = "";
 var current_role = "";
 var current_data_user = {};
 
-if (!auth || !current_user) {
+if (!auth || !current_user || !permissions) {
     window.open("login.html", "_self");
 }
 
+function updateDisabling() {
+    addButton.disabled = false;
+    editButton.disabled = false;
+    deleteButton.disabled = false;
+    if (select === "User") {
+        if (permissions.access_user === "ReadOnly" ||  permissions.access_user === "None") {
+            addButton.disabled = true;
+            editButton.disabled = true;
+            deleteButton.disabled = true;
+        }
+    } else if (select === "Absence") {
+        if (permissions.access_absence === "ReadOnly" || permissions.access_absence === "None") {
+            addButton.disabled = true;
+            editButton.disabled = true;
+            deleteButton.disabled = true;
+        }
+    } else if (select === "Criminal") {
+        if (permissions.access_criminal === "ReadOnly" || permissions.access_criminal === "None") {
+            addButton.disabled = true;
+            editButton.disabled = true;
+            deleteButton.disabled = true;
+        }
+    }
+}
 
 // Makes Requests from/to the API
 async function request(url, type, json) {
@@ -233,7 +259,7 @@ function createUserList(nestedList, node, back) {
 
             hideAllButtons();
 
-            document.getElementById("add").classList.remove("active");
+            addButton.classList.remove("active");
             editButton.classList.remove("active");
 
             current_data_user = user;
@@ -301,6 +327,7 @@ async function deleteLogin() {
 
 function reset() {
     clearList();
+    updateDisabling();
     allReadOnly(true);
     hideAllButtons();
     cancel();
@@ -323,7 +350,7 @@ function cancel() {
     if (activeElement) {
         activeElement.classList.remove("active");
     }
-    document.getElementById("add").classList.remove("active");
+    addButton.classList.remove("active");
     editButton.classList.remove("active");
     editButton.hidden = true;
     cancelButton.hidden = true;
@@ -419,7 +446,7 @@ async function getUser() {
 }
 
 function add() {
-    document.getElementById("add").classList.add("active");
+    addButton.classList.add("active");
     editButton.classList.remove("active");
     if (select === "User") {
         show([true, true, true, false, true]);
@@ -445,7 +472,7 @@ function add() {
 
 function edit() {
     editButton.classList.add("active");
-    document.getElementById("add").classList.remove("active");
+    addButton.classList.remove("active");
     if (select === "User") {
         forename.value = current_data_user.forename;
         surname.value = current_data_user.surname;

@@ -1,10 +1,10 @@
 use crate::db::project::{Database, Error, FromRow, Result};
 use rusqlite::types::{FromSql, FromSqlResult, ToSql, ToSqlOutput, ValueRef};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 #[repr(i64)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, ToSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, ToSchema)]
 pub enum Permission {
     None,
     ReadOnly,
@@ -25,6 +25,23 @@ impl FromSql for Permission {
 impl ToSql for Permission {
     fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         Ok((*self as i64).into())
+    }
+}
+
+#[derive(Debug, PartialEq, Deserialize, Serialize, ToSchema)]
+pub struct Permissions {
+    pub access_user: Permission,
+    pub access_absence: Permission,
+    pub access_criminal: Permission,
+}
+
+impl FromRow for Permissions {
+    fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Permissions> {
+        Ok(Permissions {
+            access_user: row.get("access_user")?,
+            access_absence: row.get("access_absence")?,
+            access_criminal: row.get("access_criminal")?,
+        })
     }
 }
 
@@ -70,6 +87,23 @@ pub fn fetch(db: &Database, user: &str, password: &str) -> Result<Login> {
     )?;
     let mut result = stmt.query([user, password])?;
     Ok(Login::from_row(result.next()?.ok_or(Error::NothingFound)?)?)
+}
+
+/// Returns the permissions of the user with the given `user`.
+pub fn fetch_permission(db: &Database, user: &str) -> Result<Permissions> {
+    let mut stmt = db.con.prepare(
+        "select \
+        access_user, \
+        access_absence, \
+        access_criminal \
+        from login \
+        where user=?
+        limit 1",
+    )?;
+    let mut result = stmt.query([user])?;
+    Ok(Permissions::from_row(
+        result.next()?.ok_or(Error::NothingFound)?,
+    )?)
 }
 
 /// Adds a new date with presenters.
@@ -126,6 +160,9 @@ mod tests {
         let result = login::fetch(&db, &login.user, &login.password);
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), login);
+
+        let result = login::fetch_permission(&db, &login.user);
+        assert!(result.is_ok());
 
         login::delete(&db, &login.user).unwrap();
 
