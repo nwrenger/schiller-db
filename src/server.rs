@@ -559,7 +559,11 @@ pub async fn update_criminal(
     )
 )]
 #[delete("/criminal/<account>/<kind>")]
-pub async fn delete_criminal(auth: Auth<CriminalWrite>, account: &str, kind: &str) -> Json<Result<()>> {
+pub async fn delete_criminal(
+    auth: Auth<CriminalWrite>,
+    account: &str,
+    kind: &str,
+) -> Json<Result<()>> {
     warn!("DELETE /criminal/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::delete(&db, account, kind))
