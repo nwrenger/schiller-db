@@ -23,6 +23,7 @@ const cancelButton = document.getElementById("cancel");
 var select = "User";
 var current_date = "";
 var current_kind = "";
+var current_role = "";
 var current_data_user = {};
 
 if (!auth || !current_user) {
@@ -111,6 +112,8 @@ async function roleUserList() {
         node.addEventListener("click", async function () {
             const role = this.textContent;
             cancel();
+
+            current_role = role;
 
             const users = await request(`/user/search?role=${role}`, "GET");
             createUserList(users, sidebarList, true);
@@ -251,6 +254,7 @@ function error(error) {
     document.getElementById("modal-body").textContent = error;
     console.log(error);
     modal.toggle();
+    cancel();
     throw error;
 }
 
@@ -300,6 +304,7 @@ function reset() {
     allReadOnly(true);
     hideAllButtons();
     cancel();
+    current_role = "";
     current_kind = "";
     current_date = "";
     document.getElementById("search").value = "";
@@ -421,7 +426,7 @@ function add() {
         forename.value = "";
         surname.value = "";
         account.value = "";
-        role.value = "";
+        role.value = current_role;
         showChange("POST", "", "user-add-button", "user-confirm-button");
     } else if (select === "Absence") {
         show([true, false, true, true, true, false], true);
