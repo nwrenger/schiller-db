@@ -226,9 +226,9 @@ function createUserList(list, node, back) {
             document.getElementById("cancel").hidden = false;
             document.getElementById("del").hidden = false;
 
-            for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
-                button.remove();
-            }
+            document.getElementById("user-change-button").hidden = true;
+            document.getElementById("absence-change-button").hidden = true;
+            document.getElementById("criminal-change-button").hidden = true;
 
             document.getElementById("add").classList.remove("active");
             document.getElementById("edit").classList.remove("active");
@@ -280,6 +280,9 @@ function loginCreator() {
 
 function reset() {
     clearList();
+    document.getElementById("user-change-button").hidden = true;
+    document.getElementById("absence-change-button").hidden = true;
+    document.getElementById("criminal-change-button").hidden = true;
     document.getElementById("criminal-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("add").classList.remove("active");
@@ -308,26 +311,18 @@ function changeUser(otherKind, message) {
     surname.readOnly = false;
     account.readOnly = false;
     role.readOnly = false;
-    const button = document.createElement("button")
-    const textNode = document.createTextNode(message);
-    button.className = "btn btn-outline-danger m-3";
-    button.id = "change-button"
-    button.appendChild(textNode);
-    user_container.appendChild(button);
+    const button = document.getElementById("user-change-button");
+    console.log(button);
+    button.hidden = false;
+    button.textContent = message;
     button.addEventListener("click", async function () {
         forename.readOnly = true;
         surname.readOnly = true;
         account.readOnly = true;
         role.readOnly = true;
         await request("user/" + previous_account, otherKind, JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
-        button.remove();
         reset();
     })
-    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
-        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
-            button.remove();
-        }
-    }
 }
 
 function formatDate(date) {
@@ -343,26 +338,18 @@ function changeAbsence(otherKind, message) {
     absence_account.readOnly = false;
     day.readOnly = false;
     time.readOnly = false;
-    const button = document.createElement("button")
-    const textNode = document.createTextNode(message);
-    button.className = "btn btn-outline-danger m-3";
-    button.id = "change-button"
-    button.appendChild(textNode);
-    absence_container.appendChild(button);
+    const button = document.getElementById("absence-change-button");
+    console.log(button);
+    button.hidden = false;
+    button.textContent = message;
     button.addEventListener("click", async function () {
         document.getElementById("absence-select-button").disabled = true;
         absence_account.readOnly = true;
         day.readOnly = true;
         time.readOnly = true;
         await request("absence/" + previous_account + "/" + previous_day, otherKind, JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
-        button.remove();
         reset();
     })
-    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
-        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
-            button.remove();
-        }
-    }
 }
 
 function changeCriminal(otherKind, message) {
@@ -373,26 +360,18 @@ function changeCriminal(otherKind, message) {
     kind.readOnly = false;
     criminal_data.readOnly = false;
     document.getElementById("criminal-select-button").disabled = false;
-    const button = document.createElement("button")
-    const textNode = document.createTextNode(message);
-    button.className = "btn btn-outline-danger m-3";
-    button.id = "change-button"
-    button.appendChild(textNode);
-    criminal_container.appendChild(button);
+    const button = document.getElementById("absence-change-button");
+    console.log(button);
+    button.hidden = false;
+    button.textContent = message;
     button.addEventListener("click", async function () {
         document.getElementById("criminal-select-button").disabled = true;
         criminal_account.readOnly = true;
         kind.readOnly = true;
         criminal_data.readOnly = true;
         await request("criminal/" + previous_account + "/" + previous_kind, otherKind, JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
-        button.remove();
         reset();
     })
-    if (document.getElementsByClassName("btn btn-outline-danger m-3").length > 1) {
-        for (const button of document.getElementsByClassName("btn btn-outline-danger m-3")) {
-            button.remove();
-        }
-    }
 }
 
 function visibilityGetUser(bool) {
