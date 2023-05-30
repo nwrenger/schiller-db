@@ -229,7 +229,7 @@ function createUserList(nestedList, node, back) {
             hideAllButtons();
 
             document.getElementById("add").classList.remove("active");
-            edit.classList.remove("active");
+            editButton.classList.remove("active");
 
             current_data_user = user;
             if (select === "User") {
