@@ -501,6 +501,10 @@ async function search() {
 }
 
 function createSelectList(node, text_field, data) {
+    if (!Array.isArray(data) || !data.length) {
+        node.textContent = "No Results!";
+        return;
+    }
     clearSelect(node);
     for (const user of data) {
         const aUser = document.createElement("a");
@@ -520,6 +524,7 @@ function createSelectList(node, text_field, data) {
 }
 
 function clearSelect(node) {
+    node.textContent = "";
     const items = node.querySelectorAll(".parent-dropdown-item");
     items.forEach(item => item.remove());
 }
