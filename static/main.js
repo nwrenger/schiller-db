@@ -15,6 +15,7 @@ const user_container = document.getElementById("user-container");
 const absence_container = document.getElementById("absence-container");
 const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
+const login_container = document.getElementById("login-container");
 const get_user_button = document.getElementsByClassName("get-user");
 var select = "User";
 var current_date = "";
@@ -46,11 +47,28 @@ async function request(url, type, json) {
     }
 }
 
+function showStats() {
+    stats_container.hidden = false;
+    absence_container.hidden = true;
+    criminal_container.hidden = true;
+    user_container.hidden = true;
+    login_container.hidden = true;
+}
+
 function showUser() {
     stats_container.hidden = true;
     absence_container.hidden = true;
     criminal_container.hidden = true;
     user_container.hidden = false;
+    login_container.hidden = true;
+}
+
+function showLogin() {
+    stats_container.hidden = true;
+    absence_container.hidden = true;
+    criminal_container.hidden = true;
+    user_container.hidden = true;
+    login_container.hidden = false;
 }
 
 function showAbsence() {
@@ -58,6 +76,7 @@ function showAbsence() {
     absence_container.hidden = false;
     criminal_container.hidden = true;
     user_container.hidden = true;
+    login_container.hidden = true;
     visibilityGetUser(false);
 }
 
@@ -66,6 +85,7 @@ function showCriminal() {
     absence_container.hidden = true;
     criminal_container.hidden = false;
     user_container.hidden = true;
+    login_container.hidden = true;
     visibilityGetUser(false);
 }
 
@@ -275,7 +295,24 @@ function currentUser() {
 }
 
 function loginCreator() {
-    error("Currently not Implemented!");
+    reset();
+    showLogin();
+}
+
+async function addLogin() {
+    const account = document.getElementById("login-add-account").value;
+    const password = document.getElementById("login-add-password").value;
+    const user_permissions = document.getElementById("login-add-user-permissions").value;
+    const absence_permissions = document.getElementById("login-add-absence-permissions").value;
+    const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
+    request("login", "POST", JSON.stringify({user: account, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions}))
+    reset();
+}
+
+async function deleteLogin() {
+    const account = document.getElementById("login-delete-account").value;
+    request("login/" + account, "DELETE");
+    reset();
 }
 
 function reset() {
@@ -290,10 +327,7 @@ function reset() {
     document.getElementById("edit").hidden = true;
     document.getElementById("cancel").hidden = true;
     document.getElementById("del").hidden = true;
-    absence_container.hidden = true;
-    criminal_container.hidden = true;
-    stats_container.hidden = false;
-    user_container.hidden = true;
+    showStats();
     document.getElementById("search").value = "";
     if (select === "User") {
         roleUserList().catch(() => window.open("login.html", "_self"));
@@ -459,10 +493,7 @@ function cancel() {
     document.getElementById("del").hidden = true;
     document.getElementById("criminal-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
-    absence_container.hidden = true;
-    criminal_container.hidden = true;
-    stats_container.hidden = false;
-    user_container.hidden = true;
+    showStats();
 }
 
 async function search() {
