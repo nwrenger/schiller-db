@@ -267,7 +267,7 @@ function logout() {
     window.open("login.html", "_self");
 }
 
-function profile() {
+function currentUser() {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
     document.getElementById("staticBackdropLabel").textContent = "Info"
     document.getElementById("modal-body").textContent = "The current user account is " + current_user;
