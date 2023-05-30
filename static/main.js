@@ -361,7 +361,7 @@ async function buttonAddUser() {
 }
 
 async function buttonConfirmUser() {
-    const previous_account = account.value;
+    const previous_account = account.value.trim();
     userReadOnly();
     await request("user/" + previous_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
@@ -397,8 +397,8 @@ async function buttonAddAbsence() {
 }
 
 async function buttonConfirmAbsence() {
-    const previous_account = absence_account.value;
-    const previous_day = day.value;
+    const previous_account = absence_account.value.trim();
+    const previous_day = day.value.trim();
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly();
     await request("absence/" + previous_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
@@ -430,8 +430,8 @@ async function buttonAddCriminal() {
 }
 
 async function buttonConfirmCriminal() {
-    const previous_account = criminal_account.value;
-    const previous_kind = kind.value;
+    const previous_account = criminal_account.value.trim();
+    const previous_kind = kind.value.trim().replace(" ", "%20");
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly();
     await request("criminal/" + previous_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
