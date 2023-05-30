@@ -193,17 +193,17 @@
                             <label for="login-users" class="form-label">User</label>
                             <div class="input-group mb-3 login-users">
                                 <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                    onclick=loginAddSelect()>Select</button>
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick=loginAddSelect()>Select</button>
                                 <ul id="login-add-select-dropdown" class="dropdown-menu"></ul>
                                 <input id="login-add-user" type="text" class="form-control" placeholder="User"
-                                    aria-label="User">
+                                aria-label="User">
                             </div>
                         </div>
                         <div class="col">
                             <label for="login-add-password" class="form-label">Password</label>
                             <input id="login-add-password" type="password" class="form-control" placeholder="Password"
-                                aria-label="Password">
+                            aria-label="Password">
                         </div>
                     </div>
                     <div class="row" style="padding-top: 5px;">
@@ -218,18 +218,18 @@
                         <div class="col">
                             <label for="login-add-absence-permissions" class="form-label">Absence Permissions</label>
                             <select id="login-add-absence-permissions" class="form-select"
-                                aria-label="Default select example">
-                                <option value="None">None</option>
-                                <option value="ReadOnly">ReadOnly</option>
+                            aria-label="Default select example">
+                            <option value="None">None</option>
+                            <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>
                             </select>
                         </div>
                         <div class="col">
                             <label for="login-add-criminal-permissions" class="form-label">Criminal Permissions</label>
                             <select id="login-add-criminal-permissions" class="form-select"
-                                aria-label="Default select example">
-                                <option value="None">None</option>
-                                <option value="ReadOnly">ReadOnly</option>
+                            aria-label="Default select example">
+                            <option value="None">None</option>
+                            <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>
                             </select>
                         </div>
@@ -242,14 +242,15 @@
                         <label for="login-users" class="form-label">User</label>
                         <div class="input-group mb-3 login-users">
                             <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" onclick=loginDeleteSelect()>Select</button>
+                            data-bs-toggle="dropdown" aria-expanded="false" onclick=loginDeleteSelect()>Select</button>
                             <ul id="login-delete-select-dropdown" class="dropdown-menu"></ul>
                             <input id="login-delete-user" type="text" class="form-control" placeholder="User"
-                                aria-label="User">
+                            aria-label="User">
                         </div>
                     </div>
                     <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Delete</button>
                 </div>
+                <button class="btn btn-outline-danger m-2" onclick=reset()>Cancel</button>
             </div>
             <div id="stats-container">
                 <div class="row p-3">
