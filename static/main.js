@@ -518,7 +518,7 @@ async function createSelectList(node, text_field) {
         return;
     }
     clearSelect(node);
-    for (const user of data.slice(0, 50)) {
+    for (const user of data.slice(0, 10)) {
         const aUser = document.createElement("a");
         const userTextNode = document.createTextNode(user.account);
         aUser.className = "dropdown-item";
