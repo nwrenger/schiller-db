@@ -298,6 +298,8 @@ function reset() {
     allReadOnly(true);
     hideAllButtons();
     cancel();
+    current_kind = "";
+    current_date = "";
     document.getElementById("search").value = "";
     if (select === "User") {
         roleUserList().catch(() => window.open("login.html", "_self"));
@@ -422,13 +424,13 @@ function add() {
     } else if (select === "Absence") {
         show([true, false, true, true, true, false], true);
         absence_account.value = "";
-        day.value = "";
+        day.value = current_date;
         time.value = "";
         showChange("POST", "absence-select-button", "absence-add-button", "absence-confirm-button");
     } else if (select === "Criminal") {
         show([true, true, false, true, true, false], true);
         criminal_account.value = "";
-        kind.value = "";
+        kind.value = current_kind;
         data.value = "";
         showChange("POST", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
