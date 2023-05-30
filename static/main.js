@@ -394,7 +394,7 @@ function changeCriminal(otherKind, message) {
     kind.readOnly = false;
     criminal_data.readOnly = false;
     document.getElementById("criminal-select-button").disabled = false;
-    const button = document.getElementById("absence-change-button");
+    const button = document.getElementById("criminal-change-button");
     console.log(button);
     button.hidden = false;
     button.textContent = message;
