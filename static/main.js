@@ -41,7 +41,8 @@ function updateDisabling() {
     deleteButton.disabled = false;
     if (permissions.access_absence === "None") {
         absenceDropdown.disabled = true;
-    } else if (permissions.access_criminal === "None") {
+    }
+    if (permissions.access_criminal === "None") {
         criminalDropdown.disabled = true;
     }
     if (select === "User") {
