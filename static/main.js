@@ -608,7 +608,7 @@ async function stats() {
 
     document.getElementById("name").textContent = statsData.name;
     document.getElementById("version").textContent = statsData.version;
-    document.getElementById("devs").textContent = devs[0] + " and " + devs[1];
+    document.getElementById("devs").textContent = "Programmer/Project Lead " + devs[0] + " and Assistant Lead " + devs[1];
     document.getElementById("repo").textContent = statsData.repo;
     document.getElementById("repo").href = statsData.repo;
     document.getElementById("description").textContent = statsData.description;
