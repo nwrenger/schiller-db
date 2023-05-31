@@ -23,6 +23,8 @@ const editButton = document.getElementById("edit");
 const deleteButton = document.getElementById("del");
 const cancelButton = document.getElementById("cancel");
 const loginCreatorDropdown = document.getElementById("login-creator");
+const absenceDropdown = document.getElementById("absence");
+const criminalDropdown = document.getElementById("criminal");
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -37,6 +39,11 @@ function updateDisabling() {
     addButton.disabled = false;
     editButton.disabled = false;
     deleteButton.disabled = false;
+    if (permissions.access_absence === "None") {
+        absenceDropdown.disabled = true;
+    } else if (permissions.access_criminal === "None") {
+        criminalDropdown.disabled = true;
+    }
     if (select === "User") {
         if (permissions.access_user === "ReadOnly" || permissions.access_user === "None") {
             addButton.disabled = true;
