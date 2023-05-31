@@ -571,7 +571,7 @@ pub async fn delete_criminal(
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Got a Permissions by a specific user", body = Criminal),
+        (status = 200, description = "Got a Permissions by a specific user", body = Permissions),
         (status = 401, description = "Unauthorized to fetch Permissions", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     params(
