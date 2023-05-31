@@ -316,7 +316,7 @@ function currentUser() {
 
 function loginCreator() {
     reset();
-    show([true, true, true, true, false])
+    show([true, true, true, true, false]);
 }
 
 async function addLogin() {
