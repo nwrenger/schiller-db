@@ -320,7 +320,7 @@ function currentUser() {
 }
 
 function loginCreator() {
-    reset();
+    cancel();
     show([true, true, true, true, false]);
 }
 
