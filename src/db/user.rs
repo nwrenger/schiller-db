@@ -16,6 +16,7 @@ pub struct User {
 impl User {
     pub fn is_valid(&self) -> bool {
         !self.account.trim().is_empty()
+            && !self.account.contains("#")
             && self.account != "."
             && !self.forename.trim().is_empty()
             && !self.surname.trim().is_empty()

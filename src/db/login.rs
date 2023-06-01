@@ -56,7 +56,10 @@ pub struct Login {
 
 impl Login {
     pub fn is_valid(&self) -> bool {
-        !self.user.trim().is_empty() && !self.user.contains(':') && self.user != "."
+        !self.user.trim().is_empty()
+            && !self.user.contains(':')
+            && !self.user.contains("#")
+            && self.user != "."
     }
 }
 

@@ -16,7 +16,10 @@ pub struct Criminal {
 
 impl Criminal {
     pub fn is_valid(&self) -> bool {
-        !self.account.trim().is_empty() && self.account != "." && self.kind != "."
+        !self.account.trim().is_empty()
+            && !self.account.contains("#")
+            && self.account != "."
+            && self.kind != "."
     }
 }
 
