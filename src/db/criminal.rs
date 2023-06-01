@@ -97,7 +97,7 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
 /// Adds a new criminal.
 pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
     if !criminal.is_valid() {
-        return Err(Error::InvalidUser);
+        return Err(Error::UnprocessableEntity);
     }
     db.con.execute(
         "INSERT INTO criminal VALUES (?, ?, ?)",
@@ -120,7 +120,7 @@ pub fn update(
 ) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !criminal.is_valid() {
-        return Err(Error::InvalidUser);
+        return Err(Error::UnprocessableEntity);
     }
     let previous_kind = previous_kind.trim();
     if previous_kind.is_empty() {
@@ -149,7 +149,7 @@ pub fn update(
 pub fn delete(db: &Database, account: &str, kind: &str) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {
-        return Err(Error::InvalidUser);
+        return Err(Error::UnprocessableEntity);
     }
     let kind = kind.trim();
     if kind.is_empty() {
