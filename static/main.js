@@ -25,6 +25,11 @@ const cancelButton = document.getElementById("cancel");
 const loginCreatorDropdown = document.getElementById("login-creator");
 const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
+var previous_user_account = account.value.trim();
+var previous_absence_account = absence_account.value.trim();
+var previous_day = day.value.trim();
+var previous_criminal_account = criminal_account.value.trim();
+var previous_kind = kind.value.trim().replace(" ", "%20");
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -377,7 +382,6 @@ async function buttonAddUser() {
 }
 
 async function buttonConfirmUser() {
-    const previous_account = account.value.trim();
     userReadOnly();
     await request("user/" + previous_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
@@ -397,8 +401,6 @@ async function buttonAddAbsence() {
 }
 
 async function buttonConfirmAbsence() {
-    const previous_account = absence_account.value.trim();
-    const previous_day = day.value.trim();
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly();
     await request("absence/" + previous_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
@@ -414,8 +416,6 @@ async function buttonAddCriminal() {
 }
 
 async function buttonConfirmCriminal() {
-    const previous_account = criminal_account.value.trim();
-    const previous_kind = kind.value.trim().replace(" ", "%20");
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly();
     await request("criminal/" + previous_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
@@ -488,16 +488,21 @@ function edit() {
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
+        previous_user_account = account.value.trim();
         showChange("PUT", "", "user-add-button", "user-confirm-button");
     } else if (select === "Absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
+        previous_absence_account = absence_account.value.trim();
+        previous_day = day.value.trim();
         showChange("PUT", "absence-select-button", "absence-add-button", "absence-confirm-button");
     } else if (select === "Criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
+        previous_criminal_account = criminal_account.value.trim();
+        previous_kind = kind.value.trim().replace(" ", "%20");
         showChange("PUT", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
 }
