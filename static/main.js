@@ -376,13 +376,17 @@ function cancel() {
 }
 
 async function buttonAddUser() {
-    userReadOnly();
-    await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
-    reset();
+    userReadOnly(true);
+    if (account.value === ".") {
+        error("InvalidUser");
+    } else {
+        await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+        reset();
+    }
 }
 
 async function buttonConfirmUser() {
-    userReadOnly();
+    userReadOnly(true);
     await request("user/" + previous_user_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
 }
@@ -395,14 +399,18 @@ function formatDate(date) {
 
 async function buttonAddAbsence() {
     document.getElementById("absence-select-button").disabled = true;
-    absenceReadOnly();
-    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
-    reset();
+    absenceReadOnly(true);
+    if (account.value === ".") {
+        error("InvalidAbsence");
+    } else {
+        await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+        reset();
+    }
 }
 
 async function buttonConfirmAbsence() {
     document.getElementById("absence-select-button").disabled = true;
-    absenceReadOnly();
+    absenceReadOnly(true);
     await request("absence/" + previous_absence_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
     reset();
 }
@@ -410,14 +418,18 @@ async function buttonConfirmAbsence() {
 
 async function buttonAddCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
-    criminalReadOnly();
-    await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
-    reset();
+    criminalReadOnly(true);
+    if (account.value === ".") {
+        error("InvalidUser");
+    } else {
+        await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+        reset();
+    }
 }
 
 async function buttonConfirmCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
-    criminalReadOnly();
+    criminalReadOnly(true);
     await request("criminal/" + previous_criminal_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
     reset();
 }
