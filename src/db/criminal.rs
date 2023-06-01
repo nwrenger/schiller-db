@@ -19,6 +19,7 @@ impl Criminal {
         !self.account.trim().is_empty()
             && !self.account.contains("#")
             && self.account != "."
+            && !self.kind.contains("#")
             && self.kind != "."
     }
 }
