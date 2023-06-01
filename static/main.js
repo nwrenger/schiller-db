@@ -383,7 +383,7 @@ async function buttonAddUser() {
 
 async function buttonConfirmUser() {
     userReadOnly();
-    await request("user/" + previous_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    await request("user/" + previous_user_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
 }
 
@@ -403,7 +403,7 @@ async function buttonAddAbsence() {
 async function buttonConfirmAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly();
-    await request("absence/" + previous_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    await request("absence/" + previous_absence_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
     reset();
 }
 
@@ -418,7 +418,7 @@ async function buttonAddCriminal() {
 async function buttonConfirmCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly();
-    await request("criminal/" + previous_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    await request("criminal/" + previous_criminal_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
     reset();
 }
 
