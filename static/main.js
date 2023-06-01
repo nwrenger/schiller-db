@@ -331,13 +331,13 @@ async function addLogin() {
     const absence_permissions = document.getElementById("login-add-absence-permissions").value;
     const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
     request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }))
-    reset();
+    cancel();
 }
 
 async function deleteLogin() {
     const user = document.getElementById("login-delete-user").value;
     request("login/" + user, "DELETE");
-    reset();
+    cancel();
 }
 
 function reset() {
