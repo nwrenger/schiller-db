@@ -377,12 +377,8 @@ function cancel() {
 
 async function buttonAddUser() {
     userReadOnly(true);
-    if (account.value === ".") {
-        error("InvalidAccount");
-    } else {
-        await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
-        reset();
-    }
+    await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    reset();
 }
 
 async function buttonConfirmUser() {
@@ -400,12 +396,8 @@ function formatDate(date) {
 async function buttonAddAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
-    if (account.value === ".") {
-        error("InvalidAccount");
-    } else {
-        await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
-        reset();
-    }
+    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    reset();
 }
 
 async function buttonConfirmAbsence() {
@@ -419,12 +411,8 @@ async function buttonConfirmAbsence() {
 async function buttonAddCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly(true);
-    if (account.value === ".") {
-        error("InvalidAccount");
-    } else {
-        await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
-        reset();
-    }
+    await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    reset();
 }
 
 async function buttonConfirmCriminal() {
