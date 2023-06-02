@@ -57,9 +57,8 @@ pub struct Login {
 impl Login {
     pub fn is_valid(&self) -> bool {
         !self.user.trim().is_empty()
+            && self.user.starts_with(char::is_alphabetic)
             && !self.user.contains(':')
-            && !self.user.starts_with("#")
-            && self.user != "."
             && !self.password.trim().is_empty()
     }
 }

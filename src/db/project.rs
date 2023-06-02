@@ -34,11 +34,14 @@ pub enum Error {
     InvalidFormat,
     NothingFound,
     /// Specific errors
+    InvalidUser,
+    InvalidAbsence,
+    InvalidCriminal,
     InvalidDate,
     InvalidKind,
-    InvalidUser,
     /// Server specific errors
     Unauthorized,
+    ExceededLimit,
     PageNotFound,
     UnprocessableEntity,
     InternalError,

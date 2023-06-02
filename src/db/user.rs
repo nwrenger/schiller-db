@@ -16,10 +16,10 @@ pub struct User {
 impl User {
     pub fn is_valid(&self) -> bool {
         !self.account.trim().is_empty()
-            && !self.account.starts_with("#")
-            && self.account != "."
+            && self.account.starts_with(char::is_alphabetic)
             && !self.forename.trim().is_empty()
             && !self.surname.trim().is_empty()
+            && !self.role.trim().is_empty()
     }
 }
 

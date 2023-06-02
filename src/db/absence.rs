@@ -17,7 +17,7 @@ pub struct Absence {
 
 impl Absence {
     pub fn is_valid(&self) -> bool {
-        !self.account.trim().is_empty() && !self.account.starts_with("#") && self.account != "."
+        !self.account.trim().is_empty() && self.account.starts_with(char::is_alphabetic)
     }
 }
 
@@ -94,7 +94,7 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
 /// Adds a new date with presenters.
 pub fn add(db: &Database, absence: &Absence) -> Result<()> {
     if !absence.is_valid() {
-        return Err(Error::InvalidUser);
+        return Err(Error::InvalidAbsence);
     }
     db.con.execute(
         "INSERT INTO absence VALUES (?, ?, ?)",
@@ -112,7 +112,7 @@ pub fn update(
 ) -> Result<()> {
     let previous_account = previous_account.trim();
     if previous_account.is_empty() || !absence.is_valid() {
-        return Err(Error::InvalidUser);
+        return Err(Error::InvalidAbsence);
     }
 
     let transaction = db.transaction()?;
@@ -136,7 +136,7 @@ pub fn update(
 pub fn delete(db: &Database, account: &str, date: NaiveDate) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {
-        return Err(Error::InvalidUser);
+        return Err(Error::InvalidAbsence);
     }
     let transaction = db.transaction()?;
     // remove date and presenters

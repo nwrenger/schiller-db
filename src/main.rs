@@ -122,7 +122,8 @@ fn rocket() -> Rocket<Build> {
 
     let figment = rocket::Config::figment()
         .merge(("address", "0.0.0.0"))
-        .merge(("port", 80));
+        .merge(("port", 80))
+        .merge(("limits.json", 32768));
 
     rocket::custom(figment)
         .register(
@@ -131,7 +132,9 @@ fn rocket() -> Rocket<Build> {
                 unauthorized,
                 not_found,
                 unprocessable_entity,
-                internal_error
+                internal_error,
+                exceeded_limit_413,
+                exceeded_limit_414
             ],
         )
         .mount(
@@ -204,4 +207,14 @@ async fn unprocessable_entity(_req: &Request<'_>) -> Json<Result<()>> {
 #[catch(500)]
 async fn internal_error(_req: &Request<'_>) -> Json<Result<()>> {
     Json(Err(Error::InternalError))
+}
+
+#[catch(413)]
+async fn exceeded_limit_413(_req: &Request<'_>) -> Json<Result<()>> {
+    Json(Err(Error::ExceededLimit))
+}
+
+#[catch(414)]
+async fn exceeded_limit_414(_req: &Request<'_>) -> Json<Result<()>> {
+    Json(Err(Error::ExceededLimit))
 }

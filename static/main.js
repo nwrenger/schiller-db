@@ -25,11 +25,11 @@ const cancelButton = document.getElementById("cancel");
 const loginCreatorDropdown = document.getElementById("login-creator");
 const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
-var previous_user_account = account.value.trim();
-var previous_absence_account = absence_account.value.trim();
-var previous_day = day.value.trim();
-var previous_criminal_account = criminal_account.value.trim();
-var previous_kind = kind.value.trim().replace(" ", "%20");
+var previous_user_account = "";
+var previous_absence_account = "";
+var previous_day = "";
+var previous_criminal_account = "";
+var previous_kind = "";
 var select = "User";
 var current_date = "";
 var current_kind = "";
@@ -156,7 +156,7 @@ async function roleUserList() {
 
             current_role = role;
 
-            const users = await request(`/user/search?role=${role}`, "GET");
+            const users = await request(`/user/search?role=${encodeURIComponent(role)}`, "GET");
             createUserList(users, sidebarList, true);
         });
     }
@@ -189,7 +189,7 @@ async function absenceUserList() {
 
             current_date = date;
 
-            const absences = await request(`/absence/search?text=${date}`, "GET");
+            const absences = await request(`/absence/search?text=${encodeURIComponent(date)}`, "GET");
             createUserList(absences, sidebarList, true);
         });
     }
@@ -221,7 +221,7 @@ async function criminalUserList() {
 
             current_kind = kind;
 
-            const criminals = await request(`/criminal/search?text=${kind}`, "GET");
+            const criminals = await request(`/criminal/search?text=${encodeURIComponent(kind)}`, "GET");
             createUserList(criminals, sidebarList, true);
         });
     }
@@ -336,7 +336,7 @@ async function addLogin() {
 
 async function deleteLogin() {
     const user = document.getElementById("login-delete-user").value;
-    request("login/" + user, "DELETE");
+    request("login/" + encodeURIComponent(user), "DELETE");
     cancel();
 }
 
@@ -383,7 +383,7 @@ async function buttonAddUser() {
 
 async function buttonConfirmUser() {
     userReadOnly(true);
-    await request("user/" + previous_user_account, "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    await request("user/" + encodeURIComponent(previous_user_account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
 }
 
@@ -403,7 +403,7 @@ async function buttonAddAbsence() {
 async function buttonConfirmAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
-    await request("absence/" + previous_absence_account + "/" + previous_day, "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    await request("absence/" + encodeURIComponent(previous_absence_account) + "/" + encodeURIComponent(previous_day), "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
     reset();
 }
 
@@ -418,7 +418,7 @@ async function buttonAddCriminal() {
 async function buttonConfirmCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly(true);
-    await request("criminal/" + previous_criminal_account + "/" + previous_kind, "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    await request("criminal/" + encodeURIComponent(previous_criminal_account) + "/" + encodeURIComponent(previous_kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
     reset();
 }
 
@@ -448,7 +448,7 @@ function visibilityGetUser(bool) {
 async function getUser() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     activeElement.classList.remove("active");
-    const user = await request("user/fetch/" + activeElement.textContent, "GET");
+    const user = await request("user/fetch/" + encodeURIComponent(activeElement.textContent, "GET"));
     cancelButton.hidden = true;
     editButton.hidden = true;
     deleteButton.hidden = true;
@@ -488,21 +488,21 @@ function edit() {
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
-        previous_user_account = account.value.trim().replace(" ", "%20");
+        previous_user_account = account.value.trim();
         showChange("PUT", "", "user-add-button", "user-confirm-button");
     } else if (select === "Absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        previous_absence_account = absence_account.value.trim().replace(" ", "%20");
-        previous_day = day.value.trim().replace(" ", "%20");
+        previous_absence_account = absence_account.value.trim();
+        previous_day = day.value.trim();
         showChange("PUT", "absence-select-button", "absence-add-button", "absence-confirm-button");
     } else if (select === "Criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
-        previous_criminal_account = criminal_account.value.trim().replace(" ", "%20");
-        previous_kind = kind.value.trim().replace(" ", "%20");
+        previous_criminal_account = criminal_account.value.trim();
+        previous_kind = kind.value.trim();
         showChange("PUT", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
 }
@@ -510,11 +510,11 @@ function edit() {
 async function del() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     if (select === "User") {
-        await request("user/" + activeElement.textContent, "DELETE");
+        await request("user/" + encodeURIComponent(activeElement.textContent), "DELETE");
     } else if (select === "Absence") {
-        await request("absence/" + activeElement.textContent + "/" + current_date, "DELETE");
+        await request("absence/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_date), "DELETE");
     } else if (select === "Criminal") {
-        await request("criminal/" + activeElement.textContent + "/" + current_kind, "DELETE");
+        await request("criminal/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_kind), "DELETE");
     }
     reset();
 }
@@ -555,7 +555,7 @@ function hideAllButtons() {
 
 
 async function search() {
-    const text = document.getElementById("search").value;
+    const text = encodeURIComponent(document.getElementById("search").value);
     if (select === "User") {
         const data = await request(`/user/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
@@ -569,7 +569,7 @@ async function search() {
 }
 
 async function createSelectList(node, text_field) {
-    const data = await request(`/user/search?name=${text_field.value}`, "GET")
+    const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}`, "GET")
 
     if (!Array.isArray(data) || !data.length) {
         node.textContent = "No Results!";
