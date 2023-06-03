@@ -3,7 +3,7 @@ async function handleLoginSubmit() {
     var password = document.getElementById("password").value;
     var auth = btoa(current_user + ":" + password)
     // getting all roles
-    const url = "/login/fetch/" + current_user;
+    const url = "/login/fetch/" + encodeURIComponent(current_user);
     const response = await fetch(url, {
         method: "GET",
         headers: {
