@@ -154,6 +154,16 @@ async function roleUserList() {
     }
 }
 
+function decodeFormatDate(date) {
+    const [day, month, year] = date.split('.');
+    return `${year}-${month}-${day}`;
+}
+
+function encodeFormatDate(date) {
+    const [year, month, day] = date.split('-');
+    return `${day}.${month}.${year}`;
+}
+
 // Initializes the user list for the dates
 async function absenceUserList() {
     clearList();
@@ -170,7 +180,7 @@ async function absenceUserList() {
     // Fetch users
     for (const date of dates) {
         const node = document.createElement("li");
-        const data = document.createTextNode(date);
+        const data = document.createTextNode(encodeFormatDate(date));
         node.className = "list-group-item list-group-item-action";
         node.appendChild(data);
         sidebarList.appendChild(node);
@@ -179,7 +189,7 @@ async function absenceUserList() {
             const date = this.textContent;
             cancel();
 
-            const absences = await request(`/absence/search?text=${encodeURIComponent(date)}`, "GET");
+            const absences = await request(`/absence/search?text=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
             createUserList(absences, sidebarList, true);
         });
     }
@@ -380,12 +390,6 @@ async function buttonConfirmUser() {
     reset();
 }
 
-function formatDate(date) {
-    const [year, month, day] = date.split('-');
-    return `${year}-${month}-${day}`;
-}
-
-
 async function buttonAddAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
@@ -396,10 +400,9 @@ async function buttonAddAbsence() {
 async function buttonConfirmAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
-    await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
     reset();
 }
-
 
 async function buttonAddCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
