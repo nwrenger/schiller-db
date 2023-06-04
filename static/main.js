@@ -353,11 +353,11 @@ function reset() {
     document.getElementById("search").value = "";
     if (select === "User") {
         roleUserList().catch(() => {
-            window.open("login.html", "_self"); 
+            window.open("login.html", "_self");
             error("InvalidLocalKeys");
         });
         stats().catch(() => {
-            window.open("login.html", "_self"); 
+            window.open("login.html", "_self");
             error("InvalidLocalKeys");
         });
     } else if (select === "Absence") {
