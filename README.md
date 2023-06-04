@@ -2,6 +2,10 @@
 
 A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcomming project week.
 
+### Test Website
+
+A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo.
+
 ### Download
 
 The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/sndm/releases).
