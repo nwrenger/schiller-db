@@ -215,8 +215,8 @@
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                     onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">Auswählen</button>
                                 <ul id="login-add-select-dropdown" class="dropdown-menu"></ul>
-                                <input id="login-add-user" type="text" class="form-control" placeholder="Bürger"
-                                    aria-label="Bürger">
+                                <input id="login-add-user" type="text" class="form-control" placeholder="Benutzer"
+                                    aria-label="Benutzer">
                             </div>
                         </div>
                         <div class="col">
@@ -259,7 +259,7 @@
                     <button class="btn btn-outline-danger m-3" onclick=addLogin()>Hinzufügen</button>
                 </div>
                 <div>
-                    <label for="delete-login" class="form-label">Einen Login löschen:</label>
+                    <label for="delete-login" class="form-label">Einen Login entfernen:</label>
                     <div class="card-title row col delete-login">
                         <label for="login-users" class="form-label">Benutzer</label>
                         <div class="input-group mb-3 login-users">
@@ -267,11 +267,11 @@
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">Auswählen</button>
                             <ul id="login-delete-select-dropdown" class="dropdown-menu"></ul>
-                            <input id="login-delete-user" type="text" class="form-control" placeholder="User"
-                                aria-label="User">
+                            <input id="login-delete-user" type="text" class="form-control" placeholder="Benutzer"
+                                aria-label="Benutzer">
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Löschen</button>
+                    <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Entfernen</button>
                 </div>
                 <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
             </div>
