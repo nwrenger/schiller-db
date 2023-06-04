@@ -304,7 +304,7 @@ function logout() {
 function currentUser() {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
     document.getElementById("staticBackdropLabel").textContent = "Info"
-    document.getElementById("modal-body").textContent = "Der Akutelle Benutzer ist " + current_user;
+    document.getElementById("modal-body").textContent = "Der akutelle Benutzer ist " + current_user;
     modal.toggle();
 }
 
