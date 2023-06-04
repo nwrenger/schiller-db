@@ -38,6 +38,7 @@ var current_data_user = {};
 
 if (!auth || !current_user || !permissions) {
     window.open("login.html", "_self");
+    error("InvalidLocalKeys");
 }
 
 function updateDisabling() {
@@ -351,8 +352,14 @@ function reset() {
     current_date = "";
     document.getElementById("search").value = "";
     if (select === "User") {
-        roleUserList().catch(() => window.open("login.html", "_self"));
-        stats();
+        roleUserList().catch(() => {
+            window.open("login.html", "_self"); 
+            error("InvalidLocalKeys");
+        });
+        stats().catch(() => {
+            window.open("login.html", "_self"); 
+            error("InvalidLocalKeys");
+        });
     } else if (select === "Absence") {
         absenceUserList();
     } else if (select === "Criminal") {
