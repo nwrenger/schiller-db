@@ -25,15 +25,7 @@ const cancelButton = document.getElementById("cancel");
 const loginCreatorDropdown = document.getElementById("login-creator");
 const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
-var previous_user_account = "";
-var previous_absence_account = "";
-var previous_day = "";
-var previous_criminal_account = "";
-var previous_kind = "";
-var select = "User";
-var current_date = "";
-var current_kind = "";
-var current_role = "";
+var select = "user";
 var current_data_user = {};
 
 if (!auth || !current_user || !permissions) {
@@ -51,20 +43,20 @@ function updateDisabling() {
     if (permissions.access_criminal === "None") {
         criminalDropdown.disabled = true;
     }
-    if (select === "User") {
+    if (select === "user") {
         if (permissions.access_user === "ReadOnly" || permissions.access_user === "None") {
             addButton.disabled = true;
             editButton.disabled = true;
             deleteButton.disabled = true;
             loginCreatorDropdown.disabled = true;
         }
-    } else if (select === "Absence") {
+    } else if (select === "absence") {
         if (permissions.access_absence === "ReadOnly" || permissions.access_absence === "None") {
             addButton.disabled = true;
             editButton.disabled = true;
             deleteButton.disabled = true;
         }
-    } else if (select === "Criminal") {
+    } else if (select === "criminal") {
         if (permissions.access_criminal === "ReadOnly" || permissions.access_criminal === "None") {
             addButton.disabled = true;
             editButton.disabled = true;
@@ -99,6 +91,7 @@ async function request(url, type, json) {
  * state[3] = user_container.
  * state[4] = login_container.
  * state[5] = visibilityGetUser.
+ * getUser = enable visibilityGetUser Changer
 */
 function show(state, getUser) {
     stats_container.hidden = state[0];
@@ -155,8 +148,6 @@ async function roleUserList() {
             const role = this.textContent;
             cancel();
 
-            current_role = role;
-
             const users = await request(`/user/search?role=${encodeURIComponent(role)}`, "GET");
             createUserList(users, sidebarList, true);
         });
@@ -171,7 +162,7 @@ async function absenceUserList() {
 
     if (!Array.isArray(dates) || !dates.length) {
         if (!sidebarList.textContent) {
-            sidebarList.textContent = "No Results!";
+            sidebarList.textContent = "Keine Ergebnisse!";
         }
         return;
     }
@@ -188,8 +179,6 @@ async function absenceUserList() {
             const date = this.textContent;
             cancel();
 
-            current_date = date;
-
             const absences = await request(`/absence/search?text=${encodeURIComponent(date)}`, "GET");
             createUserList(absences, sidebarList, true);
         });
@@ -203,7 +192,7 @@ async function criminalUserList() {
 
     if (!Array.isArray(kinds) || !kinds.length) {
         if (!sidebarList.textContent) {
-            sidebarList.textContent = "No Results!";
+            sidebarList.textContent = "Keine Ergebnisse!";
         }
         return;
     }
@@ -220,8 +209,6 @@ async function criminalUserList() {
             const kind = this.textContent;
             cancel();
 
-            current_kind = kind;
-
             const criminals = await request(`/criminal/search?text=${encodeURIComponent(kind)}`, "GET");
             createUserList(criminals, sidebarList, true);
         });
@@ -233,7 +220,7 @@ function createUserList(nestedList, node, back) {
 
     const backEntry = document.createElement("li");
     if (back) {
-        const text = document.createTextNode("Back");
+        const text = document.createTextNode("Zurück");
         backEntry.className = "list-group-item list-group-item-action list-group-item-danger";
         backEntry.appendChild(text);
         node.appendChild(backEntry);
@@ -246,9 +233,9 @@ function createUserList(nestedList, node, back) {
 
     if (!Array.isArray(nestedList) || !nestedList.length) {
         if (back) {
-            backEntry.textContent = "Back - No Results!";
+            backEntry.textContent = "Zurück - Keine Ergebnisse!";
         } else {
-            sidebarList.textContent = "No Results!";
+            sidebarList.textContent = "Keine Ergebnisse!";
         }
         return;
     }
@@ -259,6 +246,8 @@ function createUserList(nestedList, node, back) {
         userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
         node.appendChild(userNode);
+
+        current_data_user = user;
 
         userNode.addEventListener("click", async function () {
             const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
@@ -278,12 +267,11 @@ function createUserList(nestedList, node, back) {
             addButton.classList.remove("active");
             editButton.classList.remove("active");
 
-            current_data_user = user;
-            if (select === "User") {
+            if (select === "user") {
                 updateUserUI(user);
-            } else if (select === "Absence") {
+            } else if (select === "absence") {
                 updateAbsenceUI(user);
-            } else if (select === "Criminal") {
+            } else if (select === "criminal") {
                 updateCriminalUI(user);
             }
         });
@@ -292,7 +280,7 @@ function createUserList(nestedList, node, back) {
 
 function error(error) {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
-    document.getElementById("staticBackdropLabel").textContent = "Error"
+    document.getElementById("staticBackdropLabel").textContent = "Fehler"
     document.getElementById("modal-body").textContent = error;
     console.log(error);
     modal.toggle();
@@ -316,7 +304,7 @@ function logout() {
 function currentUser() {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
     document.getElementById("staticBackdropLabel").textContent = "Info"
-    document.getElementById("modal-body").textContent = "The current user account is " + current_user;
+    document.getElementById("modal-body").textContent = "Der Akutelle Benutzer ist " + current_user;
     modal.toggle();
 }
 
@@ -347,11 +335,9 @@ function reset() {
     allReadOnly(true);
     hideAllButtons();
     cancel();
-    current_role = "";
-    current_kind = "";
-    current_date = "";
+    current_data_user = {};
     document.getElementById("search").value = "";
-    if (select === "User") {
+    if (select === "user") {
         roleUserList().catch(() => {
             window.open("login.html", "_self");
             error("InvalidLocalKeys");
@@ -360,9 +346,9 @@ function reset() {
             window.open("login.html", "_self");
             error("InvalidLocalKeys");
         });
-    } else if (select === "Absence") {
+    } else if (select === "absence") {
         absenceUserList();
-    } else if (select === "Criminal") {
+    } else if (select === "criminal") {
         criminalUserList();
     }
 }
@@ -390,7 +376,7 @@ async function buttonAddUser() {
 
 async function buttonConfirmUser() {
     userReadOnly(true);
-    await request("user/" + encodeURIComponent(previous_user_account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    await request("user/" + encodeURIComponent(current_data_user.account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
     reset();
 }
 
@@ -410,7 +396,7 @@ async function buttonAddAbsence() {
 async function buttonConfirmAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
-    await request("absence/" + encodeURIComponent(previous_absence_account) + "/" + encodeURIComponent(previous_day), "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
     reset();
 }
 
@@ -425,7 +411,7 @@ async function buttonAddCriminal() {
 async function buttonConfirmCriminal() {
     document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly(true);
-    await request("criminal/" + encodeURIComponent(previous_criminal_account) + "/" + encodeURIComponent(previous_kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
     reset();
 }
 
@@ -465,23 +451,35 @@ async function getUser() {
 function add() {
     addButton.classList.add("active");
     editButton.classList.remove("active");
-    if (select === "User") {
+    if (select === "user") {
         show([true, true, true, false, true]);
         forename.value = "";
         surname.value = "";
         account.value = "";
-        role.value = current_role;
+        if (!current_data_user.role) {
+            role.value = "";
+        } else {
+            role.value = current_data_user.role;
+        }
         showChange("POST", "", "user-add-button", "user-confirm-button");
-    } else if (select === "Absence") {
+    } else if (select === "absence") {
         show([true, false, true, true, true, false], true);
         absence_account.value = "";
-        day.value = current_date;
+        if (!current_data_user.date) {
+            day.value = "";
+        } else {
+            day.value = current_data_user.date;
+        }
         time.value = "";
         showChange("POST", "absence-select-button", "absence-add-button", "absence-confirm-button");
-    } else if (select === "Criminal") {
+    } else if (select === "criminal") {
         show([true, true, false, true, true, false], true);
         criminal_account.value = "";
-        kind.value = current_kind;
+        if (!current_data_user.kind) {
+            kind.value = "";
+        } else {
+            kind.value = current_data_user.kind;
+        }
         data.value = "";
         showChange("POST", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
@@ -490,38 +488,33 @@ function add() {
 function edit() {
     editButton.classList.add("active");
     addButton.classList.remove("active");
-    if (select === "User") {
+    if (select === "user") {
         forename.value = current_data_user.forename;
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
-        previous_user_account = account.value.trim();
         showChange("PUT", "", "user-add-button", "user-confirm-button");
-    } else if (select === "Absence") {
+    } else if (select === "absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        previous_absence_account = absence_account.value.trim();
-        previous_day = day.value.trim();
         showChange("PUT", "absence-select-button", "absence-add-button", "absence-confirm-button");
-    } else if (select === "Criminal") {
+    } else if (select === "criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         criminal_data.value = current_data_user.data;
-        previous_criminal_account = criminal_account.value.trim();
-        previous_kind = kind.value.trim();
         showChange("PUT", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
     }
 }
 
 async function del() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
-    if (select === "User") {
+    if (select === "user") {
         await request("user/" + encodeURIComponent(activeElement.textContent), "DELETE");
-    } else if (select === "Absence") {
-        await request("absence/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_date), "DELETE");
-    } else if (select === "Criminal") {
-        await request("criminal/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_kind), "DELETE");
+    } else if (select === "absence") {
+        await request("absence/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_data_user.date), "DELETE");
+    } else if (select === "criminal") {
+        await request("criminal/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_data_user.kind), "DELETE");
     }
     reset();
 }
@@ -563,13 +556,13 @@ function hideAllButtons() {
 
 async function search() {
     const text = encodeURIComponent(document.getElementById("search").value);
-    if (select === "User") {
+    if (select === "user") {
         const data = await request(`/user/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
-    } else if (select === "Absence") {
+    } else if (select === "absence") {
         const data = await request(`/absence/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
-    } else if (select === "Criminal") {
+    } else if (select === "criminal") {
         const data = await request(`/criminal/search?text=${text}`, "GET");
         createUserList(data, sidebarList, true);
     }
@@ -620,7 +613,7 @@ async function stats() {
 
     document.getElementById("name").textContent = statsData.name;
     document.getElementById("version").textContent = statsData.version;
-    document.getElementById("devs").textContent = "Programmer/Project Lead " + devs[0] + " and Assistant Lead " + devs[1];
+    document.getElementById("devs").textContent = "Programmer/Project Lead " + devs[0] + " und Assistant Lead " + devs[1];
     document.getElementById("repo").textContent = statsData.repo;
     document.getElementById("repo").href = statsData.repo;
     document.getElementById("description").textContent = statsData.description;
@@ -628,8 +621,8 @@ async function stats() {
 }
 
 function selecting(message, which) {
-    select = message;
-    document.getElementById("select-button").textContent = select;
+    select = which;
+    document.getElementById("select-button").textContent = message;
     const activeElement = document.querySelector(".dropdown-item.active");
     if (activeElement !== null) {
         activeElement.classList.remove("active");
@@ -638,4 +631,4 @@ function selecting(message, which) {
     reset();
 }
 
-selecting("User", "user");
+selecting("Bürger", "user");

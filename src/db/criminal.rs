@@ -86,7 +86,6 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
         from criminal \
         where account like '%'||?1||'%' \
         or kind like '%'||?1||'%' \
-        or data like '%'||?1||'%' \
         order by account",
     )?;
     let rows = stmt.query([text.trim()])?;

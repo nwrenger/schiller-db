@@ -27,14 +27,14 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <h6 class="dropdown-header">Profile</h6>
+                                <h6 class="dropdown-header">Profil</h6>
                             </li>
-                            <li><button class="dropdown-item" type="button" onclick=currentUser()>Current User</button>
+                            <li><button class="dropdown-item" type="button" onclick=currentUser()>Aktueller
+                                    Benutzer</button>
                             </li>
                             <li><button id="login-creator" class="dropdown-item" type="button"
-                                    onclick=loginCreator()>Create
-                                    Logins</button></li>
-                            <li><button class="dropdown-item" type="button" onclick=logout()>Logout</button></li>
+                                    onclick=loginCreator()>Logins Erstellen</button></li>
+                            <li><button class="dropdown-item" type="button" onclick=logout()>Ausloggen</button></li>
                         </ul>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
             <div class="bg-dark-subtle">
                 <div class="btn-group p-2">
                     <button id="add" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=add()
-                        title="Add">
+                        title="Hinzufügen">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -55,7 +55,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="edit" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=edit()
-                        title="Edit" hidden>
+                        title="Bearbeiten" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path
@@ -67,7 +67,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="del" class="btn btn-outline-danger" type="button" aria-expanded="false" onclick=del()
-                        title="Delete" hidden>
+                        title="Entfernen" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -79,7 +79,7 @@
                 </div>
                 <div class="btn-group p-2">
                     <button id="cancel" class="btn btn-outline-danger" type="button" aria-expanded="false"
-                        onclick=cancel() title="Cancel" hidden>
+                        onclick=cancel() title="Schließen" hidden>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-x-lg" viewBox="0 0 16 16">
                             <path
@@ -90,19 +90,20 @@
             </div>
             <ul class="sidebar-list list-group list-group-flush" id="sidebar-list"></ul>
             <div class="sidebar-search input-group pb-1 px-1">
-                <input type="text" class="form-control" placeholder="Search" id="search" onchange=search()>
+                <input type="text" class="form-control" placeholder="Suche" id="search" onchange=search()>
                 <button id="select-button" class="btn btn-outline-secondary dropdown-toggle" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">User</button>
+                    data-bs-toggle="dropdown" aria-expanded="false">Bürger</button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <h6 class="dropdown-header">Category</h6>
+                        <h6 class="dropdown-header">Kategorie</h6>
                     </li>
-                    <li><button id="user" class="dropdown-item active" onclick="selecting('User', 'user')">User</button>
+                    <li><button id="user" class="dropdown-item active"
+                            onclick="selecting('Bürger', 'user')">Bürger</button>
                     </li>
                     <li><button id="absence" class="dropdown-item"
-                            onclick="selecting('Absence', 'absence')">Absence</button></li>
+                            onclick="selecting('Abwesenheiten', 'absence')">Abwesenheiten</button></li>
                     <li><button id="criminal" class="dropdown-item"
-                            onclick="selecting('Criminal', 'criminal')">Criminal</button></li>
+                            onclick="selecting('Kriminalregister', 'criminal')">Kriminalregister</button></li>
                 </ul>
             </div>
         </div>
@@ -110,14 +111,14 @@
             <div id="user-container" hidden>
                 <div class="card-title row">
                     <div class="col">
-                        <label for="forename" class="form-label">Forename</label>
-                        <input id="forename" type="text" class="form-control" placeholder="Forename"
-                            aria-label="Forename" readonly>
+                        <label for="forename" class="form-label">Vorname</label>
+                        <input id="forename" type="text" class="form-control" placeholder="Vorname" aria-label="Vorname"
+                            readonly>
                     </div>
                     <div class="col">
-                        <label for="surname" class="form-label">Surname</label>
-                        <input id="surname" type="text" class="form-control" placeholder="Surname" aria-label="Surname"
-                            readonly>
+                        <label for="surname" class="form-label">Nachname</label>
+                        <input id="surname" type="text" class="form-control" placeholder="Nachname"
+                            aria-label="Nachname" readonly>
                     </div>
                 </div>
                 <div class="row">
@@ -127,15 +128,15 @@
                             readonly>
                     </div>
                     <div class="col">
-                        <label for="role" class="form-label">Role</label>
-                        <input id="role" type="text" class="form-control" placeholder="Group" aria-label="Group"
+                        <label for="role" class="form-label">Gruppe</label>
+                        <input id="role" type="text" class="form-control" placeholder="Gruppe" aria-label="Gruppe"
                             readonly>
                     </div>
                 </div>
                 <button id="user-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddUser()
-                    hidden>Add</button>
+                    hidden>Hinzufügen</button>
                 <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser()
-                    hidden>Confirm</button>
+                    hidden>Bestätigen</button>
             </div>
             <div id="absence-container" hidden>
                 <div class="card-title row">
@@ -145,29 +146,30 @@
                             <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 onclick="nodeSelect('absence-select-dropdown', 'absence-account')"
-                                disabled>Select</button>
+                                disabled>Auswählen</button>
                             <ul id="absence-select-dropdown" class="dropdown-menu"></ul>
                             <input id="absence-account" type="text" class="form-control" placeholder="Account"
                                 aria-label="Account" readonly>
                         </div>
                     </div>
                     <div class="col form-group">
-                        <label for="day" class="form-label">Date</label>
+                        <label for="day" class="form-label">Datum</label>
                         <input type="date" class="form-control" id="day" readonly>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="time" class="form-label">Time (Leave Blank on whole day)</label>
-                        <input id="time" type="text" class="form-control" placeholder="Time" aria-label="Time" readonly>
+                        <label for="time" class="form-label">Uhrzeit (Leer lassen bei ganzen Tagen)</label>
+                        <input id="time" type="text" class="form-control" placeholder="Uhrzeit" aria-label="Uhrzeit"
+                            readonly>
                     </div>
                 </div>
                 <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence()
-                    hidden>Add</button>
+                    hidden>Hinzufügen</button>
                 <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence()
-                    hidden>Confirm</button>
+                    hidden>Bestätigen</button>
                 <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user"
-                    style="max-width: 160px;" onclick=getUser()>Get User</button>
+                    style="max-width: 160px;" onclick=getUser()>Bürger abrufen</button>
             </div>
             <div id="criminal-container" hidden>
                 <div class="card-title row">
@@ -177,54 +179,55 @@
                             <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 onclick="nodeSelect('criminal-select-dropdown', 'criminal-account')"
-                                disabled>Select</button>
+                                disabled>Auswählen</button>
                             <ul id="criminal-select-dropdown" class="dropdown-menu"></ul>
                             <input id="criminal-account" type="text" class="form-control" placeholder="Account"
                                 aria-label="Account" readonly>
                         </div>
                     </div>
                     <div class="col">
-                        <label for="kind" class="form-label">Kind</label>
-                        <input id="kind" type="text" class="form-control" placeholder="Kind" aria-label="Kind" readonly>
+                        <label for="kind" class="form-label">Art</label>
+                        <input id="kind" type="text" class="form-control" placeholder="Art" aria-label="Art" readonly>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="data" class="form-label">Data</label>
-                        <input id="data" type="text" class="form-control" placeholder="Data" aria-label="Data" readonly>
+                        <label for="data" class="form-label">Daten</label>
+                        <input id="data" type="text" class="form-control" placeholder="Daten" aria-label="Daten"
+                            readonly>
                     </div>
                 </div>
                 <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal()
-                    hidden>Add</button>
+                    hidden>Hinzufügen</button>
                 <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal()
-                    hidden>Confirm</button>
+                    hidden>Bestätigen</button>
                 <button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
-                    onclick=getUser()>Get User</button>
+                    onclick=getUser()>Bürger abrufen</button>
             </div>
             <div id="login-container" hidden>
                 <div>
-                    <label for="add-login" class="form-label">Add a User Login:</label>
+                    <label for="add-login" class="form-label">Einen Login hinzufügen: </label>
                     <div class="card-title row add-login">
                         <div class="col">
-                            <label for="login-users" class="form-label">User</label>
+                            <label for="login-users" class="form-label">Benutzer</label>
                             <div class="input-group mb-3 login-users">
                                 <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                    onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">Select</button>
+                                    onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">Auswählen</button>
                                 <ul id="login-add-select-dropdown" class="dropdown-menu"></ul>
-                                <input id="login-add-user" type="text" class="form-control" placeholder="User"
-                                    aria-label="User">
+                                <input id="login-add-user" type="text" class="form-control" placeholder="Bürger"
+                                    aria-label="Bürger">
                             </div>
                         </div>
                         <div class="col">
-                            <label for="login-add-password" class="form-label">Password</label>
-                            <input id="login-add-password" type="password" class="form-control" placeholder="Password"
-                                aria-label="Password">
+                            <label for="login-add-password" class="form-label">Passwort</label>
+                            <input id="login-add-password" type="password" class="form-control" placeholder="Passwort"
+                                aria-label="Passwort">
                         </div>
                     </div>
                     <div class="row" style="padding-top: 5px;">
                         <div class="col">
-                            <label for="login-add-user-permissions" class="form-label">User Permissions</label>
+                            <label for="login-add-user-permissions" class="form-label">Rechte für Bürger</label>
                             <select id="login-add-user-permissions" class="form-select"
                                 aria-label="Default select example">
                                 <option value="None">None</option>
@@ -233,7 +236,8 @@
                             </select>
                         </div>
                         <div class="col">
-                            <label for="login-add-absence-permissions" class="form-label">Absence Permissions</label>
+                            <label for="login-add-absence-permissions" class="form-label">Rechte für
+                                Abwesenheiten</label>
                             <select id="login-add-absence-permissions" class="form-select"
                                 aria-label="Default select example">
                                 <option value="None">None</option>
@@ -242,7 +246,8 @@
                             </select>
                         </div>
                         <div class="col">
-                            <label for="login-add-criminal-permissions" class="form-label">Criminal Permissions</label>
+                            <label for="login-add-criminal-permissions" class="form-label">Rechte für das
+                                Kriminalregister</label>
                             <select id="login-add-criminal-permissions" class="form-select"
                                 aria-label="Default select example">
                                 <option value="None">None</option>
@@ -251,24 +256,24 @@
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=addLogin()>Add</button>
+                    <button class="btn btn-outline-danger m-3" onclick=addLogin()>Hinzufügen</button>
                 </div>
                 <div>
-                    <label for="delete-login" class="form-label">Delete a User Login:</label>
+                    <label for="delete-login" class="form-label">Einen Login löschen:</label>
                     <div class="card-title row col delete-login">
-                        <label for="login-users" class="form-label">User</label>
+                        <label for="login-users" class="form-label">Benutzer</label>
                         <div class="input-group mb-3 login-users">
                             <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">Select</button>
+                                onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">Auswählen</button>
                             <ul id="login-delete-select-dropdown" class="dropdown-menu"></ul>
                             <input id="login-delete-user" type="text" class="form-control" placeholder="User"
                                 aria-label="User">
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Delete</button>
+                    <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Löschen</button>
                 </div>
-                <button class="btn btn-outline-danger m-2" onclick=cancel()>Cancel</button>
+                <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
             </div>
             <div id="stats-container">
                 <div class="row p-3">
@@ -293,7 +298,7 @@
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Developers</h5>
+                                <h5 class="card-title">Entwickler</h5>
                                 <p class="card-text" id="devs"></p>
                             </div>
                         </div>
@@ -311,7 +316,7 @@
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Description</h5>
+                                <h5 class="card-title">Beschreibung</h5>
                                 <p class="card-text" id="description"></p>
                             </div>
                         </div>
@@ -319,7 +324,7 @@
                     <div class="col-sm-6">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Total Users</h5>
+                                <h5 class="card-title">Bürger insgesammt</h5>
                                 <p class="card-text" id="users"></p>
                             </div>
                         </div>
@@ -339,7 +344,7 @@
                 </div>
                 <div class="modal-body" id="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
                 </div>
             </div>
         </div>

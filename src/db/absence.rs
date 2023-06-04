@@ -84,7 +84,6 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
         from absence \
         where account like '%'||?1||'%' \
         or date like '%'||?1||'%' \
-        or time like '%'||?1||'%' \
         order by account",
     )?;
     let rows = stmt.query([text.trim()])?;
