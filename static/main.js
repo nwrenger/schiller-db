@@ -393,7 +393,7 @@ async function buttonConfirmUser() {
 async function buttonAddAbsence() {
     document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
-    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: formatDate(day.value), time: time.value }))
+    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
     reset();
 }
 
