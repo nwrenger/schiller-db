@@ -575,7 +575,7 @@ async function createSelectList(node, text_field) {
     const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}`, "GET")
 
     if (!Array.isArray(data) || !data.length) {
-        node.textContent = "No Results!";
+        node.textContent = "Keine Ergebnisse!";
         return;
     }
     clearSelect(node);
