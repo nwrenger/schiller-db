@@ -284,11 +284,13 @@ function createUserList(nestedList, node, back) {
 
             allReadOnly(true);
 
+            current_data_user = user;
+
             editButton.hidden = false;
             cancelButton.hidden = false;
             deleteButton.hidden = false;
 
-            hideAllButtons();
+            resetAllButtons();
 
             addButton.classList.remove("active");
             editButton.classList.remove("active");
@@ -359,7 +361,7 @@ function reset() {
     clearList();
     updateDisabling();
     allReadOnly(true);
-    hideAllButtons();
+    resetAllButtons();
     cancel();
     current_data_user = {};
     document.getElementById("search").value = "";
@@ -589,13 +591,19 @@ function criminalReadOnly(value) {
     verdict.readOnly = value;
 }
 
-function hideAllButtons() {
+function resetAllButtons() {
     document.getElementById("user-add-button").hidden = true;
     document.getElementById("absence-add-button").hidden = true;
     document.getElementById("criminal-add-button").hidden = true;
     document.getElementById("user-confirm-button").hidden = true;
     document.getElementById("absence-confirm-button").hidden = true;
     document.getElementById("criminal-confirm-button").hidden = true;
+    document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("accuser-select-button").disabled = true;
+    document.getElementById("police-consultant-select-button").disabled = true;
+    document.getElementById("lawyer-culprit-select-button").disabled = true;
+    document.getElementById("lawyer-accuser-select-button").disabled = true;
+    document.getElementById("absence-select-button").disabled = true;
 }
 
 
