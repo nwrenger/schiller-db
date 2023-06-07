@@ -205,7 +205,7 @@ async function absenceUserList() {
             const date = this.textContent;
             cancel();
 
-            const absences = await request(`/absence/search?text=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
+            const absences = await request(`/absence/search?date=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
             createUserList(absences, sidebarList, true);
         });
     }
@@ -235,7 +235,7 @@ async function criminalUserList() {
             const kind = this.textContent;
             cancel();
 
-            const criminals = await request(`/criminal/search?text=${encodeURIComponent(kind)}`, "GET");
+            const criminals = await request(`/criminal/search?kind=${encodeURIComponent(kind)}`, "GET");
             createUserList(criminals, sidebarList, true);
         });
     }
@@ -613,10 +613,10 @@ async function search() {
         const data = await request(`/user/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
     } else if (select === "absence") {
-        const data = await request(`/absence/search?text=${text}`, "GET");
+        const data = await request(`/absence/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
     } else if (select === "criminal") {
-        const data = await request(`/criminal/search?text=${text}`, "GET");
+        const data = await request(`/criminal/search?name=${text}`, "GET");
         createUserList(data, sidebarList, true);
     }
 }

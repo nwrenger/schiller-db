@@ -21,8 +21,8 @@ use std::{env, marker::PhantomData};
 use crate::db::{self, login::Permissions, user::UserSearch};
 use chrono::NaiveDate;
 
-use db::absence::Absence;
-use db::criminal::Criminal;
+use db::absence::{Absence, AbsenceSearch};
+use db::criminal::{Criminal, CriminalSearch};
 use db::login::{Login, Permission};
 use db::project::{Database, Error, Result};
 use db::stats::Stats;
@@ -316,14 +316,20 @@ pub async fn fetch_absence(
         ("authorization" = []),
     )
 )]
-#[get("/absence/search?<text>")]
+#[get("/absence/search?<name>&<date>&<offset>")]
 pub async fn search_absence(
     _auth: Auth<AbsenceReadOnly>,
-    text: Option<&str>,
+    name: Option<&str>,
+    date: Option<&str>,
+    offset: Option<usize>,
 ) -> Json<Result<Vec<Absence>>> {
     // warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::search(&db, text.unwrap_or_default()))
+    Json(db::absence::search(
+        &db,
+        AbsenceSearch::new(name.unwrap_or_default(), date.unwrap_or("%")),
+        offset.unwrap_or_default(),
+    ))
 }
 
 #[utoipa::path(
@@ -484,14 +490,20 @@ pub async fn all_kinds(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>
         ("authorization" = []),
     )
 )]
-#[get("/criminal/search?<text>")]
+#[get("/criminal/search?<name>&<kind>&<offset>")]
 pub async fn search_criminal(
     _auth: Auth<CriminalReadOnly>,
-    text: Option<&str>,
+    name: Option<&str>,
+    kind: Option<&str>,
+    offset: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
     // warn!("GET /criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::search(&db, text.unwrap_or_default()))
+    Json(db::criminal::search(
+        &db,
+        CriminalSearch::new(name.unwrap_or_default(), kind.unwrap_or("%")),
+        offset.unwrap_or_default(),
+    ))
 }
 
 #[utoipa::path(

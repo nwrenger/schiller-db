@@ -87,6 +87,7 @@ pub struct UserSearch<'a> {
     pub name: &'a str,
     pub role: &'a str,
 }
+
 impl<'a> UserSearch<'a> {
     pub fn new(name: &'a str, role: &'a str) -> UserSearch<'a> {
         Self { name, role }

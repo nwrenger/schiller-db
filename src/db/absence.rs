@@ -73,8 +73,23 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
     Ok(dates)
 }
 
+/// Parameters for the advanced search
+///
+/// Adding the '%' char allows every number of every character in this place
+#[derive(Debug, Clone, Default)]
+pub struct AbsenceSearch<'a> {
+    pub name: &'a str,
+    pub date: &'a str,
+}
+
+impl<'a> AbsenceSearch<'a> {
+    pub fn new(name: &'a str, date: &'a str) -> AbsenceSearch<'a> {
+        Self { name, date }
+    }
+}
+
 /// Performes a simple absence search with the given `text`.
-pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
+pub fn search(db: &Database, params: AbsenceSearch, offset: usize) -> Result<Vec<Absence>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -83,10 +98,15 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Absence>> {
         \
         from absence \
         where account like '%'||?1||'%' \
-        or date like '%'||?1||'%' \
-        order by account",
+        and date like ?2 \
+        order by account \
+        limit 200 offset ?3",
     )?;
-    let rows = stmt.query([text.trim()])?;
+    let rows = stmt.query(rusqlite::params![
+        params.name.trim(),
+        params.date.trim(),
+        offset
+    ])?;
     DBIter::new(rows).collect()
 }
 
@@ -165,7 +185,7 @@ mod tests {
         };
         absence::add(&db, &absence).unwrap();
 
-        let result = absence::search(&db, "").unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], absence);
 
@@ -179,7 +199,7 @@ mod tests {
             },
         )
         .unwrap();
-        let result = absence::search(&db, "").unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].time, Some("5 Mins Late".into()));
 
@@ -189,7 +209,7 @@ mod tests {
             NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
         )
         .unwrap();
-        let result = absence::search(&db, "").unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 0);
     }
 }

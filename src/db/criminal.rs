@@ -100,8 +100,23 @@ pub fn all_kinds(db: &Database) -> Result<Vec<String>> {
     Ok(kinds)
 }
 
+/// Parameters for the advanced search
+///
+/// Adding the '%' char allows every number of every character in this place
+#[derive(Debug, Clone, Default)]
+pub struct CriminalSearch<'a> {
+    pub name: &'a str,
+    pub kind: &'a str,
+}
+
+impl<'a> CriminalSearch<'a> {
+    pub fn new(name: &'a str, kind: &'a str) -> CriminalSearch<'a> {
+        Self { name, kind }
+    }
+}
+
 /// Performes a simple criminal search with the given `text`. Only Searching on account and kind.
-pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
+pub fn search(db: &Database, params: CriminalSearch, offset: usize) -> Result<Vec<Criminal>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -117,11 +132,20 @@ pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
         verdict \
         \
         from criminal \
-        where account like '%'||?1||'%' \
-        or kind like '%'||?1||'%' \
-        order by account",
+        where (account like '%'||?1||'%' \
+            or accuser like '%'||?1||'%' \
+            or police_consultant like '%'||?1||'%' \
+            or lawyer_culprit like '%'||?1||'%' \
+            or lawyer_accuser like '%'||?1||'%') \
+        and kind like ?2 \
+        order by account
+        limit 200 offset ?3",
     )?;
-    let rows = stmt.query([text.trim()])?;
+    let rows = stmt.query(rusqlite::params![
+        params.name.trim(),
+        params.kind.trim(),
+        offset
+    ])?;
     DBIter::new(rows).collect()
 }
 
@@ -236,7 +260,7 @@ mod tests {
         };
         criminal::add(&db, &criminal).unwrap();
 
-        let result = criminal::search(&db, "").unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], criminal);
 
@@ -250,12 +274,12 @@ mod tests {
             },
         )
         .unwrap();
-        let result = criminal::search(&db, "").unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].facts, "some".to_string());
 
         criminal::delete(&db, &criminal.account, &criminal.kind).unwrap();
-        let result = criminal::search(&db, "").unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
         assert_eq!(result.len(), 0);
     }
 }
