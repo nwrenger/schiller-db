@@ -193,8 +193,83 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="data" class="form-label">Daten</label>
-                        <input id="data" type="text" class="form-control" placeholder="Daten" aria-label="Daten"
+                        <label for="accuser-select" class="form-label">Anzeiger</label>
+                        <div class="input-group mb-3 accuser-select">
+                            <button id="accuser-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick="nodeSelect('accuser-select-dropdown', 'accuser')" disabled>Auswählen</button>
+                            <ul id="accuser-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="accuser" type="text" class="form-control" placeholder="Anzeiger"
+                                aria-label="Anzeiger" readonly>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="police-consultant" class="form-label"><A>Sachberater Polizei</A></label>
+                        <div class="input-group mb-3 police-consultant-select">
+                            <button id="police-consultant-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick="nodeSelect('police-consultant-select-dropdown', 'police-consultant')"
+                                disabled>Auswählen</button>
+                            <ul id="police-consultant-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="police-consultant" type="text" class="form-control"
+                                placeholder="Sachberater Polizei" aria-label="Sachberater Polizei" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="lawyer-culprit" class="form-label">Anwalt des Täters</label>
+                        <div class="input-group mb-3 lawyer-culprit-select">
+                            <button id="lawyer-culprit-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick="nodeSelect('lawyer-culprit-select-dropdown', 'lawyer-culprit')"
+                                disabled>Auswählen</button>
+                            <ul id="lawyer-culprit-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="lawyer-culprit" type="text" class="form-control" placeholder="Anwalt des Täters"
+                                aria-label="Anwalt des Täters" readonly>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="lawyer-accuser" class="form-label">Anwalt des Anklägers</label>
+                        <div class="input-group mb-3 lawyer-accuser-select">
+                            <button id="lawyer-accuser-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick="nodeSelect('lawyer-accuser-select-dropdown', 'lawyer-accuser')"
+                                disabled>Auswählen</button>
+                            <ul id="lawyer-accuser-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="lawyer-accuser" type="text" class="form-control"
+                                placeholder="Anwalt des Anklägers" aria-label="Anwalt des Anklägers" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="facts" class="form-label">Tatbestand</label>
+                        <input id="facts" type="text" class="form-control" placeholder="Tatbestand"
+                            aria-label="Tatbestand" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="time-of-crime" class="form-label">Zeitpunkt der Tat</label>
+                        <input id="time-of-crime" type="text" class="form-control" placeholder="Zeitpunkt der Tat"
+                            aria-label="Zeitpunkt der Tat" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="location-of-crime" class="form-label">Ort der Tat</label>
+                        <input id="location-of-crime" type="text" class="form-control" placeholder="Ort der Tat"
+                            aria-label="Ort der Tat" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="note" class="form-label">Kommentar</label>
+                        <input id="note" type="text" class="form-control" placeholder="Kommentar" aria-label="Kommentar"
+                            readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="verdict" class="form-label">Urteil</label>
+                        <input id="verdict" type="text" class="form-control" placeholder="Urteil" aria-label="Urteil"
                             readonly>
                     </div>
                 </div>
@@ -228,7 +303,8 @@
                     </div>
                     <div class="row" style="padding-top: 5px;">
                         <div class="col">
-                            <label for="login-add-user-permissions" class="form-label">Rechte für Bürger</label>
+                            <label for="login-add-user-permissions" class="form-label">Rechte für
+                                Bürger</label>
                             <select id="login-add-user-permissions" class="form-select"
                                 aria-label="Default select example">
                                 <option value="None">None</option>
@@ -247,8 +323,8 @@
                             </select>
                         </div>
                         <div class="col">
-                            <label for="login-add-criminal-permissions" class="form-label">Rechte für das
-                                Kriminalregister</label>
+                            <label for="login-add-criminal-permissions" class="form-label">Rechte für
+                                das Kriminalregister</label>
                             <select id="login-add-criminal-permissions" class="form-select"
                                 aria-label="Default select example">
                                 <option value="None">None</option>

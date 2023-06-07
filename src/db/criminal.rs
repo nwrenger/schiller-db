@@ -11,7 +11,15 @@ use crate::db::project::{DBIter, Database, Error, FromRow, Result};
 pub struct Criminal {
     pub account: String,
     pub kind: String,
-    pub data: String,
+    pub accuser: String,
+    pub police_consultant: String,
+    pub lawyer_culprit: String,
+    pub lawyer_accuser: String,
+    pub facts: String,
+    pub time_of_crime: String,
+    pub location_of_crime: String,
+    pub note: String,
+    pub verdict: String,
 }
 
 impl Criminal {
@@ -28,7 +36,15 @@ impl FromRow for Criminal {
         Ok(Criminal {
             account: row.get("account")?,
             kind: row.get("kind")?,
-            data: row.get("data")?,
+            accuser: row.get("accuser")?,
+            police_consultant: row.get("police_consultant")?,
+            lawyer_culprit: row.get("lawyer_culprit")?,
+            lawyer_accuser: row.get("lawyer_accuser")?,
+            facts: row.get("facts")?,
+            time_of_crime: row.get("time_of_crime")?,
+            location_of_crime: row.get("location_of_crime")?,
+            note: row.get("note")?,
+            verdict: row.get("verdict")?,
         })
     }
 }
@@ -39,7 +55,16 @@ pub fn fetch(db: &Database, account: &str, kind: &str) -> Result<Criminal> {
         "select \
         account, \
         kind, \
-        data \
+        accuser, \
+        police_consultant, \
+        lawyer_culprit, \
+        lawyer_accuser, \
+        facts, \
+        time_of_crime, \
+        location_of_crime, \
+        note, \
+        verdict \
+        \
         from criminal \
         where account=?",
         rusqlite::params![account, kind],
@@ -75,13 +100,21 @@ pub fn all_kinds(db: &Database) -> Result<Vec<String>> {
     Ok(kinds)
 }
 
-/// Performes a simple criminal search with the given `text`.
+/// Performes a simple criminal search with the given `text`. Only Searching on account and kind.
 pub fn search(db: &Database, text: &str) -> Result<Vec<Criminal>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
         kind, \
-        data \
+        accuser, \
+        police_consultant, \
+        lawyer_culprit, \
+        lawyer_accuser, \
+        facts, \
+        time_of_crime, \
+        location_of_crime, \
+        note, \
+        verdict \
         \
         from criminal \
         where account like '%'||?1||'%' \
@@ -98,11 +131,19 @@ pub fn add(db: &Database, criminal: &Criminal) -> Result<()> {
         return Err(Error::InvalidCriminal);
     }
     db.con.execute(
-        "INSERT INTO criminal VALUES (?, ?, ?)",
+        "INSERT INTO criminal VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         rusqlite::params![
             criminal.account.trim(),
             criminal.kind.trim(),
-            criminal.data.trim()
+            criminal.accuser.trim(),
+            criminal.police_consultant.trim(),
+            criminal.lawyer_culprit.trim(),
+            criminal.lawyer_accuser.trim(),
+            criminal.facts.trim(),
+            criminal.time_of_crime.trim(),
+            criminal.location_of_crime.trim(),
+            criminal.note.trim(),
+            criminal.verdict.trim(),
         ],
     )?;
     Ok(())
@@ -128,11 +169,19 @@ pub fn update(
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update criminal set account=?, kind=?, data=? where account=? and kind=?",
+        "update criminal set account=?, kind=?, accuser=?, police_consultant=?, lawyer_culprit=?, lawyer_accuser=?, facts=?, time_of_crime=?, location_of_crime=?, note=?, verdict=? where account=? and kind=?",
         rusqlite::params![
             criminal.account.trim(),
             criminal.kind.trim(),
-            criminal.data.trim(),
+            criminal.accuser.trim(),
+            criminal.police_consultant.trim(),
+            criminal.lawyer_culprit.trim(),
+            criminal.lawyer_accuser.trim(),
+            criminal.facts.trim(),
+            criminal.time_of_crime.trim(),
+            criminal.location_of_crime.trim(),
+            criminal.note.trim(),
+            criminal.verdict.trim(),
             previous_account,
             previous_kind
         ],
@@ -175,7 +224,15 @@ mod tests {
         let criminal = Criminal {
             account: "foo".to_string(),
             kind: "Destroy".to_string(),
-            data: "Car Destroyed".into(),
+            accuser: "bar".to_string(),
+            police_consultant: "baz".to_string(),
+            lawyer_culprit: "bay".to_string(),
+            lawyer_accuser: "nay".to_string(),
+            facts: "none".to_string(),
+            time_of_crime: "3pm".to_string(),
+            location_of_crime: "nowhere".to_string(),
+            note: "yes!".to_string(),
+            verdict: "definitely guilty".to_string(),
         };
         criminal::add(&db, &criminal).unwrap();
 
@@ -188,14 +245,14 @@ mod tests {
             &criminal.account,
             &criminal.kind,
             &Criminal {
-                data: "Car Stolen".into(),
+                facts: "some".to_string(),
                 ..criminal.clone()
             },
         )
         .unwrap();
         let result = criminal::search(&db, "").unwrap();
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].data, "Car Stolen".to_string());
+        assert_eq!(result[0].facts, "some".to_string());
 
         criminal::delete(&db, &criminal.account, &criminal.kind).unwrap();
         let result = criminal::search(&db, "").unwrap();

@@ -11,7 +11,15 @@ const role = document.getElementById("role");
 const day = document.getElementById("day");
 const time = document.getElementById("time");
 const kind = document.getElementById("kind");
-const criminal_data = document.getElementById("data");
+const accuser = document.getElementById("accuser");
+const police_consultant = document.getElementById("police-consultant");
+const lawyer_culprit = document.getElementById("lawyer-culprit");
+const lawyer_accuser = document.getElementById("lawyer-accuser");
+const facts = document.getElementById("facts");
+const time_of_crime = document.getElementById("time-of-crime");
+const location_of_crime = document.getElementById("location-of-crime");
+const note = document.getElementById("note");
+const verdict = document.getElementById("verdict");
 const user_container = document.getElementById("user-container");
 const absence_container = document.getElementById("absence-container");
 const criminal_container = document.getElementById("criminal-container");
@@ -129,7 +137,15 @@ function updateCriminalUI(data) {
 
     criminal_account.value = data.account;
     kind.value = data.kind;
-    criminal_data.value = data.data;
+    accuser.value = data.accuser;
+    police_consultant.value = data.police_consultant;
+    lawyer_culprit.value = data.lawyer_culprit;
+    lawyer_accuser.value = data.lawyer_accuser;
+    facts.value = data.facts;
+    time_of_crime.value = data.time_of_crime;
+    location_of_crime.value = data.location_of_crime;
+    note.value = data.note;
+    verdict.value = data.verdict;
 }
 
 // Initializes the user list for roles UI
@@ -374,6 +390,10 @@ function cancel() {
     cancelButton.hidden = true;
     deleteButton.hidden = true;
     document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("accuser-select-button").disabled = true;
+    document.getElementById("police-consultant-select-button").disabled = true;
+    document.getElementById("lawyer-culprit-select-button").disabled = true;
+    document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     show([false, true, true, true, true])
 }
@@ -391,30 +411,26 @@ async function buttonConfirmUser() {
 }
 
 async function buttonAddAbsence() {
-    document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
     await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
     reset();
 }
 
 async function buttonConfirmAbsence() {
-    document.getElementById("absence-select-button").disabled = true;
     absenceReadOnly(true);
     await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
     reset();
 }
 
 async function buttonAddCriminal() {
-    document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly(true);
-    await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
     reset();
 }
 
 async function buttonConfirmCriminal() {
-    document.getElementById("criminal-select-button").disabled = true;
     criminalReadOnly(true);
-    await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, data: criminal_data.value }))
+    await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
     reset();
 }
 
@@ -422,7 +438,9 @@ function showChange(otherKind, selectId, addId, confirmId) {
     visibilityGetUser(true);
     allReadOnly(false);
     if (selectId) {
-        document.getElementById(selectId).disabled = false;
+        for (const item of selectId) {
+            document.getElementById(item).disabled = false;
+        }
     }
     const buttonAdd = document.getElementById(addId);
     const buttonConfirm = document.getElementById(confirmId);
@@ -474,7 +492,7 @@ function add() {
             day.value = current_data_user.date;
         }
         time.value = "";
-        showChange("POST", "absence-select-button", "absence-add-button", "absence-confirm-button");
+        showChange("POST", ["absence-select-button"], "absence-add-button", "absence-confirm-button");
     } else if (select === "criminal") {
         show([true, true, false, true, true, false], true);
         criminal_account.value = "";
@@ -483,8 +501,16 @@ function add() {
         } else {
             kind.value = current_data_user.kind;
         }
-        data.value = "";
-        showChange("POST", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
+        accuser.value = "";
+        police_consultant.value = "";
+        lawyer_culprit.value = "";
+        lawyer_accuser.value = "";
+        facts.value = "";
+        time_of_crime.value = "";
+        location_of_crime.value = "";
+        note.value = "";
+        verdict.value = "";
+        showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button"], "criminal-add-button", "criminal-confirm-button");
     }
 }
 
@@ -501,12 +527,20 @@ function edit() {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        showChange("PUT", "absence-select-button", "absence-add-button", "absence-confirm-button");
+        showChange("PUT", ["absence-select-button"], "absence-add-button", "absence-confirm-button");
     } else if (select === "criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
-        criminal_data.value = current_data_user.data;
-        showChange("PUT", "criminal-select-button", "criminal-add-button", "criminal-confirm-button");
+        accuser.value = current_data_user.accuser;
+        police_consultant.value = current_data_user.police_consultant;
+        lawyer_culprit.value = current_data_user.lawyer_culprit;
+        lawyer_accuser.value = current_data_user.lawyer_accuser;
+        facts.value = current_data_user.facts;
+        time_of_crime.value = current_data_user.time_of_crime;
+        location_of_crime.value = current_data_user.location_of_crime;
+        note.value = current_data_user.note;
+        verdict.value = current_data_user.verdict;
+        showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button"], "criminal-add-button", "criminal-confirm-button");
     }
 }
 
@@ -544,7 +578,15 @@ function absenceReadOnly(value) {
 function criminalReadOnly(value) {
     criminal_account.readOnly = value;
     kind.readOnly = value;
-    criminal_data.readOnly = value;
+    accuser.readOnly = value;
+    police_consultant.readOnly = value;
+    lawyer_culprit.readOnly = value;
+    lawyer_accuser.readOnly = value;
+    facts.readOnly = value;
+    time_of_crime.readOnly = value;
+    location_of_crime.readOnly = value;
+    note.readOnly = value;
+    verdict.readOnly = value;
 }
 
 function hideAllButtons() {

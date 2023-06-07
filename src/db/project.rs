@@ -198,7 +198,15 @@ pub fn create(db: &Database) -> Result<()> {
     create table criminal ( \
         account text not null, \
         kind text not null, \
-        data text not null, \
+        accuser text not null, \
+        police_consultant text not null, \
+        lawyer_culprit text not null, \
+        lawyer_accuser text not null, \
+        facts text not null, \
+        time_of_crime text not null, \
+        location_of_crime text not null, \
+        note text not null, \
+        verdict text not null, \
         primary key (account, kind));
     \
     create table login ( \
