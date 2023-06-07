@@ -1,6 +1,6 @@
 # Schillernover's Database Management or for Short SNDM
 
-A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcomming project week.
+A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcoming project week.
 
 ### Test Website
 
@@ -27,7 +27,7 @@ Developed by me and a few others (look to contributions). You can see a current 
 
 It's developed by using intern Server Calls, JS and Bootstrap (for the UI). I don't use any JS Webdev Framework like React.js (could be a bad idea). The code of [main.js](static/main.js) is really messy and could/should be refactored (won't probably ever done, but when you like to do that Open a Pull Request!).
 
-A Picutre of the Main Page:
+A Picture of the Main Page:
 
 <img src="images/website.png" alt="Database Schema" width=900/>
 
