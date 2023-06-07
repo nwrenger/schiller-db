@@ -84,4 +84,5 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] fix Add Button (currently a little bit buggy)
 - [x] Better Criminal/Absence adding process
 - [x] Integration for Mobile
+- [x] Finished Criminals Extended Data Fields
 - [ ] Network test (after we are finished with the UI)
