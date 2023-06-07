@@ -1,6 +1,7 @@
 /target
 Cargo.lock
 /.vscode
+/exp
 benutzer.txt
 sndm.db
 log.txt
