@@ -23,7 +23,13 @@ This application follows the 3-tier principle.
 
 ### UI Layer - SNDI
 
-Developed by me and a few others (look to contributions). Further explanation are coming soon (when development is finished).
+Developed by me and a few others (look to contributions). You can see a current state of the development, by visiting a [Test Website](#test-website).
+
+It's developed by using intern Server Calls, JS and Bootstrap (for the UI). I don't use any JS Webdev Framework like React.js (could be a bad idea). The code of [main.js](static/main.js) is really messy and could/should be refactored (won't probably ever done, but when you like to do that Open a Pull Request!).
+
+A Picutre of the Main Page:
+
+<img src="images/website.png" alt="Database Schema" width=900/>
 
 ### Application/Server Layer - SNDM
 
