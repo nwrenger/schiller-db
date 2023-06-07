@@ -145,6 +145,7 @@ fn rocket() -> Rocket<Build> {
             "/",
             routes![
                 server::index,
+                server::login,
                 server::static_files,
                 server::stats,
                 server::fetch_user,

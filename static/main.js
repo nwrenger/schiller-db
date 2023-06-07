@@ -37,7 +37,7 @@ var select = "user";
 var current_data_user = {};
 
 if (!auth || !current_user || !permissions) {
-    window.open("login.html", "_self");
+    window.open("/login", "_self");
     error("InvalidLocalKeys");
 }
 
@@ -326,7 +326,7 @@ function clearList() {
 // Event handlers
 function logout() {
     localStorage.clear();
-    window.open("login.html", "_self");
+    window.open("/login", "_self");
 }
 
 function currentUser() {
@@ -367,11 +367,11 @@ function reset() {
     document.getElementById("search").value = "";
     if (select === "user") {
         roleUserList().catch(() => {
-            window.open("login.html", "_self");
+            window.open("/login", "_self");
             error("InvalidLocalKeys");
         });
         stats().catch(() => {
-            window.open("login.html", "_self");
+            window.open("/login", "_self");
             error("InvalidLocalKeys");
         });
     } else if (select === "absence") {

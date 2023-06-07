@@ -128,6 +128,12 @@ pub async fn index() -> Option<NamedFile> {
     NamedFile::open(path).await.ok()
 }
 
+#[get("/login")]
+pub async fn login() -> Option<NamedFile> {
+    let path = Path::new("static").join("login.html");
+    NamedFile::open(path).await.ok()
+}
+
 #[get("/<path..>")]
 pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
     let path = Path::new("static").join(path);
