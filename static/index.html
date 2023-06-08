@@ -144,10 +144,15 @@
                     <div class="col">
                         <label for="absence-select" class="form-label">Account</label>
                         <div class="input-group mb-3 absence-select">
-                            <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('absence-select-dropdown', 'absence-account')"
-                                disabled>Auswählen</button>
+                            <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle hide-arrow"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('absence-select-dropdown', 'absence-account')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="absence-select-dropdown" class="dropdown-menu"></ul>
                             <input id="absence-account" type="text" class="form-control" placeholder="Account"
                                 aria-label="Account" readonly>
@@ -177,10 +182,16 @@
                     <div class="col">
                         <label for="criminal-select" class="form-label">Täter</label>
                         <div class="input-group mb-3 criminal-select">
-                            <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('criminal-select-dropdown', 'criminal-account')"
-                                disabled>Auswählen</button>
+                            <button id="criminal-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('criminal-select-dropdown', 'criminal-account')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="criminal-select-dropdown" class="dropdown-menu"></ul>
                             <input id="criminal-account" type="text" class="form-control" placeholder="Täter"
                                 aria-label="Täter" readonly>
@@ -195,9 +206,15 @@
                     <div class="col">
                         <label for="accuser-select" class="form-label">Anzeiger</label>
                         <div class="input-group mb-3 accuser-select">
-                            <button id="accuser-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('accuser-select-dropdown', 'accuser')" disabled>Auswählen</button>
+                            <button id="accuser-select-button" class="btn btn-outline-danger dropdown-toggle hide-arrow"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('accuser-select-dropdown', 'accuser')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="accuser-select-dropdown" class="dropdown-menu"></ul>
                             <input id="accuser" type="text" class="form-control" placeholder="Anzeiger"
                                 aria-label="Anzeiger" readonly>
@@ -206,10 +223,16 @@
                     <div class="col">
                         <label for="police-consultant" class="form-label"><A>Sachberater Polizei</A></label>
                         <div class="input-group mb-3 police-consultant-select">
-                            <button id="police-consultant-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('police-consultant-select-dropdown', 'police-consultant')"
-                                disabled>Auswählen</button>
+                            <button id="police-consultant-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('police-consultant-select-dropdown', 'police-consultant')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="police-consultant-select-dropdown" class="dropdown-menu"></ul>
                             <input id="police-consultant" type="text" class="form-control"
                                 placeholder="Sachberater Polizei" aria-label="Sachberater Polizei" readonly>
@@ -220,10 +243,16 @@
                     <div class="col">
                         <label for="lawyer-culprit" class="form-label">Anwalt des Täters</label>
                         <div class="input-group mb-3 lawyer-culprit-select">
-                            <button id="lawyer-culprit-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('lawyer-culprit-select-dropdown', 'lawyer-culprit')"
-                                disabled>Auswählen</button>
+                            <button id="lawyer-culprit-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('lawyer-culprit-select-dropdown', 'lawyer-culprit')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="lawyer-culprit-select-dropdown" class="dropdown-menu"></ul>
                             <input id="lawyer-culprit" type="text" class="form-control" placeholder="Anwalt des Täters"
                                 aria-label="Anwalt des Täters" readonly>
@@ -232,10 +261,16 @@
                     <div class="col">
                         <label for="lawyer-accuser" class="form-label">Anwalt des Anklägers</label>
                         <div class="input-group mb-3 lawyer-accuser-select">
-                            <button id="lawyer-accuser-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('lawyer-accuser-select-dropdown', 'lawyer-accuser')"
-                                disabled>Auswählen</button>
+                            <button id="lawyer-accuser-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('lawyer-accuser-select-dropdown', 'lawyer-accuser')" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="lawyer-accuser-select-dropdown" class="dropdown-menu"></ul>
                             <input id="lawyer-accuser" type="text" class="form-control"
                                 placeholder="Anwalt des Anklägers" aria-label="Anwalt des Anklägers" readonly>
@@ -289,9 +324,16 @@
                         <div class="col">
                             <label for="login-users" class="form-label">Benutzer</label>
                             <div class="input-group mb-3 login-users">
-                                <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                    onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">Auswählen</button>
+                                <button id="criminal-select-button"
+                                    class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                    onclick="nodeSelect('login-add-select-dropdown', 'login-add-user')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-search" viewBox="0 0 16 16">
+                                        <path
+                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                    </svg>
+                                </button>
                                 <ul id="login-add-select-dropdown" class="dropdown-menu"></ul>
                                 <input id="login-add-user" type="text" class="form-control" placeholder="Benutzer"
                                     aria-label="Benutzer">
@@ -342,9 +384,16 @@
                     <div class="card-title row col delete-login">
                         <label for="login-users" class="form-label">Benutzer</label>
                         <div class="input-group mb-3 login-users">
-                            <button id="criminal-select-button" class="btn btn-outline-danger dropdown-toggle"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">Auswählen</button>
+                            <button id="criminal-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('login-delete-select-dropdown', 'login-delete-user')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
                             <ul id="login-delete-select-dropdown" class="dropdown-menu"></ul>
                             <input id="login-delete-user" type="text" class="form-control" placeholder="Benutzer"
                                 aria-label="Benutzer">
