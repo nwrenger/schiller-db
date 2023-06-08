@@ -1,7 +1,7 @@
 [package]
 name = "sndm"
 description = "Schillernover's Database Management"
-version = "3.0.1"
+version = "3.0.2"
 edition = "2021"
 authors = ["Nils Wrenger <nils@wrenger.net>", "Leonard Böttcher <leonard.boettcher@iserv-schillerschule.de>"]
 repository = "https://github.com/nwrenger/sndm"
