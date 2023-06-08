@@ -115,8 +115,8 @@ impl<'a> CriminalSearch<'a> {
     }
 }
 
-/// Performes a simple criminal search with the given `text`. Only Searching on account and kind.
-pub fn search(db: &Database, params: CriminalSearch, offset: usize) -> Result<Vec<Criminal>> {
+/// Performes a simple criminal search with the given `text`.
+pub fn search(db: &Database, params: CriminalSearch, limit: usize) -> Result<Vec<Criminal>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -139,12 +139,12 @@ pub fn search(db: &Database, params: CriminalSearch, offset: usize) -> Result<Ve
             or lawyer_accuser like '%'||?1||'%') \
         and kind like ?2 \
         order by account
-        limit 200 offset ?3",
+        limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
         params.name.trim(),
         params.kind.trim(),
-        offset
+        limit
     ])?;
     DBIter::new(rows).collect()
 }

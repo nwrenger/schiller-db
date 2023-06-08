@@ -184,12 +184,12 @@ pub async fn fetch_user(_auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User
         ("authorization" = []),
     )
 )]
-#[get("/user/search?<name>&<role>&<offset>")]
+#[get("/user/search?<name>&<role>&<limit>")]
 pub async fn search_user(
     _auth: Auth<UserReadOnly>,
     name: Option<&str>,
     role: Option<&str>,
-    offset: Option<usize>,
+    limit: Option<usize>,
 ) -> Json<Result<Vec<User>>> {
     //     warn!(
     //         "GET /user/search?{name:?}&{role:?}&{offset:?}: {}",
@@ -199,7 +199,7 @@ pub async fn search_user(
     Json(db::user::search(
         &db,
         UserSearch::new(name.unwrap_or_default(), role.unwrap_or("%")),
-        offset.unwrap_or_default(),
+        limit.unwrap_or(200),
     ))
 }
 
@@ -316,19 +316,19 @@ pub async fn fetch_absence(
         ("authorization" = []),
     )
 )]
-#[get("/absence/search?<name>&<date>&<offset>")]
+#[get("/absence/search?<name>&<date>&<limit>")]
 pub async fn search_absence(
     _auth: Auth<AbsenceReadOnly>,
     name: Option<&str>,
     date: Option<&str>,
-    offset: Option<usize>,
+    limit: Option<usize>,
 ) -> Json<Result<Vec<Absence>>> {
     // warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::search(
         &db,
         AbsenceSearch::new(name.unwrap_or_default(), date.unwrap_or("%")),
-        offset.unwrap_or_default(),
+        limit.unwrap_or(200),
     ))
 }
 
@@ -490,19 +490,19 @@ pub async fn all_kinds(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>
         ("authorization" = []),
     )
 )]
-#[get("/criminal/search?<name>&<kind>&<offset>")]
+#[get("/criminal/search?<name>&<kind>&<limit>")]
 pub async fn search_criminal(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
     kind: Option<&str>,
-    offset: Option<usize>,
+    limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
     // warn!("GET /criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::search(
         &db,
         CriminalSearch::new(name.unwrap_or_default(), kind.unwrap_or("%")),
-        offset.unwrap_or_default(),
+        limit.unwrap_or(200),
     ))
 }
 

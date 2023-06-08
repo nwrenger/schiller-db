@@ -95,7 +95,7 @@ impl<'a> UserSearch<'a> {
 }
 
 /// Performes a simple user search with the given `text`.
-pub fn search(db: &Database, params: UserSearch, offset: usize) -> Result<Vec<User>> {
+pub fn search(db: &Database, params: UserSearch, limit: usize) -> Result<Vec<User>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -109,12 +109,12 @@ pub fn search(db: &Database, params: UserSearch, offset: usize) -> Result<Vec<Us
             or surname like '%'||?1||'%') \
         and role like ?2 \
         order by account \
-        limit 200 offset ?3",
+        limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
         params.name.trim(),
         params.role.trim(),
-        offset
+        limit
     ])?;
     DBIter::new(rows).collect()
 }

@@ -89,7 +89,7 @@ impl<'a> AbsenceSearch<'a> {
 }
 
 /// Performes a simple absence search with the given `text`.
-pub fn search(db: &Database, params: AbsenceSearch, offset: usize) -> Result<Vec<Absence>> {
+pub fn search(db: &Database, params: AbsenceSearch, limit: usize) -> Result<Vec<Absence>> {
     let mut stmt = db.con.prepare(
         "select \
         account, \
@@ -100,12 +100,12 @@ pub fn search(db: &Database, params: AbsenceSearch, offset: usize) -> Result<Vec
         where account like '%'||?1||'%' \
         and date like ?2 \
         order by account \
-        limit 200 offset ?3",
+        limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
         params.name.trim(),
         params.date.trim(),
-        offset
+        limit
     ])?;
     DBIter::new(rows).collect()
 }

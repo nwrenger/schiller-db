@@ -622,14 +622,14 @@ async function search() {
 }
 
 async function createSelectList(node, text_field) {
-    const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}`, "GET")
+    const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}&limit=${10}`, "GET")
 
     if (!Array.isArray(data) || !data.length) {
         node.textContent = "Keine Ergebnisse!";
         return;
     }
     clearSelect(node);
-    for (const user of data.slice(0, 10)) {
+    for (const user of data) {
         const aUser = document.createElement("a");
         const userTextNode = document.createTextNode(user.account);
         aUser.className = "dropdown-item";
