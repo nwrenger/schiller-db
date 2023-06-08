@@ -310,7 +310,6 @@ function error(error) {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
     document.getElementById("staticBackdropLabel").textContent = "Fehler"
     document.getElementById("modal-body").textContent = error;
-    console.log(error);
     modal.toggle();
     cancel();
     throw error;
