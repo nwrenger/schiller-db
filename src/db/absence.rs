@@ -99,7 +99,10 @@ pub fn search(db: &Database, params: AbsenceSearch, limit: usize) -> Result<Vec<
         from absence \
         where account like '%'||?1||'%' \
         and date like ?2 \
-        order by account \
+        order by case \
+            when account like ?1 || '%' then 0 \
+            else 1 \
+        end asc, account asc \
         limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
@@ -185,7 +188,7 @@ mod tests {
         };
         absence::add(&db, &absence).unwrap();
 
-        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], absence);
 
@@ -199,7 +202,7 @@ mod tests {
             },
         )
         .unwrap();
-        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].time, Some("5 Mins Late".into()));
 
@@ -209,7 +212,7 @@ mod tests {
             NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
         )
         .unwrap();
-        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 0);
     }
 }

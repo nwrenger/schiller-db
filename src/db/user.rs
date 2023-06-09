@@ -108,7 +108,10 @@ pub fn search(db: &Database, params: UserSearch, limit: usize) -> Result<Vec<Use
             or forename like '%'||?1||'%' \
             or surname like '%'||?1||'%') \
         and role like ?2 \
-        order by account \
+        order by case \
+            when account like ?1 || '%' then 0 \
+            else 1 \
+        end asc, account asc \
         limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
@@ -214,7 +217,7 @@ mod tests {
         };
         user::add(&db, &user).unwrap();
 
-        let result = user::search(&db, UserSearch::new("%", "%"), 0).unwrap();
+        let result = user::search(&db, UserSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], user);
 

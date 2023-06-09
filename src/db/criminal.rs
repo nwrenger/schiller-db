@@ -138,7 +138,10 @@ pub fn search(db: &Database, params: CriminalSearch, limit: usize) -> Result<Vec
             or lawyer_culprit like '%'||?1||'%' \
             or lawyer_accuser like '%'||?1||'%') \
         and kind like ?2 \
-        order by account
+        order by case \
+            when account like ?1 || '%' then 0 \
+            else 1 \
+        end asc, account asc \
         limit ?3",
     )?;
     let rows = stmt.query(rusqlite::params![
@@ -260,7 +263,7 @@ mod tests {
         };
         criminal::add(&db, &criminal).unwrap();
 
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], criminal);
 
@@ -274,12 +277,12 @@ mod tests {
             },
         )
         .unwrap();
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].facts, "some".to_string());
 
         criminal::delete(&db, &criminal.account, &criminal.kind).unwrap();
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 0).unwrap();
+        let result = criminal::search(&db, criminal::CriminalSearch::new("", "%"), 0).unwrap();
         assert_eq!(result.len(), 0);
     }
 }
