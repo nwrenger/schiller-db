@@ -188,7 +188,7 @@ mod tests {
         };
         absence::add(&db, &absence).unwrap();
 
-        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], absence);
 
@@ -202,7 +202,7 @@ mod tests {
             },
         )
         .unwrap();
-        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].time, Some("5 Mins Late".into()));
 
@@ -212,7 +212,7 @@ mod tests {
             NaiveDate::from_ymd_opt(2023, 4, 26).unwrap(),
         )
         .unwrap();
-        let result = absence::search(&db, absence::AbsenceSearch::new("", "%"), 0).unwrap();
+        let result = absence::search(&db, absence::AbsenceSearch::new("%", "%"), 200).unwrap();
         assert_eq!(result.len(), 0);
     }
 }

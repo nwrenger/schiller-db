@@ -97,6 +97,7 @@ fn rocket() -> Rocket<Build> {
             server::fetch_permission,
             server::add_login,
             server::delete_login,
+            server::delete_all_logins,
         ),
         components(
             schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::login::Permissions, db::stats::Stats, db::project::Error)
@@ -169,6 +170,7 @@ fn rocket() -> Rocket<Build> {
                 server::fetch_permission,
                 server::add_login,
                 server::delete_login,
+                server::delete_all_logins,
             ],
         )
 }

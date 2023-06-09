@@ -109,6 +109,23 @@ pub fn fetch_permission(db: &Database, user: &str) -> Result<Permissions> {
     )?)
 }
 
+pub fn all_logins(db: &Database) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "select \
+        user \
+        from login \
+        order by user",
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut users = Vec::new();
+    while let Some(row) = rows.next()? {
+        users.push(row.get(0)?);
+    }
+
+    Ok(users)
+}
+
 /// Adds a new date with presenters.
 pub fn add(db: &Database, login: &Login) -> Result<()> {
     if !login.is_valid() {
@@ -166,6 +183,9 @@ mod tests {
 
         let result = login::fetch_permission(&db, &login.user);
         assert!(result.is_ok());
+
+        let result = login::all_logins(&db).unwrap();
+        assert_eq!(result.len(), 1);
 
         login::delete(&db, &login.user).unwrap();
 

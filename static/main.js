@@ -356,6 +356,11 @@ async function deleteLogin() {
     cancel();
 }
 
+async function deleteAllLogins() {
+    request("all_logins", "DELETE");
+    cancel();
+}
+
 function reset() {
     clearList();
     updateDisabling();

@@ -649,3 +649,30 @@ pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>>
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::login::delete(&db, user))
 }
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "All Logins delete sended successfully"),
+        (status = 401, description = "Unauthorized to delete All Logins", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security(
+        ("authorization" = []),
+    )
+)]
+#[delete("/all_logins")]
+pub async fn delete_all_logins(auth: Auth<UserWrite>) -> Json<Result<()>> {
+    warn!("DELETE /all_logins: {}", auth.user);
+
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+
+    let users = db::login::all_logins(&db).unwrap();
+
+    for user in &users {
+        if *user == env::var("SNDM_USER").unwrap() {
+            warn!("unable to delete admin '{}'", user);
+        } else {
+            db::login::delete(&db, user).unwrap();
+        }
+    }
+    Json(Ok(()))
+}

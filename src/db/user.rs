@@ -217,7 +217,7 @@ mod tests {
         };
         user::add(&db, &user).unwrap();
 
-        let result = user::search(&db, UserSearch::new("", "%"), 0).unwrap();
+        let result = user::search(&db, UserSearch::new("%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], user);
 
@@ -234,12 +234,12 @@ mod tests {
             },
         )
         .unwrap();
-        let result = user::search(&db, UserSearch::new("%foo%", "%"), 0).unwrap();
+        let result = user::search(&db, UserSearch::new("%foo%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].role, "Teacher");
 
         user::delete(&db, &user.account).unwrap();
-        let result = user::search(&db, UserSearch::new("no one", "%"), 0).unwrap();
+        let result = user::search(&db, UserSearch::new("no one", "%"), 200).unwrap();
         assert_eq!(result.len(), 0);
     }
 }
