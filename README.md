@@ -44,9 +44,8 @@ Besides that, it also consists the management and logic for a server using [Rock
 
 The Server calls are:
 
-- 5 for each data table (user, criminal, absence)
-- 2 for logins (create, delete)
-- all_roles - to get all roles from user
+- 6 for each data table (user, criminal, absence)
+- 3 for logins (create, delete)
 - stats - getting general statistics/infos
 
 Swagger UI integrated via Utoipa:
