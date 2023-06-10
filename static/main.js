@@ -171,13 +171,16 @@ async function roleUserList() {
 }
 
 function decodeFormatDate(date) {
-    const [day, month, year] = date.split('.');
+    const parsedDate = new Date(date);
+    const year = parsedDate.getFullYear();
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = parsedDate.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
 
 function encodeFormatDate(date) {
-    const [year, month, day] = date.split('-');
-    return `${day}.${month}.${year}`;
+    const parsedDate = new Date(date);
+    return parsedDate.toLocaleDateString();
 }
 
 // Initializes the user list for the dates
