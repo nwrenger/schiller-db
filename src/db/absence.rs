@@ -51,7 +51,7 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
         "select \
         date \
         from absence \
-        order by date",
+        order by date desc",
     )?;
 
     let mut rows = stmt.query([])?;

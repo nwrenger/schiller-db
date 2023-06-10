@@ -57,7 +57,7 @@ pub fn all_roles(db: &Database) -> Result<Vec<String>> {
         "select \
         role \
         from user \
-        order by role",
+        order by role asc",
     )?;
 
     let mut rows = stmt.query([])?;

@@ -78,7 +78,7 @@ pub fn all_kinds(db: &Database) -> Result<Vec<String>> {
         "select \
         kind \
         from criminal \
-        order by kind",
+        order by kind asc",
     )?;
 
     let mut rows = stmt.query([])?;
