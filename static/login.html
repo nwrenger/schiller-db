@@ -22,22 +22,24 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Login</h5>
-                            <form action="javascript:handleLoginSubmit()">
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Benutzername</label>
-                                    <input type="text" class="form-control" id="username"
-                                        placeholder="Benutzername eingeben" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Passwort</label>
-                                    <input type="password" class="form-control" id="password"
-                                        placeholder="Passwort eingeben" required>
-                                </div>
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary">Login</button>
-                                </div>
-                            </form>
+                            <h5 class="card-title p-1">Login</h5>
+                            <div class="card-text">
+                                <form action="javascript:handleLoginSubmit()">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="username"
+                                            placeholder="Benutzername eingeben" required>
+                                        <label for="username">Benutzername</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="password"
+                                            placeholder="Passwort eingeben" required>
+                                        <label for="password">Passwort</label>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Login</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
