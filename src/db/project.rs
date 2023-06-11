@@ -13,8 +13,8 @@ use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::db::user::User;
 use super::login::Login;
+use crate::db::user::User;
 
 macro_rules! error {
     ($($args:tt)*) => {

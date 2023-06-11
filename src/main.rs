@@ -4,7 +4,7 @@ mod server;
 use std::env;
 use std::{borrow::Cow, path::Path};
 
-use db::project::{fetch_user_data, fetch_logins,  Database, Result, Error};
+use db::project::{fetch_logins, fetch_user_data, Database, Error, Result};
 
 use log::{warn, Level, LevelFilter};
 use rocket::serde::json::Json;
