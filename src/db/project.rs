@@ -9,10 +9,12 @@ use std::{
 
 use std::io::BufReader;
 
-use crate::db::user::User;
 use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
+
+use crate::db::user::User;
+use super::login::Login;
 
 macro_rules! error {
     ($($args:tt)*) => {
@@ -246,6 +248,29 @@ pub fn fetch_user_data(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<
             {
                 super::user::update(db, &user.account, &user)?;
             }
+        }
+        Ok(())
+    } else {
+        Err(Error::FileNotFound)
+    }
+}
+
+//Fetches Logins from a file. Performance might not be the best.
+//Ignore the Error messages!
+pub fn fetch_logins(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()> {
+    if path.exists() {
+        let reader = BufReader::new(File::open(path)?);
+        for i in reader.lines() {
+            let line = i?;
+            let mut lines = line.split(div);
+            let login = Login {
+                user: lines.next().unwrap().into(),
+                password: lines.next().unwrap().into(),
+                access_user: lines.next().unwrap().into(),
+                access_absence: lines.next().unwrap().into(),
+                access_criminal: lines.next().unwrap().into(),
+            };
+            super::login::add(db, &login)?;
         }
         Ok(())
     } else {

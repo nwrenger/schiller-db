@@ -4,7 +4,7 @@ mod server;
 use std::env;
 use std::{borrow::Cow, path::Path};
 
-use db::project::{fetch_user_data, Database, Result};
+use db::project::{fetch_user_data, fetch_logins,  Database, Result, Error};
 
 use log::{warn, Level, LevelFilter};
 use rocket::serde::json::Json;
@@ -18,7 +18,6 @@ use utoipa_swagger_ui::SwaggerUi;
 use std::fs::OpenOptions;
 
 use crate::db::login::{Login, Permission};
-use crate::db::project::Error;
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
@@ -68,6 +67,8 @@ fn rocket() -> Rocket<Build> {
                 },
             )
             .unwrap();
+            //Other Users
+            fetch_logins(&db, Cow::from(Path::new("./logins.txt")), "|").unwrap();
             db
         }
     };

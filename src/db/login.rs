@@ -11,6 +11,17 @@ pub enum Permission {
     Write,
 }
 
+impl From<&str> for Permission {
+    fn from(s: &str) -> Self {
+        match s {
+            "0" => Permission::None,
+            "1" => Permission::ReadOnly,
+            "2" => Permission::Write,
+            _ => unimplemented!("Unknown permission variant"),
+        }
+    }
+}
+
 impl FromSql for Permission {
     fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
         i64::column_result(value).and_then(|value| match value {
