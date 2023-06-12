@@ -741,6 +741,10 @@ async function handleExport() {
                 result.push(one);
             }
         }
+        if (!wasThere) {
+            createUserList(parent.value, result, sidebarList, true ,true);
+            return;
+        }
     }
     createUserList(parent.value, result, sidebarList, true);
 }
