@@ -35,6 +35,7 @@ const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
 var select = "user";
 var current_data_user = {};
+var current_data_raw = [];
 
 if (!auth || !current_user || !permissions) {
     window.open("/login", "_self");
@@ -214,9 +215,9 @@ async function absenceUserList() {
 async function criminalUserList() {
     clearList();
 
-    const kinds = await request("/criminal/all_kinds", "GET");
+    const accounts = await request("/criminal/all_accounts", "GET");
 
-    if (!Array.isArray(kinds) || !kinds.length) {
+    if (!Array.isArray(accounts) || !accounts.length) {
         if (!sidebarList.textContent) {
             sidebarList.textContent = "Keine Ergebnisse!";
         }
@@ -224,24 +225,24 @@ async function criminalUserList() {
     }
 
     // Fetch users
-    for (const kind of kinds) {
+    for (const account of accounts) {
         const node = document.createElement("li");
-        const data = document.createTextNode(kind);
+        const data = document.createTextNode(account);
         node.className = "list-group-item list-group-item-action";
         node.appendChild(data);
         sidebarList.appendChild(node);
 
         node.addEventListener("click", async function () {
-            const kind = this.textContent;
+            const account = this.textContent;
             cancel();
 
-            const criminals = await request(`/criminal/search?kind=${encodeURIComponent(kind)}`, "GET");
-            createUserList(criminals, sidebarList, true);
+            const criminals = await request(`/criminal/search?name=${encodeURIComponent(account)}`, "GET");
+            createUserList(criminals, sidebarList, true, true);
         });
     }
 }
 
-function createUserList(nestedList, node, back) {
+function createUserList(nestedList, node, back, swappedKind) {
     clearList();
 
     const backEntry = document.createElement("li");
@@ -257,6 +258,8 @@ function createUserList(nestedList, node, back) {
         document.scrollingElement.scrollTo(0, 0);
     }
 
+    current_data_raw = nestedList;
+
     if (!Array.isArray(nestedList) || !nestedList.length) {
         if (back) {
             backEntry.textContent = "Zurück - Keine Ergebnisse!";
@@ -268,7 +271,13 @@ function createUserList(nestedList, node, back) {
 
     for (const user of nestedList) {
         const userNode = document.createElement("li");
-        const userTextNode = document.createTextNode(user.account);
+        let data = {};
+        if (swappedKind) {
+            data = user.kind;
+        } else {
+            data = user.account;
+        }
+        const userTextNode = document.createTextNode(data);
         userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
         node.appendChild(userNode);
@@ -368,6 +377,7 @@ function reset() {
     resetAllButtons();
     cancel();
     current_data_user = {};
+    current_data_raw = [];
     document.getElementById("search").value = "";
     if (select === "user") {
         roleUserList().catch(() => {
@@ -400,6 +410,7 @@ function cancel() {
     document.getElementById("police-consultant-select-button").disabled = true;
     document.getElementById("lawyer-culprit-select-button").disabled = true;
     document.getElementById("lawyer-accuser-select-button").disabled = true;
+    document.getElementById("verdict-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     show([false, true, true, true, true])
 }
@@ -468,7 +479,7 @@ function visibilityGetUser(bool) {
 async function getUser() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     activeElement.classList.remove("active");
-    const user = await request("user/fetch/" + encodeURIComponent(activeElement.textContent, "GET"));
+    const user = await request("user/fetch/" + encodeURIComponent(current_data_user.account, "GET"));
     cancelButton.hidden = true;
     editButton.hidden = true;
     deleteButton.hidden = true;
@@ -501,12 +512,12 @@ function add() {
         showChange("POST", ["absence-select-button"], "absence-add-button", "absence-confirm-button");
     } else if (select === "criminal") {
         show([true, true, false, true, true, false], true);
-        criminal_account.value = "";
-        if (!current_data_user.kind) {
-            kind.value = "";
+        if (!current_data_user.account) {
+            criminal_account.value = "";
         } else {
-            kind.value = current_data_user.kind;
+            criminal_account.value = current_data_user.account;
         }
+        kind.value = "";
         accuser.value = "";
         police_consultant.value = "";
         lawyer_culprit.value = "";
@@ -516,7 +527,7 @@ function add() {
         location_of_crime.value = "";
         note.value = "";
         verdict.value = "";
-        showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button"], "criminal-add-button", "criminal-confirm-button");
+        showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button");
     }
 }
 
@@ -546,7 +557,7 @@ function edit() {
         location_of_crime.value = current_data_user.location_of_crime;
         note.value = current_data_user.note;
         verdict.value = current_data_user.verdict;
-        showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button"], "criminal-add-button", "criminal-confirm-button");
+        showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button");
     }
 }
 
@@ -557,7 +568,7 @@ async function del() {
     } else if (select === "absence") {
         await request("absence/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_data_user.date), "DELETE");
     } else if (select === "criminal") {
-        await request("criminal/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_data_user.kind), "DELETE");
+        await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(activeElement.textContent), "DELETE");
     }
     reset();
 }
@@ -608,6 +619,7 @@ function resetAllButtons() {
     document.getElementById("lawyer-culprit-select-button").disabled = true;
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
+    document.getElementById("verdict-select-button").disabled = true;
 }
 
 
@@ -663,6 +675,72 @@ function nodeSelect(parentId, inputId) {
     createSelectList(parent, input);
 }
 
+async function createExportSelectList(node) {
+    const data = await request(`/user/all_roles`, "GET");
+
+    if (!Array.isArray(data) || !data.length) {
+        node.textContent = "Keine Ergebnisse!";
+        return;
+    }
+    clearSelect(node);
+    for (const group of data) {
+        const groupNode = document.createElement("option");
+        const groupTextNode = document.createTextNode(group);
+        groupNode.value = group;
+        groupNode.appendChild(groupTextNode);
+        node.appendChild(groupNode);
+    }
+}
+
+function exportSelect(parentId) {
+    const parent = document.getElementById(parentId);
+    clearExportSelect(parent);
+    createExportSelectList(parent);
+}
+
+function clearExportSelect(node) {
+    node.textContent = "";
+    const items = node.querySelectorAll(".select");
+    items.forEach(item => item.remove());
+}
+
+async function handleExport() {
+    const parent = document.getElementById("group-select");
+    let result = [];
+    if (select === "user") {
+        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+            current_data_raw = await request(`/user/search?limit=9999999`, "GET");
+        }
+        for (const one of current_data_raw) {
+            if (one.role === parent.value) {
+                result.push(one);
+            }
+        }
+    } else if (select === "absence") {
+        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+            current_data_raw = await request(`/absence/search?limit=9999999`, "GET");
+        }
+        for (let one of current_data_raw) {
+            const data = await request(`/user/fetch/${one.account}`)
+            if (data.role === parent.value) {
+                result.push(one);
+            }
+        }
+    } else if (select === "criminal") {
+        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+            current_data_raw = await request(`/criminal/search?limit=9999999`, "GET");
+        }
+        for (const one of current_data_raw) {
+            const data = await request(`/user/fetch/${one.account}`)
+            if (data.role === parent.value) {
+                result.push(one);
+            }
+        }
+    }
+    createUserList(result, sidebarList, true);
+    current_data_raw = [];
+}
+
 async function stats() {
     const statsData = await request("/stats", "GET");
 
@@ -686,6 +764,10 @@ function selecting(message, which) {
     }
     document.getElementById(which).classList.add("active");
     reset();
+}
+
+function selectingVerdict(message, which) {
+    document.getElementById(which).value = message;
 }
 
 selecting("Bürger", "user");

@@ -7,7 +7,7 @@ html {
     display: grid;
     grid-template:
         "nav nav" 60px
-        "sidebar mid" calc(100% - 60px) / 280px auto;
+        "sidebar mid" calc(100% - 60px) / 350px auto;
     height: 100%;
 }
 

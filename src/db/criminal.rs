@@ -72,32 +72,32 @@ pub fn fetch(db: &Database, account: &str, kind: &str) -> Result<Criminal> {
     )?)
 }
 
-/// Returns all kinds from the criminal table without duplicates
-pub fn all_kinds(db: &Database) -> Result<Vec<String>> {
+/// Returns all accounts from the criminal table without duplicates
+pub fn all_accounts(db: &Database) -> Result<Vec<String>> {
     let mut stmt = db.con.prepare(
         "select \
-        kind \
+        account \
         from criminal \
-        order by kind asc",
+        order by account asc",
     )?;
 
     let mut rows = stmt.query([])?;
-    let mut kinds = Vec::new();
-    let mut seen_kinds = HashSet::new();
+    let mut accounts = Vec::new();
+    let mut seen_accounts = HashSet::new();
 
     while let Some(row) = rows.next()? {
-        let kind: String = row.get(0).unwrap();
+        let account: String = row.get(0).unwrap();
 
-        // Check if the kind has already been seen
-        if seen_kinds.contains(&kind) {
-            continue; // Skip the duplicate kind
+        // Check if the account has already been seen
+        if seen_accounts.contains(&account) {
+            continue; // Skip the duplicate account
         }
 
-        kinds.push(kind.clone());
-        seen_kinds.insert(kind);
+        accounts.push(account.clone());
+        seen_accounts.insert(account);
     }
 
-    Ok(kinds)
+    Ok(accounts)
 }
 
 /// Parameters for the advanced search
@@ -132,11 +132,7 @@ pub fn search(db: &Database, params: CriminalSearch, limit: usize) -> Result<Vec
         verdict \
         \
         from criminal \
-        where (account like '%'||?1||'%' \
-            or accuser like '%'||?1||'%' \
-            or police_consultant like '%'||?1||'%' \
-            or lawyer_culprit like '%'||?1||'%' \
-            or lawyer_accuser like '%'||?1||'%') \
+        where account like '%'||?1||'%' \
         and kind like ?2 \
         order by case \
             when account like ?1 || '%' then 0 \

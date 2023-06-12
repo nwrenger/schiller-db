@@ -474,11 +474,11 @@ pub async fn fetch_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/criminal/all_kinds")]
-pub async fn all_kinds(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
-    // warn!("GET /user/all_kinds: {}", auth.user);
+#[get("/criminal/all_accounts")]
+pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
+    // warn!("GET /user/all_accounts: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::all_kinds(&db))
+    Json(db::criminal::all_accounts(&db))
 }
 
 #[utoipa::path(

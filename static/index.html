@@ -91,6 +91,28 @@
             </div>
             <ul class="sidebar-list list-group list-group-flush" id="sidebar-list"></ul>
             <div class="sidebar-search input-group pb-1 px-1">
+                <button id="export" class="btn btn-outline-secondary dropdown-toggle hide-arrow" type="button"
+                    aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                    title="Nach Parametern Suchen" onclick="exportSelect('group-select')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-gear" viewBox="0 0 16 16">
+                        <path
+                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                        <path
+                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                    </svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <h6 class="dropdown-header">Gruppe</h6>
+                    </li>
+                    <form class="px-3 py-1" action="javascript:handleExport()">
+                        <div class="mb-2">
+                            <select id="group-select" class="form-select" aria-label="Group Select"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Suchen</button>
+                    </form>
+                </ul>
                 <input type="text" class="form-control" placeholder="Suche" id="search" onchange=search()>
                 <button id="select-button" class="btn btn-outline-secondary dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">Bürger</button>
@@ -180,7 +202,7 @@
             <div id="criminal-container" hidden>
                 <div class="card-title row">
                     <div class="col">
-                        <label for="criminal-select" class="form-label">Täter</label>
+                        <label for="criminal-select" class="form-label">Beschuldigter</label>
                         <div class="input-group mb-3 criminal-select">
                             <button id="criminal-select-button"
                                 class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
@@ -193,8 +215,8 @@
                                 </svg>
                             </button>
                             <ul id="criminal-select-dropdown" class="dropdown-menu"></ul>
-                            <input id="criminal-account" type="text" class="form-control" placeholder="Täter"
-                                aria-label="Täter" readonly>
+                            <input id="criminal-account" type="text" class="form-control" placeholder="Beschuldigter"
+                                aria-label="Beschuldigter" readonly>
                         </div>
                     </div>
                     <div class="col">
@@ -241,7 +263,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="lawyer-culprit" class="form-label">Anwalt des Täters</label>
+                        <label for="lawyer-culprit" class="form-label">Anwalt des Beschuldigtens</label>
                         <div class="input-group mb-3 lawyer-culprit-select">
                             <button id="lawyer-culprit-select-button"
                                 class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
@@ -254,12 +276,12 @@
                                 </svg>
                             </button>
                             <ul id="lawyer-culprit-select-dropdown" class="dropdown-menu"></ul>
-                            <input id="lawyer-culprit" type="text" class="form-control" placeholder="Anwalt des Täters"
-                                aria-label="Anwalt des Täters" readonly>
+                            <input id="lawyer-culprit" type="text" class="form-control"
+                                placeholder="Anwalt des Beschuldigtens" aria-label="Anwalt des Beschuldigtens" readonly>
                         </div>
                     </div>
                     <div class="col">
-                        <label for="lawyer-accuser" class="form-label">Anwalt des Anklägers</label>
+                        <label for="lawyer-accuser" class="form-label">Anwalt des Anzeigers</label>
                         <div class="input-group mb-3 lawyer-accuser-select">
                             <button id="lawyer-accuser-select-button"
                                 class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
@@ -273,7 +295,7 @@
                             </button>
                             <ul id="lawyer-accuser-select-dropdown" class="dropdown-menu"></ul>
                             <input id="lawyer-accuser" type="text" class="form-control"
-                                placeholder="Anwalt des Anklägers" aria-label="Anwalt des Anklägers" readonly>
+                                placeholder="Anwalt des Anzeigers" aria-label="Anwalt des Anzeigers" readonly>
                         </div>
                     </div>
                 </div>
@@ -306,8 +328,23 @@
                 <div class="row">
                     <div class="col">
                         <label for="verdict" class="form-label">Urteil</label>
-                        <input id="verdict" type="text" class="form-control" placeholder="Urteil" aria-label="Urteil"
-                            readonly>
+                        <div class="input-group mb-3 verdict-select">
+                            <button id="verdict-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Auswählen">Urteil</button>
+                            <ul id="verdict-select-dropdown" class="dropdown-menu">
+                                <li><button id="no-yet" class="dropdown-item"
+                                        onclick="selectingVerdict('a.) Noch kein Verfahren','verdict')">a.) Noch kein
+                                        Verfahren</button></li>
+                                <li><button id="guilty" class="dropdown-item"
+                                        onclick="selectingVerdict('b.) Schuldig','verdict')">b.) Schuldig</button></li>
+                                <li><button id="innocent" class="dropdown-item"
+                                        onclick="selectingVerdict('c.) Unschuldig','verdict')">c.) Unschuldig</button>
+                                </li>
+                            </ul>
+                            <input id="verdict" type="text" class="form-control" placeholder="Urteil"
+                                aria-label="Urteil" readonly>
+                        </div>
                     </div>
                 </div>
                 <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal()
@@ -349,8 +386,7 @@
                         <div class="col">
                             <label for="login-add-user-permissions" class="form-label">Rechte für
                                 Bürger</label>
-                            <select id="login-add-user-permissions" class="form-select"
-                                aria-label="Default select example">
+                            <select id="login-add-user-permissions" class="form-select" aria-label="Permissions">
                                 <option value="None">None</option>
                                 <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>
@@ -359,8 +395,7 @@
                         <div class="col">
                             <label for="login-add-absence-permissions" class="form-label">Rechte für
                                 Abwesenheiten</label>
-                            <select id="login-add-absence-permissions" class="form-select"
-                                aria-label="Default select example">
+                            <select id="login-add-absence-permissions" class="form-select" aria-label="Permissions">
                                 <option value="None">None</option>
                                 <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>
@@ -369,8 +404,7 @@
                         <div class="col">
                             <label for="login-add-criminal-permissions" class="form-label">Rechte für
                                 das Kriminalregister</label>
-                            <select id="login-add-criminal-permissions" class="form-select"
-                                aria-label="Default select example">
+                            <select id="login-add-criminal-permissions" class="form-select" aria-label="Permissions">
                                 <option value="None">None</option>
                                 <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>
