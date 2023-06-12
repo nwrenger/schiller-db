@@ -166,7 +166,8 @@ async function roleUserList() {
             cancel();
 
             const users = await request(`/user/search?role=${encodeURIComponent(role)}`, "GET");
-            createUserList(users, sidebarList, true);
+            current_data_raw = users;
+            createUserList(role, users, sidebarList, true);
         });
     }
 }
@@ -207,7 +208,8 @@ async function absenceUserList() {
             cancel();
 
             const absences = await request(`/absence/search?date=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
-            createUserList(absences, sidebarList, true);
+            current_data_raw = absences;
+            createUserList(date, absences, sidebarList, true);
         });
     }
 }
@@ -237,17 +239,18 @@ async function criminalUserList() {
             cancel();
 
             const criminals = await request(`/criminal/search?name=${encodeURIComponent(account)}`, "GET");
-            createUserList(criminals, sidebarList, true, true);
+            current_data_raw = criminals;
+            createUserList(account, criminals, sidebarList, true, true);
         });
     }
 }
 
-function createUserList(nestedList, node, back, swappedKind) {
+function createUserList(param, nestedList, node, back, swappedKind) {
     clearList();
 
     const backEntry = document.createElement("li");
     if (back) {
-        const text = document.createTextNode("Zurück");
+        const text = document.createTextNode("Zurück - " + param);
         backEntry.className = "list-group-item list-group-item-action list-group-item-danger";
         backEntry.appendChild(text);
         node.appendChild(backEntry);
@@ -257,8 +260,6 @@ function createUserList(nestedList, node, back, swappedKind) {
         })
         document.scrollingElement.scrollTo(0, 0);
     }
-
-    current_data_raw = nestedList;
 
     if (!Array.isArray(nestedList) || !nestedList.length) {
         if (back) {
@@ -627,13 +628,13 @@ async function search() {
     const text = encodeURIComponent(document.getElementById("search").value);
     if (select === "user") {
         const data = await request(`/user/search?name=${text}`, "GET");
-        createUserList(data, sidebarList, true);
+        createUserList('"' + text + '"', data, sidebarList, true);
     } else if (select === "absence") {
         const data = await request(`/absence/search?name=${text}`, "GET");
-        createUserList(data, sidebarList, true);
+        createUserList('"' + text + '"', data, sidebarList, true);
     } else if (select === "criminal") {
         const data = await request(`/criminal/search?name=${text}`, "GET");
-        createUserList(data, sidebarList, true);
+        createUserList('"' + text + '"', data, sidebarList, true);
     }
 }
 
@@ -707,8 +708,12 @@ function clearExportSelect(node) {
 async function handleExport() {
     const parent = document.getElementById("group-select");
     let result = [];
+    let wasThere = false;
+    if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+        wasThere = true;
+    }
     if (select === "user") {
-        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+        if (wasThere) {
             current_data_raw = await request(`/user/search?limit=9999999`, "GET");
         }
         for (const one of current_data_raw) {
@@ -717,7 +722,7 @@ async function handleExport() {
             }
         }
     } else if (select === "absence") {
-        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+        if (wasThere) {
             current_data_raw = await request(`/absence/search?limit=9999999`, "GET");
         }
         for (let one of current_data_raw) {
@@ -727,7 +732,7 @@ async function handleExport() {
             }
         }
     } else if (select === "criminal") {
-        if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
+        if (wasThere) {
             current_data_raw = await request(`/criminal/search?limit=9999999`, "GET");
         }
         for (const one of current_data_raw) {
@@ -737,8 +742,7 @@ async function handleExport() {
             }
         }
     }
-    createUserList(result, sidebarList, true);
-    current_data_raw = [];
+    createUserList(parent.value, result, sidebarList, true);
 }
 
 async function stats() {
