@@ -751,6 +751,10 @@ function clearAdvancedSelect(node) {
 
 async function handleAdvanced() {
     const parent = document.getElementById("group-select");
+    const button = document.getElementById("button-group-select");
+    const spinner = document.getElementById("spinner-group-select");
+    button.disabled = true;
+    spinner.hidden = false;
     let result = [];
     let wasThere = false;
     if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
@@ -787,6 +791,8 @@ async function handleAdvanced() {
         }
     }
     createUserList(parent.value, result, sidebarList, true);
+    button.disabled = false;
+    spinner.hidden = true;
 }
 
 async function stats() {
