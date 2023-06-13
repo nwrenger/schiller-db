@@ -786,7 +786,7 @@ async function handleAdvanced() {
             }
         }
         if (!wasThere) {
-            createUserList(parent.value, result, sidebarList, true ,true);
+            createUserList(parent.value, result, sidebarList, true, true);
             return;
         }
     }
