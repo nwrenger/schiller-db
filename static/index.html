@@ -91,9 +91,9 @@
             </div>
             <ul class="sidebar-list list-group list-group-flush" id="sidebar-list"></ul>
             <div class="sidebar-search input-group pb-1 px-1">
-                <button id="export" class="btn btn-outline-secondary dropdown-toggle hide-arrow" type="button"
+                <button id="advanced" class="btn btn-outline-secondary dropdown-toggle hide-arrow" type="button"
                     aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                    title="Nach Parametern Suchen" onclick="exportSelect('group-select')">
+                    title="Nach Parametern Suchen" onclick="advancedSelect('group-select')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-gear" viewBox="0 0 16 16">
                         <path
@@ -106,7 +106,7 @@
                     <li>
                         <h6 class="dropdown-header">Gruppe</h6>
                     </li>
-                    <form class="px-3 py-1" action="javascript:handleExport()">
+                    <form class="px-3 py-1" action="javascript:handleAdvanced()">
                         <div class="mb-2">
                             <select id="group-select" class="form-select" aria-label="Group Select"></select>
                         </div>
@@ -160,6 +160,8 @@
                     hidden>Hinzufügen</button>
                 <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser()
                     hidden>Bestätigen</button>
+                <button id="user-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortUser()
+                hidden>Abbrechen</button>
             </div>
             <div id="absence-container" hidden>
                 <div class="card-title row">
@@ -196,6 +198,8 @@
                     hidden>Hinzufügen</button>
                 <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence()
                     hidden>Bestätigen</button>
+                <button id="absence-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortAbsence()
+                hidden>Abbrechen</button>
                 <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user"
                     style="max-width: 160px;" onclick=getUser()>Bürger abrufen</button>
             </div>
@@ -351,6 +355,8 @@
                     hidden>Hinzufügen</button>
                 <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal()
                     hidden>Bestätigen</button>
+                <button id="criminal-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortCriminal()
+                hidden>Abbrechen</button>
                 <button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
                     onclick=getUser()>Bürger abrufen</button>
             </div>

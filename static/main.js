@@ -263,7 +263,7 @@ function createUserList(param, nestedList, node, back, swappedKind) {
 
     if (!Array.isArray(nestedList) || !nestedList.length) {
         if (back) {
-            backEntry.textContent = "Zurück - Keine Ergebnisse!";
+            backEntry.textContent = "Zurück - " + param + " - Keine Ergebnisse!";
         } else {
             sidebarList.textContent = "Keine Ergebnisse!";
         }
@@ -428,6 +428,17 @@ async function buttonConfirmUser() {
     reset();
 }
 
+function buttonAbortUser() {
+    userReadOnly(true);
+    addButton.classList.remove("active");
+    editButton.classList.remove("active");
+    resetAllButtons();
+    forename.value = current_data_user.forename;
+    surname.value = current_data_user.surname;
+    account.value = current_data_user.account;
+    role.value = current_data_user.role;
+}
+
 async function buttonAddAbsence() {
     absenceReadOnly(true);
     await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
@@ -438,6 +449,16 @@ async function buttonConfirmAbsence() {
     absenceReadOnly(true);
     await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
     reset();
+}
+
+function buttonAbortAbsence() {
+    absenceReadOnly(true);
+    addButton.classList.remove("active");
+    editButton.classList.remove("active");
+    resetAllButtons();
+    absence_account.value = current_data_user.account;
+    day.value = current_data_user.date;
+    time.value = current_data_user.time;
 }
 
 async function buttonAddCriminal() {
@@ -452,7 +473,25 @@ async function buttonConfirmCriminal() {
     reset();
 }
 
-function showChange(otherKind, selectId, addId, confirmId) {
+function buttonAbortCriminal() {
+    criminalReadOnly(true);
+    addButton.classList.remove("active");
+    editButton.classList.remove("active");
+    resetAllButtons();
+    criminal_account.value = current_data_user.account;
+    kind.value = current_data_user.kind;
+    accuser.value = current_data_user.accuser;
+    police_consultant.value = current_data_user.police_consultant;
+    lawyer_culprit.value = current_data_user.lawyer_culprit;
+    lawyer_accuser.value = current_data_user.lawyer_accuser;
+    facts.value = current_data_user.facts;
+    time_of_crime.value = current_data_user.time_of_crime;
+    location_of_crime.value = current_data_user.location_of_crime;
+    note.value = current_data_user.note;
+    verdict.value = current_data_user.verdict;
+}
+
+function showChange(otherKind, selectId, addId, confirmId, abortId) {
     visibilityGetUser(true);
     allReadOnly(false);
     if (selectId) {
@@ -462,6 +501,7 @@ function showChange(otherKind, selectId, addId, confirmId) {
     }
     const buttonAdd = document.getElementById(addId);
     const buttonConfirm = document.getElementById(confirmId);
+    const buttonAbort = document.getElementById(abortId);
     if (otherKind === "PUT") {
         buttonAdd.hidden = true;
         buttonConfirm.hidden = false;
@@ -469,6 +509,7 @@ function showChange(otherKind, selectId, addId, confirmId) {
         buttonAdd.hidden = false;
         buttonConfirm.hidden = true;
     }
+    buttonAbort.hidden = false;
 }
 
 function visibilityGetUser(bool) {
@@ -500,7 +541,7 @@ function add() {
         } else {
             role.value = current_data_user.role;
         }
-        showChange("POST", "", "user-add-button", "user-confirm-button");
+        showChange("POST", "", "user-add-button", "user-confirm-button", "user-abort-button");
     } else if (select === "absence") {
         show([true, false, true, true, true, false], true);
         absence_account.value = "";
@@ -510,7 +551,7 @@ function add() {
             day.value = current_data_user.date;
         }
         time.value = "";
-        showChange("POST", ["absence-select-button"], "absence-add-button", "absence-confirm-button");
+        showChange("POST", ["absence-select-button"], "absence-add-button", "absence-confirm-button", "absence-abort-button");
     } else if (select === "criminal") {
         show([true, true, false, true, true, false], true);
         if (!current_data_user.account) {
@@ -528,7 +569,7 @@ function add() {
         location_of_crime.value = "";
         note.value = "";
         verdict.value = "";
-        showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button");
+        showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button", "criminal-abort-button");
     }
 }
 
@@ -540,12 +581,12 @@ function edit() {
         surname.value = current_data_user.surname;
         account.value = current_data_user.account;
         role.value = current_data_user.role;
-        showChange("PUT", "", "user-add-button", "user-confirm-button");
+        showChange("PUT", "", "user-add-button", "user-confirm-button", "user-abort-button");
     } else if (select === "absence") {
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
-        showChange("PUT", ["absence-select-button"], "absence-add-button", "absence-confirm-button");
+        showChange("PUT", ["absence-select-button"], "absence-add-button", "absence-confirm-button", "absence-abort-button");
     } else if (select === "criminal") {
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
@@ -558,7 +599,7 @@ function edit() {
         location_of_crime.value = current_data_user.location_of_crime;
         note.value = current_data_user.note;
         verdict.value = current_data_user.verdict;
-        showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button");
+        showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button", "criminal-abort-button");
     }
 }
 
@@ -615,6 +656,9 @@ function resetAllButtons() {
     document.getElementById("absence-confirm-button").hidden = true;
     document.getElementById("criminal-confirm-button").hidden = true;
     document.getElementById("criminal-select-button").disabled = true;
+    document.getElementById("user-abort-button").hidden = true;
+    document.getElementById("absence-abort-button").hidden = true;
+    document.getElementById("criminal-abort-button").hidden = true;
     document.getElementById("accuser-select-button").disabled = true;
     document.getElementById("police-consultant-select-button").disabled = true;
     document.getElementById("lawyer-culprit-select-button").disabled = true;
@@ -626,16 +670,16 @@ function resetAllButtons() {
 
 async function search() {
     const text = encodeURIComponent(document.getElementById("search").value);
+    var data = [];
     if (select === "user") {
-        const data = await request(`/user/search?name=${text}`, "GET");
-        createUserList('"' + text + '"', data, sidebarList, true);
+        data = await request(`/user/search?name=${text}`, "GET");
     } else if (select === "absence") {
-        const data = await request(`/absence/search?name=${text}`, "GET");
-        createUserList('"' + text + '"', data, sidebarList, true);
+        data = await request(`/absence/search?name=${text}`, "GET");
     } else if (select === "criminal") {
-        const data = await request(`/criminal/search?name=${text}`, "GET");
-        createUserList('"' + text + '"', data, sidebarList, true);
+        data = await request(`/criminal/search?name=${text}`, "GET");
     }
+    current_data_raw = data;
+    createUserList('"' + text + '"', data, sidebarList, true);
 }
 
 async function createSelectList(node, text_field) {
@@ -676,7 +720,7 @@ function nodeSelect(parentId, inputId) {
     createSelectList(parent, input);
 }
 
-async function createExportSelectList(node) {
+async function createAdvancedSelectList(node) {
     const data = await request(`/user/all_roles`, "GET");
 
     if (!Array.isArray(data) || !data.length) {
@@ -693,19 +737,19 @@ async function createExportSelectList(node) {
     }
 }
 
-function exportSelect(parentId) {
+function advancedSelect(parentId) {
     const parent = document.getElementById(parentId);
-    clearExportSelect(parent);
-    createExportSelectList(parent);
+    clearAdvancedSelect(parent);
+    createAdvancedSelectList(parent);
 }
 
-function clearExportSelect(node) {
+function clearAdvancedSelect(node) {
     node.textContent = "";
     const items = node.querySelectorAll(".select");
     items.forEach(item => item.remove());
 }
 
-async function handleExport() {
+async function handleAdvanced() {
     const parent = document.getElementById("group-select");
     let result = [];
     let wasThere = false;
