@@ -238,6 +238,8 @@ async function criminalUserList() {
 
         node.addEventListener("click", async function () {
             const account = this.textContent;
+            document.getElementById("advanced").disabled = true;
+            document.getElementById("group-select-dropdown").hidden = true;
             current_criminal = account;
             cancel();
 
