@@ -334,6 +334,44 @@ pub async fn search_absence(
 
 #[utoipa::path(
     responses(
+        (status = 200, description = "Searched all Absences by roles", body = Vec<Absence>),
+        (status = 401, description = "Unauthorized to search all Absences by roles", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/absence/search_role?<name>&<date>&<role>&<limit>")]
+pub async fn search_absence_roles(
+    _auth: Auth<AbsenceReadOnly>,
+    name: Option<&str>,
+    date: Option<&str>,
+    role: Option<&str>,
+    limit: Option<usize>,
+) -> Json<Result<Vec<Absence>>> {
+    // warn!("GET /absence/search?{text:?}: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    let absence = db::absence::search(
+        &db,
+        AbsenceSearch::new(name.unwrap_or_default(), date.unwrap_or("%")),
+        limit.unwrap_or(9999),
+    )
+    .unwrap_or_default();
+
+    let mut result: Vec<Absence> = [].to_vec();
+
+    for i in absence {
+        let res = db::user::fetch(&db, &i.account).unwrap_or_default();
+        if role.unwrap_or_default() == res.role {
+            result.push(i);
+        }
+    }
+
+    Json(Ok(result))
+}
+
+#[utoipa::path(
+    responses(
         (status = 200, description = "Got all Dates", body = Vec<String>),
         (status = 401, description = "Unauthorized to get all Dates", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
@@ -504,6 +542,43 @@ pub async fn search_criminal(
         CriminalSearch::new(name.unwrap_or_default(), kind.unwrap_or("%")),
         limit.unwrap_or(200),
     ))
+}
+
+#[utoipa::path(
+    responses(
+        (status = 200, description = "Searched all Criminals by roles", body = Vec<Criminal>),
+        (status = 401, description = "Unauthorized to search all Criminals by roles", body = Error, example = json!({"Err": Error::Unauthorized})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[get("/criminal/search_role?<name>&<role>&<limit>")]
+pub async fn search_criminal_roles(
+    _auth: Auth<CriminalReadOnly>,
+    name: Option<&str>,
+    role: Option<&str>,
+    limit: Option<usize>,
+) -> Json<Result<Vec<Criminal>>> {
+    // warn!("GET /Criminal/search?{text:?}: {}", auth.user);
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+    let criminal = db::criminal::search(
+        &db,
+        CriminalSearch::new(name.unwrap_or_default(), "%"),
+        limit.unwrap_or(9999),
+    )
+    .unwrap_or_default();
+
+    let mut result: Vec<Criminal> = [].to_vec();
+
+    for i in criminal {
+        let res = db::user::fetch(&db, &i.account).unwrap_or_default();
+        if role.unwrap_or_default() == res.role {
+            result.push(i);
+        }
+    }
+
+    Json(Ok(result))
 }
 
 #[utoipa::path(

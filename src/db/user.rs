@@ -4,8 +4,8 @@ use utoipa::ToSchema;
 use crate::db::project::{DBIter, Database, Error, FromRow, Result};
 
 /// Data object for a user.
-#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
-#[cfg_attr(test, derive(PartialEq, Default))]
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema, Default)]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct User {
     pub account: String,
     pub forename: String,

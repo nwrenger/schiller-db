@@ -35,7 +35,8 @@ const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
 var select = "user";
 var current_data_user = {};
-var current_data_raw = [];
+var current_criminal = "%";
+var current_date = "%";
 
 if (!auth || !current_user || !permissions) {
     window.open("/login", "_self");
@@ -163,10 +164,10 @@ async function roleUserList() {
 
         node.addEventListener("click", async function () {
             const role = this.textContent;
+            document.getElementById("advanced").disabled = true;
             cancel();
 
             const users = await request(`/user/search?role=${encodeURIComponent(role)}`, "GET");
-            current_data_raw = users;
             createUserList(role, users, sidebarList, true);
         });
     }
@@ -205,10 +206,10 @@ async function absenceUserList() {
 
         node.addEventListener("click", async function () {
             const date = this.textContent;
+            current_date = decodeFormatDate(date);
             cancel();
 
             const absences = await request(`/absence/search?date=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
-            current_data_raw = absences;
             createUserList(date, absences, sidebarList, true);
         });
     }
@@ -236,10 +237,10 @@ async function criminalUserList() {
 
         node.addEventListener("click", async function () {
             const account = this.textContent;
+            current_criminal = account;
             cancel();
 
             const criminals = await request(`/criminal/search?name=${encodeURIComponent(account)}`, "GET");
-            current_data_raw = criminals;
             createUserList(account, criminals, sidebarList, true, true);
         });
     }
@@ -378,7 +379,8 @@ function reset() {
     resetAllButtons();
     cancel();
     current_data_user = {};
-    current_data_raw = [];
+    current_date = "%";
+    current_criminal = "%";
     document.getElementById("search").value = "";
     if (select === "user") {
         roleUserList().catch(() => {
@@ -433,10 +435,15 @@ function buttonAbortUser() {
     addButton.classList.remove("active");
     editButton.classList.remove("active");
     resetAllButtons();
-    forename.value = current_data_user.forename;
-    surname.value = current_data_user.surname;
-    account.value = current_data_user.account;
-    role.value = current_data_user.role;
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    if (activeElement === null) {
+        cancel();
+    } else {
+        forename.value = current_data_user.forename;
+        surname.value = current_data_user.surname;
+        account.value = current_data_user.account;
+        role.value = current_data_user.role;
+    }
 }
 
 async function buttonAddAbsence() {
@@ -456,9 +463,14 @@ function buttonAbortAbsence() {
     addButton.classList.remove("active");
     editButton.classList.remove("active");
     resetAllButtons();
-    absence_account.value = current_data_user.account;
-    day.value = current_data_user.date;
-    time.value = current_data_user.time;
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    if (activeElement === null) {
+        cancel();
+    } else {
+        absence_account.value = current_data_user.account;
+        day.value = current_data_user.date;
+        time.value = current_data_user.time;
+    }
 }
 
 async function buttonAddCriminal() {
@@ -478,17 +490,22 @@ function buttonAbortCriminal() {
     addButton.classList.remove("active");
     editButton.classList.remove("active");
     resetAllButtons();
-    criminal_account.value = current_data_user.account;
-    kind.value = current_data_user.kind;
-    accuser.value = current_data_user.accuser;
-    police_consultant.value = current_data_user.police_consultant;
-    lawyer_culprit.value = current_data_user.lawyer_culprit;
-    lawyer_accuser.value = current_data_user.lawyer_accuser;
-    facts.value = current_data_user.facts;
-    time_of_crime.value = current_data_user.time_of_crime;
-    location_of_crime.value = current_data_user.location_of_crime;
-    note.value = current_data_user.note;
-    verdict.value = current_data_user.verdict;
+    const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
+    if (activeElement === null) {
+        cancel();
+    } else {
+        criminal_account.value = current_data_user.account;
+        kind.value = current_data_user.kind;
+        accuser.value = current_data_user.accuser;
+        police_consultant.value = current_data_user.police_consultant;
+        lawyer_culprit.value = current_data_user.lawyer_culprit;
+        lawyer_accuser.value = current_data_user.lawyer_accuser;
+        facts.value = current_data_user.facts;
+        time_of_crime.value = current_data_user.time_of_crime;
+        location_of_crime.value = current_data_user.location_of_crime;
+        note.value = current_data_user.note;
+        verdict.value = current_data_user.verdict;
+    }
 }
 
 function showChange(otherKind, selectId, addId, confirmId, abortId) {
@@ -665,10 +682,12 @@ function resetAllButtons() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
+    document.getElementById("advanced").disabled = false;
 }
 
-
 async function search() {
+    cancel();
+    resetAllButtons();
     const text = encodeURIComponent(document.getElementById("search").value);
     var data = [];
     if (select === "user") {
@@ -678,7 +697,6 @@ async function search() {
     } else if (select === "criminal") {
         data = await request(`/criminal/search?name=${text}`, "GET");
     }
-    current_data_raw = data;
     createUserList('"' + text + '"', data, sidebarList, true);
 }
 
@@ -753,42 +771,19 @@ async function handleAdvanced() {
     const parent = document.getElementById("group-select");
     const button = document.getElementById("button-group-select");
     const spinner = document.getElementById("spinner-group-select");
+    var text = encodeURIComponent(document.getElementById("search").value);
     button.disabled = true;
     spinner.hidden = false;
     let result = [];
-    let wasThere = false;
-    if (!Array.isArray(current_data_raw) || !current_data_raw.length) {
-        wasThere = true;
-    }
     if (select === "user") {
-        if (wasThere) {
-            current_data_raw = await request(`/user/search?limit=9999999`, "GET");
-        }
-        for (const one of current_data_raw) {
-            if (one.role === parent.value) {
-                result.push(one);
-            }
-        }
+        result = await request(`/user/search?limit=99999&name=${text}&role=${encodeURIComponent(parent.value)}`, "GET");
     } else if (select === "absence") {
-        if (wasThere) {
-            current_data_raw = await request(`/absence/search?limit=9999999`, "GET");
-        }
-        for (let one of current_data_raw) {
-            const data = await request(`/user/fetch/${one.account}`)
-            if (data.role === parent.value) {
-                result.push(one);
-            }
-        }
+        result = await request(`/absence/search_role?limit=99999&name=${text}&date=${encodeURIComponent(current_date)}&role=${encodeURIComponent(parent.value)}`, "GET");
     } else if (select === "criminal") {
-        if (wasThere) {
-            current_data_raw = await request(`/criminal/search?limit=9999999`, "GET");
+        if (!text) {
+            text = encodeURIComponent(current_criminal)
         }
-        for (const one of current_data_raw) {
-            const data = await request(`/user/fetch/${one.account}`)
-            if (data.role === parent.value) {
-                result.push(one);
-            }
-        }
+        result = await request(`/criminal/search_role?limit=99999&name=${text}&role=${encodeURIComponent(parent.value)}`, "GET");
     }
     createUserList(parent.value, result, sidebarList, true);
     button.disabled = false;
