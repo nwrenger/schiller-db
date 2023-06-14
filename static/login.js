@@ -1,5 +1,5 @@
 async function handleLoginSubmit() {
-    var current_user = document.getElementById("username").value;
+    var current_user = document.getElementById("username").value.trim();
     var password = document.getElementById("password").value;
     var auth = btoa(current_user + ":" + password)
     // getting all roles
