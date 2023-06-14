@@ -165,6 +165,7 @@ async function roleUserList() {
         node.addEventListener("click", async function () {
             const role = this.textContent;
             document.getElementById("advanced").disabled = true;
+            document.getElementById("group-select-dropdown").hidden = true;
             cancel();
 
             const users = await request(`/user/search?role=${encodeURIComponent(role)}`, "GET");
@@ -381,6 +382,8 @@ function reset() {
     current_data_user = {};
     current_date = "%";
     current_criminal = "%";
+    document.getElementById("advanced").disabled = false;
+    document.getElementById("group-select-dropdown").hidden = false;
     document.getElementById("search").value = "";
     if (select === "user") {
         roleUserList().catch(() => {
@@ -682,10 +685,11 @@ function resetAllButtons() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
-    document.getElementById("advanced").disabled = false;
 }
 
 async function search() {
+    document.getElementById("advanced").disabled = false;
+    document.getElementById("group-select-dropdown").hidden = false;
     cancel();
     resetAllButtons();
     const text = encodeURIComponent(document.getElementById("search").value);
