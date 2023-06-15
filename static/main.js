@@ -704,6 +704,8 @@ async function search() {
         data = await request(`/criminal/search?name=${text}`, "GET");
     }
     createUserList('"' + text + '"', data, sidebarList, true);
+    current_date = "%";
+    current_criminal = "%";
 }
 
 async function createSelectList(node, text_field) {
@@ -745,7 +747,15 @@ function nodeSelect(parentId, inputId) {
 }
 
 async function createAdvancedSelectList(node) {
-    const data = await request(`/user/all_roles`, "GET");
+    var data = [];
+
+    if (select === "user") {
+        data = await request(`/user/all_roles`, "GET");
+    } else if (select === "absence") {
+        data = await request(`/absence/all_roles?date=${current_date}`, "GET");
+    } else if (select === "criminal") {
+        data = await request(`/criminal/all_roles`, "GET");
+    }
 
     if (!Array.isArray(data) || !data.length) {
         node.textContent = "Keine Ergebnisse!";

@@ -73,6 +73,36 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
     Ok(dates)
 }
 
+/// Returns all roles from the absence table without duplicates
+pub fn all_roles(db: &Database, date: &str) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "SELECT \
+        DISTINCT user.role \
+        FROM absence \
+        INNER JOIN user ON absence.account = user.account \
+        WHERE absence.date like ? \
+        ORDER BY user.role ASC",
+    )?;
+
+    let mut rows = stmt.query([&date])?;
+    let mut roles = Vec::new();
+    let mut seen_roles = HashSet::new();
+
+    while let Some(row) = rows.next()? {
+        let role: String = row.get(0).unwrap();
+
+        // Check if the role has already been seen
+        if seen_roles.contains(&role) {
+            continue; // Skip the duplicate role
+        }
+
+        roles.push(role.clone());
+        seen_roles.insert(role);
+    }
+
+    Ok(roles)
+}
+
 /// Parameters for the advanced search
 ///
 /// Adding the '%' char allows every number of every character in this place

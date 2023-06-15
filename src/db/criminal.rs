@@ -100,6 +100,35 @@ pub fn all_accounts(db: &Database) -> Result<Vec<String>> {
     Ok(accounts)
 }
 
+/// Returns all roles from the criminal table without duplicates
+pub fn all_roles(db: &Database) -> Result<Vec<String>> {
+    let mut stmt = db.con.prepare(
+        "SELECT \
+        DISTINCT user.role \
+        FROM criminal \
+        INNER JOIN user ON criminal.account = user.account \
+        ORDER BY user.role ASC",
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut roles = Vec::new();
+    let mut seen_roles = HashSet::new();
+
+    while let Some(row) = rows.next()? {
+        let role: String = row.get(0).unwrap();
+
+        // Check if the role has already been seen
+        if seen_roles.contains(&role) {
+            continue; // Skip the duplicate role
+        }
+
+        roles.push(role.clone());
+        seen_roles.insert(role);
+    }
+
+    Ok(roles)
+}
+
 /// Parameters for the advanced search
 ///
 /// Adding the '%' char allows every number of every character in this place
