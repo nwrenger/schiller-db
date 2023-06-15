@@ -472,6 +472,7 @@ function buttonAbortAbsence() {
     if (activeElement === null) {
         cancel();
     } else {
+        show([true, false, true, true, true, false], true);
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
@@ -499,6 +500,7 @@ function buttonAbortCriminal() {
     if (activeElement === null) {
         cancel();
     } else {
+        show([true, true, false, true, true, false], true);
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         accuser.value = current_data_user.accuser;
