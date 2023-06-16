@@ -37,6 +37,7 @@ pub enum Error {
     NothingFound,
     /// Specific errors
     InvalidUser,
+    InvalidLogin,
     InvalidAbsence,
     InvalidCriminal,
     InvalidDate,

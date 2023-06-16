@@ -18,7 +18,7 @@ use std::{
 };
 use std::{env, marker::PhantomData};
 
-use crate::db::{self, login::Permissions, user::UserSearch};
+use crate::db::{self, login::{Permissions, UpdateLogin}, user::UserSearch};
 use chrono::NaiveDate;
 
 use db::absence::{Absence, AbsenceSearch};
@@ -730,6 +730,42 @@ pub async fn add_login(auth: Auth<UserWrite>, login: Json<Login>) -> Json<Result
     warn!("POST /login with data {login:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::login::add(&db, &login))
+}
+
+#[utoipa::path(
+    request_body = UpdateLogin,
+    responses(
+        (status = 200, description = "Update a login sended successfully"),
+        (status = 401, description = "Unauthorized to update a login", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
+    ),
+    security (
+        ("authorization" = []),
+    )
+)]
+#[put(
+    "/login",
+    format = "json",
+    data = "<login>"
+)]
+pub async fn update_login(
+    auth: Auth<UserReadOnly>,
+    login: Json<UpdateLogin>,
+) -> Json<Result<()>> {
+    warn!(
+        "PUT /login with data {login:?}: {}",
+        auth.user
+    );
+    let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
+
+    if db::login::fetch(&db, &login.previous_user, &login.previous_password).is_err() {
+        return Json(Err(Error::InvalidLogin));
+    }
+
+    Json(db::login::update(
+        &db,
+        &login,
+    ))
 }
 
 #[utoipa::path(

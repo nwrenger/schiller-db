@@ -101,11 +101,12 @@ fn rocket() -> Rocket<Build> {
             server::delete_criminal,
             server::fetch_permission,
             server::add_login,
+            server::update_login,
             server::delete_login,
             server::delete_all_logins,
         ),
         components(
-            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::login::Permissions, db::stats::Stats, db::project::Error)
+            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::login::Permissions, db::login::UpdateLogin, db::stats::Stats, db::project::Error)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
@@ -178,6 +179,7 @@ fn rocket() -> Rocket<Build> {
                 server::delete_criminal,
                 server::fetch_permission,
                 server::add_login,
+                server::update_login,
                 server::delete_login,
                 server::delete_all_logins,
             ],

@@ -137,7 +137,7 @@ pub fn all_logins(db: &Database) -> Result<Vec<String>> {
     Ok(users)
 }
 
-/// Adds a new date with presenters.
+/// Adds a new login.
 pub fn add(db: &Database, login: &Login) -> Result<()> {
     if !login.is_valid() {
         return Err(Error::InvalidUser);
@@ -150,6 +150,45 @@ pub fn add(db: &Database, login: &Login) -> Result<()> {
             login.access_user,
             login.access_absence,
             login.access_criminal
+        ],
+    )?;
+    Ok(())
+}
+
+#[derive(Deserialize, PartialEq, Debug, ToSchema)]
+pub struct UpdateLogin {
+    pub previous_user: String,
+    pub previous_password: String,
+    pub new_user: String,
+    pub new_password: String,
+}
+
+impl UpdateLogin  {
+    fn is_valid(&self) ->  bool {
+        !self.previous_user.trim().is_empty()
+            && self.previous_user.starts_with(char::is_alphabetic)
+            && !self.previous_user.contains(':')
+            && !self.previous_password.trim().is_empty()
+            && !self.new_user.trim().is_empty()
+            && self.new_user.starts_with(char::is_alphabetic)
+            && !self.new_user.contains(':')
+            && !self.new_password.trim().is_empty()
+    } 
+}
+
+/// Updates a login.
+/// This includes only it's user and password.
+pub fn update(db: &Database, login: &UpdateLogin) -> Result<()> {
+    if !login.is_valid() {
+        return Err(Error::InvalidLogin);
+    }
+    db.con.execute(
+        "update login set user=?, password=? where user=? and password=?",
+        rusqlite::params![
+            login.new_user.trim(),
+            login.new_password.trim(),
+            login.previous_user.trim(),
+            login.previous_password.trim(),
         ],
     )?;
     Ok(())
