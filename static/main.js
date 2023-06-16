@@ -1,5 +1,5 @@
 var auth = localStorage.getItem("auth");
-const current_user = localStorage.getItem("current_user");
+const current_user = atob(auth).split(":")[0];
 const permissions = JSON.parse(localStorage.getItem("permissions"));
 const sidebarList = document.getElementById("sidebar-list");
 const forename = document.getElementById("forename");
@@ -39,7 +39,7 @@ var current_data_user = {};
 var current_criminal = "%";
 var current_date = "%";
 
-if (!auth || !current_user || !permissions) {
+if (!auth || !permissions) {
     window.open("/login", "_self");
     error("InvalidLocalKeys");
 }
@@ -357,10 +357,15 @@ function loginChanger() {
 }
 
 async function changePassword() {
-    const old_password = document.getElementById("old-password").value;
-    const new_password = document.getElementById("new-password").value;
-    request("login", "PUT", JSON.stringify({ previous_user: current_user, previous_password: old_password, new_user: current_user, new_password })).then(() => {
-        auth = btoa(current_user + ":" + new_password);
+    const new_password = document.getElementById("new-password");
+    const new_password_wdh = document.getElementById("new-password-wdh");
+    if (new_password.value != new_password_wdh.value) {
+        new_password.classList.add("is-invalid");
+        new_password_wdh.classList.add("is-invalid");
+        return;
+    }
+    request("login", "PUT", JSON.stringify({ user: current_user, password: new_password.value, access_user: permissions.access_user, access_absence: permissions.access_absence, access_criminal: permissions.access_criminal })).then(() => {
+        auth = btoa(current_user + ":" + new_password.value);
         localStorage.removeItem("auth");
         localStorage.setItem("auth", auth);
     });
@@ -769,12 +774,14 @@ function nodeSelect(parentId, inputId) {
 async function createAdvancedSelectList(node) {
     var data = [];
 
+    const text = encodeURIComponent(document.getElementById("search").value);
+
     if (select === "user") {
-        data = await request(`/user/all_roles`, "GET");
+        data = await request(`/user/all_roles?name=${text}`, "GET");
     } else if (select === "absence") {
-        data = await request(`/absence/all_roles?date=${current_date}`, "GET");
+        data = await request(`/absence/all_roles?date=${current_date}&name=${text}`, "GET");
     } else if (select === "criminal") {
-        data = await request(`/criminal/all_roles`, "GET");
+        data = await request(`/criminal/all_roles?name=${text}`, "GET");
     }
 
     if (!Array.isArray(data) || !data.length) {

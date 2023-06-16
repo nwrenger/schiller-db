@@ -101,16 +101,17 @@ pub fn all_accounts(db: &Database) -> Result<Vec<String>> {
 }
 
 /// Returns all roles from the criminal table without duplicates
-pub fn all_roles(db: &Database) -> Result<Vec<String>> {
+pub fn all_roles(db: &Database, name: &str) -> Result<Vec<String>> {
     let mut stmt = db.con.prepare(
         "SELECT \
         DISTINCT user.role \
         FROM criminal \
         INNER JOIN user ON criminal.account = user.account \
+        where criminal.account like '%'||?1||'%' \
         ORDER BY user.role ASC",
     )?;
 
-    let mut rows = stmt.query([])?;
+    let mut rows = stmt.query(rusqlite::params![name.trim()])?;
     let mut roles = Vec::new();
     let mut seen_roles = HashSet::new();
 

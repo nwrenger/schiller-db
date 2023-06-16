@@ -16,7 +16,6 @@ async function handleLoginSubmit() {
 
     if (response.status === 200) {
         //get with getItem and clear at logout completely with clear
-        window.localStorage.setItem("current_user", current_user);
         window.localStorage.setItem("auth", auth);
         window.localStorage.setItem("permissions", JSON.stringify(data["Ok"]));
 

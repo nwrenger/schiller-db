@@ -13,7 +13,7 @@ use rusqlite::{types::FromSql, Connection};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use super::login::Login;
+use super::login::NewLogin;
 use crate::db::user::User;
 
 macro_rules! error {
@@ -214,7 +214,8 @@ pub fn create(db: &Database) -> Result<()> {
     \
     create table login ( \
         user text not null primary key, \
-        password text not null, \
+        hash text not null, \
+        salt text not null, \
         access_user int default 0, \
         access_absence int default 0, \
         access_criminal int default 0); \
@@ -264,14 +265,14 @@ pub fn fetch_logins(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()>
         for i in reader.lines() {
             let line = i?;
             let mut lines = line.split(div);
-            let login = Login {
+            let login = NewLogin {
                 user: lines.next().unwrap().into(),
                 password: lines.next().unwrap().into(),
                 access_user: lines.next().unwrap().into(),
                 access_absence: lines.next().unwrap().into(),
                 access_criminal: lines.next().unwrap().into(),
             };
-            super::login::add(db, &login)?;
+            super::login::add(db, login)?;
         }
         Ok(())
     } else {

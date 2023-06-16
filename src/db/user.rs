@@ -52,15 +52,18 @@ pub fn fetch(db: &Database, id: &str) -> Result<User> {
 use std::collections::HashSet;
 
 /// Returns all roles from the user table without duplicates
-pub fn all_roles(db: &Database) -> Result<Vec<String>> {
+pub fn all_roles(db: &Database, name: &str) -> Result<Vec<String>> {
     let mut stmt = db.con.prepare(
         "select \
         role \
         from user \
+        where (account like '%'||?1||'%' \
+            or forename like '%'||?1||'%' \
+            or surname like '%'||?1||'%') \
         order by role asc",
     )?;
 
-    let mut rows = stmt.query([])?;
+    let mut rows = stmt.query(rusqlite::params![name.trim()])?;
     let mut roles = Vec::new();
     let mut seen_roles = HashSet::new();
 
@@ -221,7 +224,7 @@ mod tests {
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], user);
 
-        let result = user::all_roles(&db).unwrap();
+        let result = user::all_roles(&db, "").unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], "Demo".to_string());
 

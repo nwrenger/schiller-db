@@ -455,17 +455,17 @@
             </div>
             <div id="password-changer-container" hidden>
                 <div>
-                    <label for="add-login" class="form-label">Passwort ändern: </label>
-                    <div class="card-title row add-login">
-                        <div class="col">
-                            <label for="old-password" class="form-label">Altes Passwort</label>
-                            <input id="old-password" type="password" class="form-control" placeholder="Altes Passwort"
-                                aria-label="Altes Passwort">
-                        </div>
+                    <label for="password-changer" class="form-label">Passwort ändern: </label>
+                    <div class="card-title row password-changer">
                         <div class="col">
                             <label for="new-password" class="form-label">Neues Passwort</label>
                             <input id="new-password" type="password" class="form-control" placeholder="Neues Passwort"
                                 aria-label="Neues Passwort">
+                        </div>
+                        <div class="col">
+                            <label for="new-password-wdh" class="form-label">Wiederholen</label>
+                            <input id="new-password-wdh" type="password" class="form-control" placeholder="Wiederholen"
+                                aria-label="Wiederholen">
                         </div>
                     </div>
                     <button class="btn btn-outline-danger m-3" onclick=changePassword()>Ändern</button>

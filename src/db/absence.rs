@@ -74,17 +74,18 @@ pub fn all_dates(db: &Database) -> Result<Vec<String>> {
 }
 
 /// Returns all roles from the absence table without duplicates
-pub fn all_roles(db: &Database, date: &str) -> Result<Vec<String>> {
+pub fn all_roles(db: &Database, date: &str, name: &str) -> Result<Vec<String>> {
     let mut stmt = db.con.prepare(
         "SELECT \
         DISTINCT user.role \
         FROM absence \
         INNER JOIN user ON absence.account = user.account \
-        WHERE absence.date like ? \
+        WHERE absence.date like ?1 \
+        and absence.account like '%'||?2||'%' \
         ORDER BY user.role ASC",
     )?;
 
-    let mut rows = stmt.query([&date])?;
+    let mut rows = stmt.query(rusqlite::params![date, name.trim()])?;
     let mut roles = Vec::new();
     let mut seen_roles = HashSet::new();
 

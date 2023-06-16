@@ -17,7 +17,7 @@ use utoipa_swagger_ui::SwaggerUi;
 
 use std::fs::OpenOptions;
 
-use crate::db::login::{Login, Permission};
+use crate::db::login::{Permission, NewLogin};
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
@@ -58,7 +58,7 @@ fn rocket() -> Rocket<Build> {
             // Admin user
             db::login::add(
                 &db,
-                &Login {
+                NewLogin {
                     user: env::var("SNDM_USER").unwrap(),
                     password: env::var("SNDM_PASSWORD").unwrap(),
                     access_user: Permission::Write,
@@ -106,7 +106,7 @@ fn rocket() -> Rocket<Build> {
             server::delete_all_logins,
         ),
         components(
-            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::Permission, db::login::Permissions, db::login::UpdateLogin, db::stats::Stats, db::project::Error)
+            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::NewLogin, db::login::Permission, db::login::Permissions, db::stats::Stats, db::project::Error)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")

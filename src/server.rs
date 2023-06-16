@@ -18,7 +18,11 @@ use std::{
 };
 use std::{env, marker::PhantomData};
 
-use crate::db::{self, login::{Permissions, UpdateLogin}, user::UserSearch};
+use crate::db::{
+    self,
+    login::{Permissions, NewLogin},
+    user::UserSearch,
+};
 use chrono::NaiveDate;
 
 use db::absence::{Absence, AbsenceSearch};
@@ -98,12 +102,19 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
         // lookup in database
 
         let Ok((db, _)) = Database::open(Cow::from(Path::new("./sndm.db"))) else {
+            warn!("could not open Database");
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
-        let Ok(login) = db::login::fetch(&db, user, password) else {
+        let Ok(login) = db::login::fetch(&db, user) else {
             warn!("missing auth credentials '{user}:{password}' from {:?}", request.client_ip());
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
+
+        // checking password
+
+        if !login.check_password(password) {
+            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+        }
 
         // checking permissions
 
@@ -212,11 +223,11 @@ pub async fn search_user(
         ("authorization" = []),
     )
 )]
-#[get("/user/all_roles")]
-pub async fn all_roles(_auth: Auth<UserReadOnly>) -> Json<Result<Vec<String>>> {
+#[get("/user/all_roles?<name>")]
+pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Result<Vec<String>>> {
     // warn!("GET /user/all_roles: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::user::all_roles(&db))
+    Json(db::user::all_roles(&db, name.unwrap_or("")))
 }
 
 #[utoipa::path(
@@ -395,13 +406,18 @@ pub async fn all_dates(_auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>
         ("authorization" = []),
     )
 )]
-#[get("/absence/all_roles?<date>")]
+#[get("/absence/all_roles?<date>&<name>")]
 pub async fn all_roles_absence(
     _auth: Auth<AbsenceReadOnly>,
     date: Option<&str>,
+    name: Option<&str>,
 ) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::all_roles(&db, date.unwrap_or("%")))
+    Json(db::absence::all_roles(
+        &db,
+        date.unwrap_or("%"),
+        name.unwrap_or(""),
+    ))
 }
 
 #[utoipa::path(
@@ -546,10 +562,13 @@ pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<Stri
         ("authorization" = []),
     )
 )]
-#[get("/criminal/all_roles")]
-pub async fn all_roles_criminal(_auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>> {
+#[get("/criminal/all_roles?<name>")]
+pub async fn all_roles_criminal(
+    _auth: Auth<AbsenceReadOnly>,
+    name: Option<&str>,
+) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::criminal::all_roles(&db))
+    Json(db::criminal::all_roles(&db, name.unwrap_or("")))
 }
 
 #[utoipa::path(
@@ -715,7 +734,7 @@ pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Res
 }
 
 #[utoipa::path(
-    request_body = Login,
+    request_body = NewLogin,
     responses(
         (status = 200, description = "Add a Login sended successfully"),
         (status = 401, description = "Unauthorized to add a Logins", body = Error, example = json!({"Err": Error::Unauthorized})),
@@ -726,14 +745,14 @@ pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Res
     )
 )]
 #[post("/login", format = "json", data = "<login>")]
-pub async fn add_login(auth: Auth<UserWrite>, login: Json<Login>) -> Json<Result<()>> {
+pub async fn add_login(auth: Auth<UserWrite>, login: Json<NewLogin>) -> Json<Result<()>> {
     warn!("POST /login with data {login:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::login::add(&db, &login))
+    Json(db::login::add(&db, login.into_inner()))
 }
 
 #[utoipa::path(
-    request_body = UpdateLogin,
+    request_body = NewLogin,
     responses(
         (status = 200, description = "Update a login sended successfully"),
         (status = 401, description = "Unauthorized to update a login", body = Error, example = json!({"Err": Error::Unauthorized})),
@@ -743,29 +762,16 @@ pub async fn add_login(auth: Auth<UserWrite>, login: Json<Login>) -> Json<Result
         ("authorization" = []),
     )
 )]
-#[put(
-    "/login",
-    format = "json",
-    data = "<login>"
-)]
-pub async fn update_login(
-    auth: Auth<UserReadOnly>,
-    login: Json<UpdateLogin>,
-) -> Json<Result<()>> {
-    warn!(
-        "PUT /login with data {login:?}: {}",
-        auth.user
-    );
+#[put("/login", format = "json", data = "<login>")]
+pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Json<Result<()>> {
+    warn!("PUT /login with data {login:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
 
-    if db::login::fetch(&db, &login.previous_user, &login.previous_password).is_err() {
+    if db::login::fetch(&db, &login.clone().user).is_err() {
         return Json(Err(Error::InvalidLogin));
     }
 
-    Json(db::login::update(
-        &db,
-        &login,
-    ))
+    Json(db::login::update(&db, &login.clone().into_inner().user, &login.into_inner().password))
 }
 
 #[utoipa::path(
