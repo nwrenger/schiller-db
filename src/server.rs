@@ -20,7 +20,7 @@ use std::{env, marker::PhantomData};
 
 use crate::db::{
     self,
-    login::{Permissions, NewLogin},
+    login::{NewLogin, Permissions},
     user::UserSearch,
 };
 use chrono::NaiveDate;
@@ -777,7 +777,11 @@ pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Js
         return Json(Err(Error::Unauthorized));
     }
 
-    Json(db::login::update(&db, &login.clone().into_inner().user, &login.into_inner().password))
+    Json(db::login::update(
+        &db,
+        &login.clone().into_inner().user,
+        &login.into_inner().password,
+    ))
 }
 
 #[utoipa::path(
