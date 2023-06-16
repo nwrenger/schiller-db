@@ -105,7 +105,13 @@ pub fn all_roles(db: &Database, date: &str, name: &str) -> Result<Vec<String>> {
 }
 
 /// Searches with roles etc. from the absence table
-pub fn search_role(db: &Database, name: &str, role: &str, date: &str, limit: usize) -> Result<Vec<Absence>> {
+pub fn search_role(
+    db: &Database,
+    name: &str,
+    role: &str,
+    date: &str,
+    limit: usize,
+) -> Result<Vec<Absence>> {
     let mut stmt = db.con.prepare(
         "SELECT absence.*
         FROM absence
@@ -120,7 +126,12 @@ pub fn search_role(db: &Database, name: &str, role: &str, date: &str, limit: usi
         LIMIT ?4",
     )?;
 
-    let rows = stmt.query(rusqlite::params![name.trim(), role.trim(), date.trim(), limit])?;
+    let rows = stmt.query(rusqlite::params![
+        name.trim(),
+        role.trim(),
+        date.trim(),
+        limit
+    ])?;
     DBIter::new(rows).collect()
 }
 
