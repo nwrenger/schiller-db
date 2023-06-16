@@ -362,23 +362,13 @@ pub async fn search_absence_roles(
 ) -> Json<Result<Vec<Absence>>> {
     // warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    let absence = db::absence::search(
+    Json(db::absence::search_role(
         &db,
-        AbsenceSearch::new(name.unwrap_or_default(), date.unwrap_or("%")),
+        name.unwrap_or(""),
+        role.unwrap_or("%"),
+        date.unwrap_or("%"),
         limit.unwrap_or(9999),
-    )
-    .unwrap_or_default();
-
-    let mut result: Vec<Absence> = [].to_vec();
-
-    for i in absence {
-        let res = db::user::fetch(&db, &i.account).unwrap_or_default();
-        if role.unwrap_or_default() == res.role {
-            result.push(i);
-        }
-    }
-
-    Json(Ok(result))
+    ))
 }
 
 #[utoipa::path(
@@ -614,23 +604,12 @@ pub async fn search_criminal_roles(
 ) -> Json<Result<Vec<Criminal>>> {
     // warn!("GET /Criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    let criminal = db::criminal::search(
+    Json(db::criminal::search_role(
         &db,
-        CriminalSearch::new(name.unwrap_or_default(), "%"),
+        name.unwrap_or(""),
+        role.unwrap_or("%"),
         limit.unwrap_or(9999),
-    )
-    .unwrap_or_default();
-
-    let mut result: Vec<Criminal> = [].to_vec();
-
-    for i in criminal {
-        let res = db::user::fetch(&db, &i.account).unwrap_or_default();
-        if role.unwrap_or_default() == res.role {
-            result.push(i);
-        }
-    }
-
-    Json(Ok(result))
+    ))
 }
 
 #[utoipa::path(

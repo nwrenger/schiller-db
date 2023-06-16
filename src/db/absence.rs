@@ -104,6 +104,26 @@ pub fn all_roles(db: &Database, date: &str, name: &str) -> Result<Vec<String>> {
     Ok(roles)
 }
 
+/// Searches with roles etc. from the absence table
+pub fn search_role(db: &Database, name: &str, role: &str, date: &str, limit: usize) -> Result<Vec<Absence>> {
+    let mut stmt = db.con.prepare(
+        "SELECT absence.*
+        FROM absence
+        INNER JOIN user ON absence.account = user.account
+        WHERE absence.account LIKE '%' || ?1 || '%'
+        AND user.role LIKE ?2
+        AND absence.date LIkE ?3
+        ORDER BY CASE
+            WHEN absence.account LIKE ?1 || '%' THEN 0
+            ELSE 1
+        END ASC, absence.account ASC
+        LIMIT ?4",
+    )?;
+
+    let rows = stmt.query(rusqlite::params![name.trim(), role.trim(), date.trim(), limit])?;
+    DBIter::new(rows).collect()
+}
+
 /// Parameters for the advanced search
 ///
 /// Adding the '%' char allows every number of every character in this place

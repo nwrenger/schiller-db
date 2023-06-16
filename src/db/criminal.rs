@@ -130,6 +130,25 @@ pub fn all_roles(db: &Database, name: &str) -> Result<Vec<String>> {
     Ok(roles)
 }
 
+/// Searches with roles etc. from the criminal table
+pub fn search_role(db: &Database, name: &str, role: &str, limit: usize) -> Result<Vec<Criminal>> {
+    let mut stmt = db.con.prepare(
+        "SELECT criminal.*
+        FROM criminal
+        INNER JOIN user ON criminal.account = user.account
+        WHERE criminal.account LIKE '%' || ?1 || '%'
+        AND user.role LIKE ?2
+        ORDER BY CASE
+            WHEN criminal.account LIKE ?1 || '%' THEN 0
+            ELSE 1
+        END ASC, criminal.account ASC
+        LIMIT ?3",
+    )?;
+
+    let rows = stmt.query(rusqlite::params![name.trim(), role.trim(), limit])?;
+    DBIter::new(rows).collect()
+}
+
 /// Parameters for the advanced search
 ///
 /// Adding the '%' char allows every number of every character in this place
