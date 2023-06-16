@@ -20,7 +20,7 @@ use std::{env, marker::PhantomData};
 
 use crate::db::{
     self,
-    login::{NewLogin, Permissions},
+    login::{Permissions, NewLogin},
     user::UserSearch,
 };
 use chrono::NaiveDate;
@@ -768,14 +768,16 @@ pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Js
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
 
     if db::login::fetch(&db, &login.user).is_err() {
+        warn!("invalid user of login json");
         return Json(Err(Error::InvalidLogin));
     }
 
-    Json(db::login::update(
-        &db,
-        &login.clone().into_inner().user,
-        &login.into_inner().password,
-    ))
+    if auth.user != login.user {
+        warn!("missing permissions to change user password: {}", auth.user);
+        return Json(Err(Error::Unauthorized));
+    }
+
+    Json(db::login::update(&db, &login.clone().into_inner().user, &login.into_inner().password))
 }
 
 #[utoipa::path(
