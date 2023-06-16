@@ -224,7 +224,12 @@ pub fn add(db: &Database, login: NewLogin) -> Result<()> {
 /// Updates a login.
 /// This includes only it's user and password.
 pub fn update(db: &Database, user: &str, password: &str) -> Result<()> {
-    let login = NewLogin {user: user.to_string(), password: password.to_string(), ..Default::default()}.salted()?;
+    let login = NewLogin {
+        user: user.to_string(),
+        password: password.to_string(),
+        ..Default::default()
+    }
+    .salted()?;
 
     db.con.execute(
         "update login set hash=?, salt=? where user=?",
@@ -249,7 +254,7 @@ pub fn delete(db: &Database, user: &str) -> Result<()> {
 mod tests {
     //TODO: Tests
 
-    use crate::db::login::{self, Permission, NewLogin};
+    use crate::db::login::{self, NewLogin, Permission};
     use crate::db::project::{create, Database};
 
     #[test]

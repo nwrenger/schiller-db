@@ -17,7 +17,7 @@ use utoipa_swagger_ui::SwaggerUi;
 
 use std::fs::OpenOptions;
 
-use crate::db::login::{Permission, NewLogin};
+use crate::db::login::{NewLogin, Permission};
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
