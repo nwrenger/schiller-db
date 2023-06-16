@@ -17,7 +17,7 @@
                 <a href="/" class="navbar-brand">SNDI</a>
                 <div class="d-flex">
                     <div class="btn-group dropdown">
-                        <button class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                        <button class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button" title="Profil"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-person" viewBox="0 0 16 16">
@@ -32,8 +32,9 @@
                             <li><button class="dropdown-item" type="button" onclick=currentUser()>Aktueller
                                     Benutzer</button>
                             </li>
+                            <li><button class="dropdown-item" type="button" onclick=loginChanger()>Passwort ändern</button></li>
                             <li><button id="login-creator" class="dropdown-item" type="button"
-                                    onclick=loginCreator()>Logins Erstellen</button></li>
+                                    onclick=loginCreator()>Logins Verwalten</button></li>
                             <li><button class="dropdown-item" type="button" onclick=logout()>Ausloggen</button></li>
                         </ul>
                     </div>
@@ -448,6 +449,25 @@
                     <p style="margin: 0;">Alle Logins entfernen:</p>
                     <button class="btn btn-outline-danger m-3 delete-all-logins" onclick=deleteAllLogins()>Alle Logins
                         löschen</button>
+                </div>
+                <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
+            </div>
+            <div id="password-changer-container" hidden>
+                <div>
+                    <label for="add-login" class="form-label">Passwort ändern: </label>
+                    <div class="card-title row add-login">
+                        <div class="col">
+                            <label for="old-password" class="form-label">Altes Passwort</label>
+                            <input id="old-password" type="password" class="form-control" placeholder="Altes Passwort"
+                                aria-label="Altes Passwort">
+                        </div>
+                        <div class="col">
+                            <label for="new-password" class="form-label">Neues Passwort</label>
+                            <input id="new-password" type="password" class="form-control" placeholder="Neues Passwort"
+                                aria-label="Neues Passwort">
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-danger m-3" onclick=changePassword()>Ändern</button>
                 </div>
                 <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
             </div>

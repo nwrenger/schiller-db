@@ -1,4 +1,4 @@
-const auth = localStorage.getItem("auth");
+var auth = localStorage.getItem("auth");
 const current_user = localStorage.getItem("current_user");
 const permissions = JSON.parse(localStorage.getItem("permissions"));
 const sidebarList = document.getElementById("sidebar-list");
@@ -24,7 +24,8 @@ const user_container = document.getElementById("user-container");
 const absence_container = document.getElementById("absence-container");
 const criminal_container = document.getElementById("criminal-container");
 const stats_container = document.getElementById("stats-container");
-const login_container = document.getElementById("login-container");
+const login_creator_container = document.getElementById("login-container");
+const password_changer_container = document.getElementById("password-changer-container")
 const get_user_button = document.getElementsByClassName("get-user");
 const addButton = document.getElementById("add");
 const editButton = document.getElementById("edit");
@@ -99,24 +100,25 @@ async function request(url, type, json) {
  * state[1] = absence_container.
  * state[2] = criminal_container.
  * state[3] = user_container.
- * state[4] = login_container.
+ * state[4] = login_creator_container.
  * state[5] = visibilityGetUser.
- * getUser = enable visibilityGetUser Changer
+ * getUser = visibilityGetUser
 */
 function show(state, getUser) {
     stats_container.hidden = state[0];
     absence_container.hidden = state[1];
     criminal_container.hidden = state[2];
     user_container.hidden = state[3];
-    login_container.hidden = state[4];
+    login_creator_container.hidden = state[4];
+    password_changer_container.hidden = state[5];
     if (getUser) {
-        visibilityGetUser(state[5]);
+        visibilityGetUser(!getUser);
     }
 }
 
 // Updates the UI with user data
 function updateUserUI(data) {
-    show([true, true, true, false, true]);
+    show([true, true, true, false, true, true]);
 
     forename.value = data.forename;
     surname.value = data.surname;
@@ -126,7 +128,7 @@ function updateUserUI(data) {
 
 // Updates the UI with absence data
 function updateAbsenceUI(data) {
-    show([true, false, true, true, true, false], true);
+    show([true, false, true, true, true, true], true);
 
     absence_account.value = data.account;
     day.value = data.date;
@@ -135,7 +137,7 @@ function updateAbsenceUI(data) {
 
 // Updates the UI with criminal data
 function updateCriminalUI(data) {
-    show([true, true, false, true, true, false], true);
+    show([true, true, false, true, true, true], true);
 
     criminal_account.value = data.account;
     kind.value = data.kind;
@@ -349,9 +351,25 @@ function currentUser() {
     modal.toggle();
 }
 
+function loginChanger() {
+    cancel();
+    show([true, true, true, true, true, false]);
+}
+
+async function changePassword() {
+    const old_password = document.getElementById("old-password").value;
+    const new_password = document.getElementById("new-password").value;
+    request("login", "PUT", JSON.stringify({ previous_user: current_user, previous_password: old_password, new_user: current_user, new_password })).then(() => {
+        auth = btoa(current_user + ":" + new_password);
+        localStorage.removeItem("auth");
+        localStorage.setItem("auth", auth);
+    });
+    cancel();
+}
+
 function loginCreator() {
     cancel();
-    show([true, true, true, true, false]);
+    show([true, true, true, true, false, true]);
 }
 
 async function addLogin() {
@@ -420,7 +438,7 @@ function cancel() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
-    show([false, true, true, true, true])
+    show([false, true, true, true, true, true])
 }
 
 async function buttonAddUser() {
@@ -472,7 +490,7 @@ function buttonAbortAbsence() {
     if (activeElement === null) {
         cancel();
     } else {
-        show([true, false, true, true, true, false], true);
+        show([true, false, true, true, true, true], true);
         absence_account.value = current_data_user.account;
         day.value = current_data_user.date;
         time.value = current_data_user.time;
@@ -500,7 +518,7 @@ function buttonAbortCriminal() {
     if (activeElement === null) {
         cancel();
     } else {
-        show([true, true, false, true, true, false], true);
+        show([true, true, false, true, true, true], true);
         criminal_account.value = current_data_user.account;
         kind.value = current_data_user.kind;
         accuser.value = current_data_user.accuser;
@@ -556,7 +574,7 @@ function add() {
     addButton.classList.add("active");
     editButton.classList.remove("active");
     if (select === "user") {
-        show([true, true, true, false, true]);
+        show([true, true, true, false, true, true]);
         forename.value = "";
         surname.value = "";
         account.value = "";
@@ -567,7 +585,7 @@ function add() {
         }
         showChange("POST", "", "user-add-button", "user-confirm-button", "user-abort-button");
     } else if (select === "absence") {
-        show([true, false, true, true, true, false], true);
+        show([true, false, true, true, true, true], true);
         absence_account.value = "";
         if (!current_data_user.date) {
             day.value = "";
@@ -577,7 +595,7 @@ function add() {
         time.value = "";
         showChange("POST", ["absence-select-button"], "absence-add-button", "absence-confirm-button", "absence-abort-button");
     } else if (select === "criminal") {
-        show([true, true, false, true, true, false], true);
+        show([true, true, false, true, true, true], true);
         if (!current_data_user.account) {
             criminal_account.value = "";
         } else {
