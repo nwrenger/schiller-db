@@ -106,7 +106,7 @@ fn rocket() -> Rocket<Build> {
             server::delete_all_logins,
         ),
         components(
-            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::Login, db::login::NewLogin, db::login::Permission, db::login::Permissions, db::stats::Stats, db::project::Error)
+            schemas(db::user::User, db::absence::Absence, db::criminal::Criminal, db::login::NewLogin, db::login::Permission, db::login::Permissions, db::stats::Stats, db::project::Error)
         ),
         tags(
             (name = "server", description = "Server management endpoints.")
