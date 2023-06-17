@@ -1,7 +1,7 @@
 async function handleLoginSubmit() {
-    var current_user = document.getElementById("username").value.trim();
-    var password = document.getElementById("password").value;
-    var auth = btoa(current_user + ":" + password)
+    const current_user = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const auth = btoa(current_user + ":" + password);
     // getting all roles
     const url = "/login/fetch/" + encodeURIComponent(current_user);
     const response = await fetch(url, {
@@ -19,7 +19,7 @@ async function handleLoginSubmit() {
         window.localStorage.setItem("auth", auth);
         window.localStorage.setItem("permissions", JSON.stringify(data["Ok"]));
 
-        window.open("/", "_self")
+        window.open("/", "_self");
     } else {
         const all_elements = document.getElementsByTagName("input");
         for (const element of all_elements) {

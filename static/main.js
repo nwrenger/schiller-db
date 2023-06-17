@@ -324,7 +324,7 @@ function createUserList(param, nestedList, node, back, swappedKind) {
 
 function error(error) {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
-    document.getElementById("staticBackdropLabel").textContent = "Fehler"
+    document.getElementById("staticBackdropLabel").textContent = "Fehler";
     document.getElementById("modal-body").textContent = error;
     modal.toggle();
     cancel();
@@ -346,7 +346,7 @@ function logout() {
 
 function currentUser() {
     const modal = new bootstrap.Modal(document.getElementById("dialog"));
-    document.getElementById("staticBackdropLabel").textContent = "Info"
+    document.getElementById("staticBackdropLabel").textContent = "Info";
     document.getElementById("modal-body").textContent = "Der akutelle Benutzer ist " + current_user;
     modal.toggle();
 }
@@ -383,7 +383,7 @@ async function addLogin() {
     const user_permissions = document.getElementById("login-add-user-permissions").value;
     const absence_permissions = document.getElementById("login-add-absence-permissions").value;
     const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
-    request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }))
+    request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }));
     cancel();
 }
 
@@ -443,18 +443,18 @@ function cancel() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
-    show([false, true, true, true, true, true])
+    show([false, true, true, true, true, true]);
 }
 
 async function buttonAddUser() {
     userReadOnly(true);
-    await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
     reset();
 }
 
 async function buttonConfirmUser() {
     userReadOnly(true);
-    await request("user/" + encodeURIComponent(current_data_user.account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }))
+    await request("user/" + encodeURIComponent(current_data_user.account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
     reset();
 }
 
@@ -476,13 +476,13 @@ function buttonAbortUser() {
 
 async function buttonAddAbsence() {
     absenceReadOnly(true);
-    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
+    await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
     reset();
 }
 
 async function buttonConfirmAbsence() {
     absenceReadOnly(true);
-    await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }))
+    await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
     reset();
 }
 
@@ -734,7 +734,7 @@ async function search() {
 }
 
 async function createSelectList(node, text_field) {
-    const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}&limit=${10}`, "GET")
+    const data = await request(`/user/search?name=${encodeURIComponent(text_field.value)}&limit=${10}`, "GET");
 
     if (!Array.isArray(data) || !data.length) {
         node.textContent = "Keine Ergebnisse!";
@@ -746,8 +746,8 @@ async function createSelectList(node, text_field) {
         const userTextNode = document.createTextNode(user.account);
         aUser.className = "dropdown-item";
         aUser.appendChild(userTextNode);
-        const userNode = document.createElement("li")
-        userNode.className = "parent-dropdown-item"
+        const userNode = document.createElement("li");
+        userNode.className = "parent-dropdown-item";
         userNode.appendChild(aUser);
         node.appendChild(userNode);
 
@@ -824,7 +824,7 @@ async function handleAdvanced() {
         result = await request(`/absence/search_role?limit=99999&name=${text}&date=${encodeURIComponent(current_date)}&role=${encodeURIComponent(parent.value)}`, "GET");
     } else if (select === "criminal") {
         if (!text) {
-            text = encodeURIComponent(current_criminal)
+            text = encodeURIComponent(current_criminal);
         }
         result = await request(`/criminal/search_role?limit=99999&name=${text}&role=${encodeURIComponent(parent.value)}`, "GET");
     }
