@@ -162,7 +162,6 @@ pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
 )]
 #[get("/stats")]
 pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
-    // warn!("GET /stats: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
 }
@@ -181,7 +180,6 @@ pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
 )]
 #[get("/user/fetch/<id>")]
 pub async fn fetch_user(_auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>> {
-    // warn!("GET /user/fetch/{id}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
 }
@@ -202,10 +200,6 @@ pub async fn search_user(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<User>>> {
-    //     warn!(
-    //         "GET /user/search?{name:?}&{role:?}&{offset:?}: {}",
-    //         auth.user
-    //     );
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::search(
         &db,
@@ -225,7 +219,6 @@ pub async fn search_user(
 )]
 #[get("/user/all_roles?<name>")]
 pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Result<Vec<String>>> {
-    // warn!("GET /user/all_roles: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::all_roles(&db, name.unwrap_or("")))
 }
@@ -307,7 +300,6 @@ pub async fn fetch_absence(
     account: &str,
     date: &str,
 ) -> Json<Result<Absence>> {
-    // warn!("GET /absence/fetch/{account}/{date}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -334,7 +326,6 @@ pub async fn search_absence(
     date: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Absence>>> {
-    // warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::search(
         &db,
@@ -360,7 +351,6 @@ pub async fn search_absence_roles(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Absence>>> {
-    // warn!("GET /absence/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::search_role(
         &db,
@@ -382,7 +372,6 @@ pub async fn search_absence_roles(
 )]
 #[get("/absence/all_dates")]
 pub async fn all_dates(_auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>> {
-    // warn!("GET /user/all_roles: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::absence::all_dates(&db))
 }
@@ -522,7 +511,6 @@ pub async fn fetch_criminal(
     account: &str,
     kind: &str,
 ) -> Json<Result<Criminal>> {
-    // warn!("GET /criminal/fetch/{account}/{kind}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::fetch(&db, account, kind))
 }
@@ -538,7 +526,6 @@ pub async fn fetch_criminal(
 )]
 #[get("/criminal/all_accounts")]
 pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
-    // warn!("GET /user/all_accounts: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::all_accounts(&db))
 }
@@ -577,7 +564,6 @@ pub async fn search_criminal(
     kind: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
-    // warn!("GET /criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::search(
         &db,
@@ -602,7 +588,6 @@ pub async fn search_criminal_roles(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
-    // warn!("GET /Criminal/search?{text:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::search_role(
         &db,
@@ -707,7 +692,6 @@ pub async fn delete_criminal(
 )]
 #[get("/login/fetch/<user>")]
 pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Result<Permissions>> {
-    // warn!("GET /login/fetch/{user}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::login::fetch_permission(&db, user))
 }

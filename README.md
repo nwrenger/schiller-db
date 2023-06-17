@@ -44,8 +44,9 @@ Besides that, it also consists the management and logic for a server using [Rock
 
 The Server calls are:
 
-- 6 for each data table (user, criminal, absence)
-- 3 for logins (create, fetch, delete)
+- 8 for data table criminal and absence
+- 6 for data table user
+- 5 for logins (create, fetch, edit, delete, delete_all)
 - stats - getting general statistics/infos
 
 Swagger UI integrated via Utoipa:
@@ -60,6 +61,7 @@ Security:
 
 - User System, an Admin, defined thought the admin.env file
 - Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Absence, Criminal)
+- the passwords are internally hashed and cannot be directly red out of the database
 - logging every Server call (excluding Swagger UI) to separate file called 'log.txt' with Information who did what
 
 ### Database Layer
