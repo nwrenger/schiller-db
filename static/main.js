@@ -34,6 +34,8 @@ const cancelButton = document.getElementById("cancel");
 const loginCreatorDropdown = document.getElementById("login-creator");
 const absenceDropdown = document.getElementById("absence");
 const criminalDropdown = document.getElementById("criminal");
+const new_password = document.getElementById("new-password");
+const new_password_wdh = document.getElementById("new-password-wdh");
 var select = "user";
 var current_data_user = {};
 var current_criminal = "%";
@@ -327,7 +329,7 @@ function error(error) {
     document.getElementById("staticBackdropLabel").textContent = "Fehler";
     document.getElementById("modal-body").textContent = error;
     modal.toggle();
-    cancel();
+    abort();
     throw error;
 }
 
@@ -357,19 +359,28 @@ function loginChanger() {
 }
 
 async function changePassword() {
-    const new_password = document.getElementById("new-password");
-    const new_password_wdh = document.getElementById("new-password-wdh");
+    document.getElementById("change-password-button").disabled = true;
+    document.getElementById("change-password-button-spinner").hidden = false;
     if (new_password.value != new_password_wdh.value) {
         new_password.classList.add("is-invalid");
         new_password_wdh.classList.add("is-invalid");
+        document.getElementById("change-password-button").disabled = false;
+        document.getElementById("change-password-button-spinner").hidden = true;
         return;
     }
-    request("login", "PUT", JSON.stringify({ user: current_user, password: new_password.value, access_user: permissions.access_user, access_absence: permissions.access_absence, access_criminal: permissions.access_criminal })).then(() => {
+    new_password.classList.remove("is-invalid");
+    new_password_wdh.classList.remove("is-invalid");
+    await request("login", "PUT", JSON.stringify({ user: current_user, password: new_password.value, access_user: permissions.access_user, access_absence: permissions.access_absence, access_criminal: permissions.access_criminal })).then(() => {
         auth = btoa(current_user + ":" + new_password.value);
         localStorage.removeItem("auth");
         localStorage.setItem("auth", auth);
+        document.getElementById("change-password-button").disabled = false;
+        document.getElementById("change-password-button-spinner").hidden = true;
+        const modal = new bootstrap.Modal(document.getElementById("dialog"));
+        document.getElementById("staticBackdropLabel").textContent = "Info";
+        document.getElementById("modal-body").textContent = "Passwort Änderung war erfolgreich!";
+        modal.toggle();
     });
-    cancel();
 }
 
 function loginCreator() {
@@ -378,24 +389,33 @@ function loginCreator() {
 }
 
 async function addLogin() {
+    document.getElementById("add-login-button").disabled = true;
+    document.getElementById("add-login-button-spinner").hidden = false;
     const user = document.getElementById("login-add-user").value;
     const password = document.getElementById("login-add-password").value;
     const user_permissions = document.getElementById("login-add-user-permissions").value;
     const absence_permissions = document.getElementById("login-add-absence-permissions").value;
     const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
-    request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }));
-    cancel();
+    await request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_absence: absence_permissions, access_criminal: criminal_permissions }));
+    document.getElementById("add-login-button").disabled = false;
+    document.getElementById("add-login-button-spinner").hidden = true;
 }
 
 async function deleteLogin() {
+    document.getElementById("delete-login-button").disabled = true;
+    document.getElementById("delete-login-button-spinner").hidden = false;
     const user = document.getElementById("login-delete-user").value;
-    request("login/" + encodeURIComponent(user), "DELETE");
-    cancel();
+    await request("login/" + encodeURIComponent(user), "DELETE");
+    document.getElementById("delete-login-button").disabled = false;
+    document.getElementById("delete-login-button-spinner").hidden = true;
 }
 
 async function deleteAllLogins() {
-    request("all_logins", "DELETE");
-    cancel();
+    document.getElementById("delete-all-logins-button").disabled = true;
+    document.getElementById("delete-all-logins-button-spinner").hidden = false;
+    await request("all_logins", "DELETE");
+    document.getElementById("delete-all-logins-button").disabled = false;
+    document.getElementById("delete-all-logins-button-spinner").hidden = true;
 }
 
 function reset() {
@@ -436,6 +456,10 @@ function cancel() {
     editButton.hidden = true;
     cancelButton.hidden = true;
     deleteButton.hidden = true;
+    new_password.classList.remove("is-invalid");
+    new_password_wdh.classList.remove("is-invalid");
+    new_password.value = "";
+    new_password_wdh.value = "";
     document.getElementById("criminal-select-button").disabled = true;
     document.getElementById("accuser-select-button").disabled = true;
     document.getElementById("police-consultant-select-button").disabled = true;
@@ -444,6 +468,17 @@ function cancel() {
     document.getElementById("verdict-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     show([false, true, true, true, true, true]);
+}
+
+function abort() {
+    resetAllButtons();
+    if (select === "user") {
+        buttonAbortUser();
+    } else if (select === "absence") {
+        buttonAbortAbsence();
+    } else if (select === "criminal") {
+        buttonAbortCriminal();
+    }
 }
 
 async function buttonAddUser() {
@@ -712,6 +747,16 @@ function resetAllButtons() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
+    document.getElementById("add-login-button").disabled = false;
+    document.getElementById("add-login-button-spinner").hidden = true;
+    document.getElementById("delete-login-button").disabled = false;
+    document.getElementById("delete-login-button-spinner").hidden = true;
+    document.getElementById("delete-all-logins-button").disabled = false;
+    document.getElementById("delete-all-logins-button-spinner").hidden = true;
+    document.getElementById("change-password-button").disabled = false;
+    document.getElementById("change-password-button-spinner").hidden = true;
+    new_password.classList.remove("is-invalid");
+    new_password_wdh.classList.remove("is-invalid");
 }
 
 async function search() {

@@ -422,7 +422,11 @@
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=addLogin()>Hinzufügen</button>
+                    <button id="add-login-button" class="btn btn-outline-danger m-3" onclick=addLogin()>
+                        <span id="add-login-button-spinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true" hidden></span>
+                        Hinzufügen
+                    </button>
                 </div>
                 <div>
                     <label for="delete-login" class="form-label">Einen Login entfernen:</label>
@@ -444,12 +448,20 @@
                                 aria-label="Benutzer">
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=deleteLogin()>Entfernen</button>
+                    <button id="delete-login-button" class="btn btn-outline-danger m-3" onclick=deleteLogin()>
+                        <span id="delete-login-button-spinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true" hidden></span>
+                        Entfernen
+                    </button>
                 </div>
                 <div>
                     <p style="margin: 0;">Alle Logins entfernen:</p>
-                    <button class="btn btn-outline-danger m-3 delete-all-logins" onclick=deleteAllLogins()>Alle Logins
-                        löschen</button>
+                    <button id="delete-all-logins-button" class="btn btn-outline-danger m-3 delete-all-logins"
+                        onclick=deleteAllLogins()>
+                        <span id="delete-all-logins-button-spinner" class="spinner-border spinner-border-sm"
+                            role="status" aria-hidden="true" hidden></span>
+                        Alle Logins löschen
+                    </button>
                 </div>
                 <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
             </div>
@@ -468,7 +480,11 @@
                                 aria-label="Wiederholen">
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger m-3" onclick=changePassword()>Ändern</button>
+                    <button id="change-password-button" class="btn btn-outline-danger m-3" onclick=changePassword()>
+                        <span id="change-password-button-spinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true" visibility="hidden"></span>
+                        Ändern
+                    </button>
                 </div>
                 <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
             </div>
