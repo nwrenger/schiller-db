@@ -370,19 +370,18 @@ async function changePassword() {
     }
     new_password.classList.remove("is-invalid");
     new_password_wdh.classList.remove("is-invalid");
-    await request("login", "PUT", JSON.stringify({ user: current_user, password: new_password.value, access_user: permissions.access_user, access_absence: permissions.access_absence, access_criminal: permissions.access_criminal })).then(() => {
-        auth = btoa(current_user + ":" + new_password.value);
-        localStorage.removeItem("auth");
-        localStorage.setItem("auth", auth);
-        document.getElementById("change-password-button").disabled = false;
-        document.getElementById("change-password-button-spinner").hidden = true;
-        const modal = new bootstrap.Modal(document.getElementById("dialog"));
-        document.getElementById("staticBackdropLabel").textContent = "Info";
-        document.getElementById("modal-body").textContent = "Passwort Änderung war erfolgreich!";
-        modal.toggle();
-    });
+    await request("login", "PUT", JSON.stringify({ user: current_user, password: new_password.value, access_user: permissions.access_user, access_absence: permissions.access_absence, access_criminal: permissions.access_criminal }));
+    auth = btoa(current_user + ":" + new_password.value);
+    localStorage.removeItem("auth");
+    localStorage.setItem("auth", auth);
+    document.getElementById("change-password-button").disabled = false;
+    document.getElementById("change-password-button-spinner").hidden = true;
+    const modal = new bootstrap.Modal(document.getElementById("dialog"));
+    document.getElementById("staticBackdropLabel").textContent = "Info";
+    document.getElementById("modal-body").textContent = "Passwort Änderung war erfolgreich!";
+    modal.toggle();
 }
-
+    
 function loginCreator() {
     cancel();
     show([true, true, true, true, false, true]);
