@@ -381,7 +381,7 @@ async function changePassword() {
     document.getElementById("modal-body").textContent = "Passwort Änderung war erfolgreich!";
     modal.toggle();
 }
-    
+
 function loginCreator() {
     cancel();
     show([true, true, true, true, false, true]);
