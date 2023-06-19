@@ -27,7 +27,7 @@ impl Criminal {
         !self.account.trim().is_empty()
             && self.account.starts_with(char::is_alphabetic)
             && !self.kind.trim().is_empty()
-            && self.kind.starts_with(char::is_alphabetic)
+            && self.kind.starts_with(char::is_alphanumeric)
     }
 }
 
