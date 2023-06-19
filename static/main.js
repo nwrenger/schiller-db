@@ -329,7 +329,7 @@ function error(error) {
     document.getElementById("staticBackdropLabel").textContent = "Fehler";
     document.getElementById("modal-body").textContent = error;
     modal.toggle();
-    abort();
+    resetAllSpinners();
     throw error;
 }
 
@@ -467,17 +467,6 @@ function cancel() {
     document.getElementById("verdict-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     show([false, true, true, true, true, true]);
-}
-
-function abort() {
-    resetAllButtons();
-    if (select === "user") {
-        buttonAbortUser();
-    } else if (select === "absence") {
-        buttonAbortAbsence();
-    } else if (select === "criminal") {
-        buttonAbortCriminal();
-    }
 }
 
 async function buttonAddUser() {
@@ -746,16 +735,20 @@ function resetAllButtons() {
     document.getElementById("lawyer-accuser-select-button").disabled = true;
     document.getElementById("absence-select-button").disabled = true;
     document.getElementById("verdict-select-button").disabled = true;
-    document.getElementById("add-login-button").disabled = false;
-    document.getElementById("add-login-button-spinner").hidden = true;
-    document.getElementById("delete-login-button").disabled = false;
-    document.getElementById("delete-login-button-spinner").hidden = true;
-    document.getElementById("delete-all-logins-button").disabled = false;
-    document.getElementById("delete-all-logins-button-spinner").hidden = true;
-    document.getElementById("change-password-button").disabled = false;
-    document.getElementById("change-password-button-spinner").hidden = true;
     new_password.classList.remove("is-invalid");
     new_password_wdh.classList.remove("is-invalid");
+    resetAllSpinners();
+}
+
+function resetAllSpinners() {
+    document.getElementById("delete-all-logins-button").disabled = false;
+    document.getElementById("delete-all-logins-button-spinner").hidden = true;
+    document.getElementById("change-password-button-spinner").hidden = true;
+    document.getElementById("change-password-button").disabled = false;
+    document.getElementById("delete-login-button-spinner").hidden = true;
+    document.getElementById("delete-login-button").disabled = false;
+    document.getElementById("add-login-button-spinner").hidden = true;
+    document.getElementById("add-login-button").disabled = false;
 }
 
 async function search() {
