@@ -505,15 +505,23 @@ async function updateSide(param) {
 }
 
 async function buttonAddUser() {
+    document.getElementById("user-add-button").disabled = true;
+    document.getElementById("user-add-button-spinner").hidden = false;
     await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
     userReadOnly(true);
     await updateSide(current_data_user.role);
+    document.getElementById("user-add-button").disabled = false;
+    document.getElementById("user-add-button-spinner").hidden = true;
 }
 
 async function buttonConfirmUser() {
+    document.getElementById("user-confirm-button").disabled = true;
+    document.getElementById("user-confirm-button-spinner").hidden = false;
     await request("user/" + encodeURIComponent(current_data_user.account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
     userReadOnly(true);
     await updateSide(current_data_user.role);
+    document.getElementById("user-confirm-button").disabled = false;
+    document.getElementById("user-confirm-button-spinner").hidden = true;
 }
 
 function buttonAbortUser() {
@@ -533,15 +541,23 @@ function buttonAbortUser() {
 }
 
 async function buttonAddAbsence() {
+    document.getElementById("absence-add-button").disabled = true;
+    document.getElementById("absence-add-button-spinner").hidden = false;
     await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
     absenceReadOnly(true);
     await updateSide(current_data_user.date);
+    document.getElementById("absence-add-button").disabled = false;
+    document.getElementById("absence-add-button-spinner").hidden = true;
 }
 
 async function buttonConfirmAbsence() {
+    document.getElementById("absence-confirm-button").disabled = true;
+    document.getElementById("absence-confirm-button-spinner").hidden = false;
     await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
     absenceReadOnly(true);
     await updateSide(current_data_user.date);
+    document.getElementById("absence-confirm-button").disabled = false;
+    document.getElementById("absence-confirm-button-spinner").hidden = true;
 }
 
 function buttonAbortAbsence() {
@@ -561,15 +577,23 @@ function buttonAbortAbsence() {
 }
 
 async function buttonAddCriminal() {
+    document.getElementById("criminal-add-button").disabled = true;
+    document.getElementById("criminal-add-button-spinner").hidden = false;
     await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
     criminalReadOnly(true);
     await updateSide(current_data_user.account);
+    document.getElementById("criminal-add-button").disabled = false;
+    document.getElementById("criminal-add-button-spinner").hidden = true;
 }
 
 async function buttonConfirmCriminal() {
+    document.getElementById("criminal-confirm-button").disabled = true;
+    document.getElementById("criminal-confirm-button-spinner").hidden = false;
     await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
     criminalReadOnly(true);
     await updateSide(current_data_user.account);
+    document.getElementById("criminal-confirm-button").disabled = false;
+    document.getElementById("criminal-confirm-button-spinner").hidden = true;
 }
 
 function buttonAbortCriminal() {
@@ -786,6 +810,18 @@ function resetAllSpinners() {
     document.getElementById("delete-login-button").disabled = false;
     document.getElementById("add-login-button-spinner").hidden = true;
     document.getElementById("add-login-button").disabled = false;
+    document.getElementById("user-add-button").disabled = false;
+    document.getElementById("user-add-button-spinner").hidden = true;
+    document.getElementById("user-confirm-button").disabled = false;
+    document.getElementById("user-confirm-button-spinner").hidden = true;
+    document.getElementById("absence-add-button").disabled = false;
+    document.getElementById("absence-add-button-spinner").hidden = true;
+    document.getElementById("absence-confirm-button").disabled = false;
+    document.getElementById("absence-confirm-button-spinner").hidden = true;
+    document.getElementById("criminal-add-button").disabled = false;
+    document.getElementById("criminal-add-button-spinner").hidden = true;
+    document.getElementById("criminal-confirm-button").disabled = false;
+    document.getElementById("criminal-confirm-button-spinner").hidden = true;
 }
 
 async function search() {

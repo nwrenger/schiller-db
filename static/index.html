@@ -125,12 +125,12 @@
                     <li>
                         <h6 class="dropdown-header">Kategorie</h6>
                     </li>
-                    <li><button id="user" class="dropdown-item active"
+                    <li><button id="user" class="dropdown-item active" type="button"
                             onclick="selecting('Bürger', 'user')">Bürger</button>
                     </li>
-                    <li><button id="absence" class="dropdown-item"
+                    <li><button id="absence" class="dropdown-item" type="button"
                             onclick="selecting('Abwesenheiten', 'absence')">Abwesenheiten</button></li>
-                    <li><button id="criminal" class="dropdown-item"
+                    <li><button id="criminal" class="dropdown-item" type="button"
                             onclick="selecting('Kriminalregister', 'criminal')">Kriminalregister</button></li>
                 </ul>
             </div>
@@ -161,12 +161,15 @@
                             readonly>
                     </div>
                 </div>
-                <button id="user-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddUser()
-                    hidden>Hinzufügen</button>
-                <button id="user-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmUser()
-                    hidden>Bestätigen</button>
-                <button id="user-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortUser()
-                    hidden>Abbrechen</button>
+                <button id="user-add-button" class="btn btn-outline-danger m-3" type="button" onclick=buttonAddUser()
+                    hidden><span id="user-add-button-spinner" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true" hidden></span>Hinzufügen</button>
+                <button id="user-confirm-button" type="button" class="btn btn-outline-danger m-3"
+                    onclick=buttonConfirmUser() hidden><span id="user-confirm-button-spinner"
+                        class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                        hidden></span>Bestätigen</button>
+                <button id="user-abort-button" type="button" class="btn btn-outline-danger m-3"
+                    onclick=buttonAbortUser() hidden>Abbrechen</button>
             </div>
             <div id="absence-container" hidden>
                 <div class="card-title row">
@@ -200,12 +203,15 @@
                     </div>
                 </div>
                 <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence()
-                    hidden>Hinzufügen</button>
+                    type="button" hidden><span id="absence-add-button-spinner" class="spinner-border spinner-border-sm"
+                        role="status" aria-hidden="true" hidden></span>Hinzufügen</button>
                 <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence()
-                    hidden>Bestätigen</button>
+                    type="button" hidden><span id="absence-confirm-button-spinner"
+                        class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                        hidden></span>Bestätigen</button>
                 <button id="absence-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortAbsence()
-                    hidden>Abbrechen</button>
-                <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user"
+                    type="button" hidden>Abbrechen</button>
+                <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user" type="button"
                     style="max-width: 160px;" onclick=getUser()>Bürger abrufen</button>
             </div>
             <div id="criminal-container" hidden>
@@ -342,12 +348,12 @@
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 title="Auswählen">Urteil</button>
                             <ul id="verdict-select-dropdown" class="dropdown-menu">
-                                <li><button id="no-yet" class="dropdown-item"
+                                <li><button id="no-yet" class="dropdown-item" type="button"
                                         onclick="selectingVerdict('a.) Noch kein Verfahren','verdict')">a.) Noch kein
                                         Verfahren</button></li>
-                                <li><button id="guilty" class="dropdown-item"
+                                <li><button id="guilty" class="dropdown-item" type="button"
                                         onclick="selectingVerdict('b.) Schuldig','verdict')">b.) Schuldig</button></li>
-                                <li><button id="innocent" class="dropdown-item"
+                                <li><button id="innocent" class="dropdown-item" type="button"
                                         onclick="selectingVerdict('c.) Unschuldig','verdict')">c.) Unschuldig</button>
                                 </li>
                             </ul>
@@ -356,12 +362,16 @@
                         </div>
                     </div>
                 </div>
-                <button id="criminal-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddCriminal()
-                    hidden>Hinzufügen</button>
-                <button id="criminal-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmCriminal()
-                    hidden>Bestätigen</button>
-                <button id="criminal-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortCriminal()
-                    hidden>Abbrechen</button>
+                <button id="criminal-add-button" type="button" class="btn btn-outline-danger m-3"
+                    onclick=buttonAddCriminal() hidden><span id="criminal-add-button-spinner"
+                        class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                        hidden></span>Hinzufügen</button>
+                <button id="criminal-confirm-button" type="button" class="btn btn-outline-danger m-3"
+                    onclick=buttonConfirmCriminal() hidden><span id="criminal-confirm-button-spinner"
+                        class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                        hidden></span>Bestätigen</button>
+                <button id="criminal-abort-button" type="button" class="btn btn-outline-danger m-3"
+                    onclick=buttonAbortCriminal() hidden>Abbrechen</button>
                 <button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
                     onclick=getUser()>Bürger abrufen</button>
             </div>
@@ -422,7 +432,7 @@
                             </select>
                         </div>
                     </div>
-                    <button id="add-login-button" class="btn btn-outline-danger m-3" onclick=addLogin()>
+                    <button id="add-login-button" type="button" class="btn btn-outline-danger m-3" onclick=addLogin()>
                         <span id="add-login-button-spinner" class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true" hidden></span>
                         Hinzufügen
@@ -448,7 +458,8 @@
                                 aria-label="Benutzer">
                         </div>
                     </div>
-                    <button id="delete-login-button" class="btn btn-outline-danger m-3" onclick=deleteLogin()>
+                    <button id="delete-login-button" type="button" class="btn btn-outline-danger m-3"
+                        onclick=deleteLogin()>
                         <span id="delete-login-button-spinner" class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true" hidden></span>
                         Entfernen
@@ -456,14 +467,14 @@
                 </div>
                 <div>
                     <p style="margin: 0;">Alle Logins entfernen:</p>
-                    <button id="delete-all-logins-button" class="btn btn-outline-danger m-3 delete-all-logins"
-                        onclick=deleteAllLogins()>
+                    <button id="delete-all-logins-button" type="button"
+                        class="btn btn-outline-danger m-3 delete-all-logins" onclick=deleteAllLogins()>
                         <span id="delete-all-logins-button-spinner" class="spinner-border spinner-border-sm"
                             role="status" aria-hidden="true" hidden></span>
                         Alle Logins löschen
                     </button>
                 </div>
-                <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
+                <button class="btn btn-outline-danger m-2" type="button" onclick=cancel()>Schließen</button>
             </div>
             <div id="password-changer-container" hidden>
                 <div>
@@ -480,13 +491,14 @@
                                 aria-label="Wiederholen">
                         </div>
                     </div>
-                    <button id="change-password-button" class="btn btn-outline-danger m-3" onclick=changePassword()>
+                    <button id="change-password-button" type="button" class="btn btn-outline-danger m-3"
+                        onclick=changePassword()>
                         <span id="change-password-button-spinner" class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true" visibility="hidden"></span>
                         Ändern
                     </button>
                 </div>
-                <button class="btn btn-outline-danger m-2" onclick=cancel()>Schließen</button>
+                <button class="btn btn-outline-danger m-2" type="button" onclick=cancel()>Schließen</button>
             </div>
             <div id="stats-container">
                 <div class="row p-3">
