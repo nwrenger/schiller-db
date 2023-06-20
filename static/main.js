@@ -1,5 +1,5 @@
 var auth = localStorage.getItem("auth");
-const current_user = atob(auth).split(":")[0];
+const current_user = localStorage.getItem("current_user");
 const permissions = JSON.parse(localStorage.getItem("permissions"));
 const sidebarList = document.getElementById("sidebar-list");
 const forename = document.getElementById("forename");
@@ -41,7 +41,7 @@ var current_data_user = {};
 var current_criminal = "%";
 var current_date = "%";
 
-if (!auth || !permissions) {
+if (!auth || !current_user || !permissions) {
     window.open("/login", "_self");
     error("InvalidLocalKeys");
 }
