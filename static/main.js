@@ -37,6 +37,7 @@ const criminalDropdown = document.getElementById("criminal");
 const new_password = document.getElementById("new-password");
 const new_password_wdh = document.getElementById("new-password-wdh");
 var select = "user";
+var state_advanced = false;
 var current_data_user = {};
 var current_criminal = "%";
 var current_date = "%";
@@ -423,6 +424,7 @@ function reset() {
     allReadOnly(true);
     resetAllButtons();
     cancel();
+    state_advanced = false;
     current_data_user = {};
     current_date = "%";
     current_criminal = "%";
@@ -469,16 +471,49 @@ function cancel() {
     show([false, true, true, true, true, true]);
 }
 
+async function updateSide(param) {
+    if (!param) {
+        reset();
+    } else {
+        var swapped = false;
+        var data = [];
+        const text =  document.getElementById("search").value;
+        if (!text) {
+            if (select === "user") {
+                data = await request(`/user/search?role=${encodeURIComponent(param)}`, "GET");
+            } else if (select === "absence") {
+                data = await request(`/absence/search?date=${encodeURIComponent(param)}`, "GET");
+                param = encodeFormatDate(param);
+            } else if (select === "criminal") {
+                data = await request(`/criminal/search?criminal=${encodeURIComponent(param)}`, "GET");
+                swapped = true;
+            }
+            if (!Array.isArray(data) || !data.length) {
+                reset();
+            } else {
+                createUserList(param, data, sidebarList, true, swapped);
+                cancel();
+            }
+        } else {
+            if (!state_advanced) {
+                await search();
+            } else {
+                await handleAdvanced();
+            }
+        }
+    }
+}
+
 async function buttonAddUser() {
-    userReadOnly(true);
     await request("user", "POST", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
-    reset();
+    userReadOnly(true);
+    await updateSide(current_data_user.role);
 }
 
 async function buttonConfirmUser() {
-    userReadOnly(true);
     await request("user/" + encodeURIComponent(current_data_user.account), "PUT", JSON.stringify({ forename: forename.value, surname: surname.value, account: account.value, role: role.value }));
-    reset();
+    userReadOnly(true);
+    await updateSide(current_data_user.role);
 }
 
 function buttonAbortUser() {
@@ -498,15 +533,15 @@ function buttonAbortUser() {
 }
 
 async function buttonAddAbsence() {
-    absenceReadOnly(true);
     await request("absence", "POST", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
-    reset();
+    absenceReadOnly(true);
+    await updateSide(current_data_user.date);
 }
 
 async function buttonConfirmAbsence() {
-    absenceReadOnly(true);
     await request("absence/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.date), "PUT", JSON.stringify({ account: absence_account.value, date: day.value, time: time.value }));
-    reset();
+    absenceReadOnly(true);
+    await updateSide(current_data_user.date);
 }
 
 function buttonAbortAbsence() {
@@ -526,15 +561,15 @@ function buttonAbortAbsence() {
 }
 
 async function buttonAddCriminal() {
-    criminalReadOnly(true);
     await request("criminal", "POST", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
-    reset();
+    criminalReadOnly(true);
+    await updateSide(current_data_user.account);
 }
 
 async function buttonConfirmCriminal() {
-    criminalReadOnly(true);
     await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.kind), "PUT", JSON.stringify({ account: criminal_account.value, kind: kind.value, accuser: accuser.value, police_consultant: police_consultant.value, lawyer_culprit: lawyer_culprit.value, lawyer_accuser: lawyer_accuser.value, facts: facts.value, time_of_crime: time_of_crime.value, location_of_crime: location_of_crime.value, note: note.value, verdict: verdict.value }));
-    reset();
+    criminalReadOnly(true);
+    await updateSide(current_data_user.account);
 }
 
 function buttonAbortCriminal() {
@@ -677,12 +712,14 @@ async function del() {
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     if (select === "user") {
         await request("user/" + encodeURIComponent(activeElement.textContent), "DELETE");
+        updateSide(current_data_user.role);
     } else if (select === "absence") {
         await request("absence/" + encodeURIComponent(activeElement.textContent) + "/" + encodeURIComponent(current_data_user.date), "DELETE");
+        updateSide(current_data_user.date);
     } else if (select === "criminal") {
         await request("criminal/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(activeElement.textContent), "DELETE");
+        updateSide(current_data_user.account);
     }
-    reset();
 }
 
 function allReadOnly(value) {
@@ -851,6 +888,8 @@ async function handleAdvanced() {
     const parent = document.getElementById("group-select");
     const button = document.getElementById("button-group-select");
     const spinner = document.getElementById("spinner-group-select");
+    cancel();
+    resetAllButtons();
     var text = encodeURIComponent(document.getElementById("search").value);
     button.disabled = true;
     spinner.hidden = false;
@@ -866,6 +905,7 @@ async function handleAdvanced() {
         result = await request(`/criminal/search_role?limit=99999&name=${text}&role=${encodeURIComponent(parent.value)}`, "GET");
     }
     createUserList(parent.value, result, sidebarList, true);
+    state_advanced  = true;
     button.disabled = false;
     spinner.hidden = true;
 }
