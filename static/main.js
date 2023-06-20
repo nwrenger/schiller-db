@@ -477,7 +477,7 @@ async function updateSide(param) {
     } else {
         var swapped = false;
         var data = [];
-        const text =  document.getElementById("search").value;
+        const text = document.getElementById("search").value;
         if (!text) {
             if (select === "user") {
                 data = await request(`/user/search?role=${encodeURIComponent(param)}`, "GET");
@@ -905,7 +905,7 @@ async function handleAdvanced() {
         result = await request(`/criminal/search_role?limit=99999&name=${text}&role=${encodeURIComponent(parent.value)}`, "GET");
     }
     createUserList(parent.value, result, sidebarList, true);
-    state_advanced  = true;
+    state_advanced = true;
     button.disabled = false;
     spinner.hidden = true;
 }
