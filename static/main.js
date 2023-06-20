@@ -589,9 +589,9 @@ function visibilityGetUser(bool) {
 }
 
 async function getUser() {
+    const user = await request("user/fetch/" + encodeURIComponent(current_data_user.account, "GET"));
     const activeElement = document.querySelector(".list-group-item.list-group-item-action.active");
     activeElement.classList.remove("active");
-    const user = await request("user/fetch/" + encodeURIComponent(current_data_user.account, "GET"));
     cancelButton.hidden = true;
     editButton.hidden = true;
     deleteButton.hidden = true;
