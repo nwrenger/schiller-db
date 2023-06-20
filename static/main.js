@@ -478,14 +478,14 @@ async function updateSide(param) {
         var swapped = false;
         var data = [];
         const text = document.getElementById("search").value;
-        if (!text) {
+        if (!text && !state_advanced) {
             if (select === "user") {
                 data = await request(`/user/search?role=${encodeURIComponent(param)}`, "GET");
             } else if (select === "absence") {
                 data = await request(`/absence/search?date=${encodeURIComponent(param)}`, "GET");
                 param = encodeFormatDate(param);
             } else if (select === "criminal") {
-                data = await request(`/criminal/search?criminal=${encodeURIComponent(param)}`, "GET");
+                data = await request(`/criminal/search?name=${encodeURIComponent(param)}`, "GET");
                 swapped = true;
             }
             if (!Array.isArray(data) || !data.length) {
