@@ -259,7 +259,7 @@ function createUserList(param, nestedList, node, back, swappedKind) {
 
     const backEntry = document.createElement("li");
     if (back) {
-        const text = document.createTextNode("Zurück - " + param);
+        const text = document.createTextNode("Zurück - " + param + " - " + nestedList.length);
         backEntry.className = "list-group-item list-group-item-action list-group-item-danger";
         backEntry.appendChild(text);
         node.appendChild(backEntry);
