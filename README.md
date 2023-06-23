@@ -93,4 +93,5 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Integration for Mobile
 - [x] Finished Criminals Extended Data Fields
 - [x] More specific search
-- [ ] Network test (after we are finished with the UI)
+- [x] Network test (after we are finished with the UI)
+- [x] Using it in the project week -> worked really well
