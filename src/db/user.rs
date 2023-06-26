@@ -161,9 +161,9 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
         ],
     )?;
 
-    // update absence
+    // update workless
     transaction.execute(
-        "update absence set account=? where account=?",
+        "update workless set account=? where account=?",
         [user.account.trim(), previous_account],
     )?;
 
@@ -194,8 +194,8 @@ pub fn delete(db: &Database, account: &str) -> Result<()> {
     // remove user
     transaction.execute("delete from user where account=?", [account])?;
 
-    //remove from absence
-    transaction.execute("delete from absence where account=?", [account])?;
+    //remove from workless
+    transaction.execute("delete from workless where account=?", [account])?;
     //remove from criminal
     transaction.execute("delete from criminal where account=?", [account])?;
     transaction.commit()?;

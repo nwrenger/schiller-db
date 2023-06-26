@@ -44,7 +44,7 @@ Besides that, it also consists the management and logic for a server using [Rock
 
 The Server calls are:
 
-- 8 for data table criminal and absence
+- 8 for data table criminal and Workless
 - 6 for data table user
 - 5 for logins (create, fetch, edit, delete, delete_all)
 - stats - getting general statistics/infos
@@ -60,7 +60,7 @@ Schemas:
 Security:
 
 - User System, an Admin, defined thought the admin.env file
-- Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Absence, Criminal)
+- Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Workless, Criminal)
 - the passwords are internally hashed and cannot be directly red out of the database
 - logging every Server call (excluding Swagger UI) to separate file called 'log.txt' with Information who did what
 
@@ -82,16 +82,17 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] Testing, Fixing, etc.
 - [x] Logging? Why not!
 - [x] SideBar -> User
-- [x] Searching (including absence, criminal, user)
+- [x] Searching (including workless, criminal, user)
 - [x] Main Input Container -> Stats when nothing and User when one is selected -> include changing and adding them
 - [x] Login -> at the current Logout Button make a profile menu
 - [x] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
-- [x] Absence Management
+- [x] Workless Management
 - [x] Criminal Management
 - [x] fix Add Button (currently a little bit buggy)
-- [x] Better Criminal/Absence adding process
+- [x] Better Criminal/Workless adding process
 - [x] Integration for Mobile
 - [x] Finished Criminals Extended Data Fields
 - [x] More specific search
 - [x] Network test (after we are finished with the UI)
 - [x] Using it in the project week -> worked really well
+- [x] Changes due to customer feedback -> Workless into workless

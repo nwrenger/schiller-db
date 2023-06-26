@@ -128,10 +128,10 @@
                     <li><button id="user" class="dropdown-item active" type="button"
                             onclick="selecting('Bürger', 'user')">Bürger</button>
                     </li>
-                    <li><button id="absence" class="dropdown-item" type="button"
-                            onclick="selecting('Abwesenheiten', 'absence')">Abwesenheiten</button></li>
+                    <li><button id="workless" class="dropdown-item" type="button"
+                            onclick="selecting('Arbeitslosenreg.', 'workless')">Arbeitslosenreg.</button></li>
                     <li><button id="criminal" class="dropdown-item" type="button"
-                            onclick="selecting('Kriminalregister', 'criminal')">Kriminalregister</button></li>
+                            onclick="selecting('Kriminalreg.', 'criminal')">Kriminalreg.</button></li>
                 </ul>
             </div>
         </div>
@@ -171,45 +171,80 @@
                 <button id="user-abort-button" type="button" class="btn btn-outline-danger m-3"
                     onclick=buttonAbortUser() hidden>Abbrechen</button>
             </div>
-            <div id="absence-container" hidden>
+            <div id="workless-container" hidden>
                 <div class="card-title row">
                     <div class="col">
-                        <label for="absence-select" class="form-label">Account</label>
-                        <div class="input-group mb-3 absence-select">
-                            <button id="absence-select-button" class="btn btn-outline-danger dropdown-toggle hide-arrow"
-                                type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
-                                onclick="nodeSelect('absence-select-dropdown', 'absence-account')" disabled>
+                        <label for="workless-select" class="form-label">Account</label>
+                        <div class="input-group mb-3 workless-select">
+                            <button id="workless-select-button"
+                                class="btn btn-outline-danger dropdown-toggle hide-arrow" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Auswählen"
+                                onclick="nodeSelect('workless-select-dropdown', 'workless-account')" disabled>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-search" viewBox="0 0 16 16">
                                     <path
                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                                 </svg>
                             </button>
-                            <ul id="absence-select-dropdown" class="dropdown-menu"></ul>
-                            <input id="absence-account" type="text" class="form-control" placeholder="Account"
+                            <ul id="workless-select-dropdown" class="dropdown-menu"></ul>
+                            <input id="workless-account" type="text" class="form-control" placeholder="Account"
                                 aria-label="Account" readonly>
                         </div>
                     </div>
+                    <div class="col">
+                        <label for="old-company" class="form-label">Vorgeriger Betrieb</label>
+                        <input id="old-company" type="text" class="form-control" placeholder="Vorgeriger Betrieb"
+                            aria-label="Vorgeriger Betrieb" readonly>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col form-group">
-                        <label for="day" class="form-label">Datum</label>
-                        <input type="date" class="form-control" id="day" readonly>
+                        <label for="date-of-dismiss" class="form-label">Datum der Entlassung</label>
+                        <input type="date" class="form-control" id="date-of-dismiss" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="currently-workless" class="form-label">Aktuell Arbeitslos</label>
+                        <div class="input-group mb-3 currently-select">
+                            <button id="currently-select-button" class="btn btn-outline-danger dropdown-toggle"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Auswahl">Auswahl</button>
+                            <ul id="currently-select-dropdown" class="dropdown-menu">
+                                <li><button id="yes-currently" class="dropdown-item" type="button"
+                                        onclick="selectingVerdict(true,'currently-workless')">true</button></li>
+                                <li><button id="no-currently" class="dropdown-item" type="button"
+                                        onclick="selectingVerdict(false,'currently-workless')">false</button></li>
+                            </ul>
+                            <input id="currently-workless" type="text" class="form-control" placeholder="Auswahl"
+                                aria-label="Auswahl" readonly>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="time" class="form-label">Uhrzeit (Leer lassen bei ganzen Tagen)</label>
-                        <input id="time" type="text" class="form-control" placeholder="Uhrzeit" aria-label="Uhrzeit"
-                            readonly>
+                        <label for="new-company" class="form-label">Neuer Betrieb</label>
+                        <input id="new-company" type="text" class="form-control" placeholder="Neuer Betrieb"
+                            aria-label="Neuer Betrieb" readonly>
+                    </div>
+                    <div class="col form-group">
+                        <label for="date-of-hiring" class="form-label">Datum der Einstellung</label>
+                        <input type="date" class="form-control" id="date-of-hiring" readonly>
                     </div>
                 </div>
-                <button id="absence-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddAbsence()
-                    type="button" hidden><span id="absence-add-button-spinner" class="spinner-border spinner-border-sm"
+                <div class="row">
+                    <div class="col">
+                        <label for="total-time" class="form-label">Insgeammte arbeitslose Zeit</label>
+                        <input id="total-time" type="text" class="form-control"
+                            placeholder="Insgeammte arbeitslose Zeit" aria-label="Insgeammte arbeitslose Zeit" readonly>
+                    </div>
+                </div>
+                <button id="workless-add-button" class="btn btn-outline-danger m-3" onclick=buttonAddWorkless()
+                    type="button" hidden><span id="workless-add-button-spinner" class="spinner-border spinner-border-sm"
                         role="status" aria-hidden="true" hidden></span>Hinzufügen</button>
-                <button id="absence-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmAbsence()
-                    type="button" hidden><span id="absence-confirm-button-spinner"
+                <button id="workless-confirm-button" class="btn btn-outline-danger m-3" onclick=buttonConfirmWorkless()
+                    type="button" hidden><span id="workless-confirm-button-spinner"
                         class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
                         hidden></span>Bestätigen</button>
-                <button id="absence-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortAbsence()
+                <button id="workless-abort-button" class="btn btn-outline-danger m-3" onclick=buttonAbortWorkless()
                     type="button" hidden>Abbrechen</button>
                 <button type="button" class="btn btn-outline-danger m-3 justify-content-center get-user" type="button"
                     style="max-width: 160px;" onclick=getUser()>Bürger abrufen</button>
@@ -414,9 +449,9 @@
                             </select>
                         </div>
                         <div class="col">
-                            <label for="login-add-absence-permissions" class="form-label">Rechte für
-                                Abwesenheiten</label>
-                            <select id="login-add-absence-permissions" class="form-select" aria-label="Permissions">
+                            <label for="login-add-workless-permissions" class="form-label">Rechte für
+                                Arbeitslose</label>
+                            <select id="login-add-workless-permissions" class="form-select" aria-label="Permissions">
                                 <option value="None">None</option>
                                 <option value="ReadOnly">ReadOnly</option>
                                 <option value="Write">Write</option>

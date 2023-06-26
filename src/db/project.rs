@@ -192,11 +192,15 @@ pub fn create(db: &Database) -> Result<()> {
         surname text not null, \
         role text not null); \
     \
-    create table absence ( \
+    create table workless ( \
         account text not null, \
-        date text not null, \
-        time text default none, \
-        primary key (account, date)); \
+        old_company text not null, \
+        date_of_dismiss text not null, \
+        currently integer not null default 1, \
+        new_company text not null, \
+        date_of_hiring text not null, \
+        total_time text text not null, \
+        primary key (account, old_company, date_of_dismiss)); \
     \
     create table criminal ( \
         account text not null, \
@@ -217,7 +221,7 @@ pub fn create(db: &Database) -> Result<()> {
         hash text not null, \
         salt text not null, \
         access_user int default 0, \
-        access_absence int default 0, \
+        access_workless int default 0, \
         access_criminal int default 0); \
     ";
 
@@ -269,7 +273,7 @@ pub fn fetch_logins(db: &Database, path: Cow<'_, Path>, div: &str) -> Result<()>
                 user: lines.next().unwrap().into(),
                 password: lines.next().unwrap().into(),
                 access_user: lines.next().unwrap().into(),
-                access_absence: lines.next().unwrap().into(),
+                access_workless: lines.next().unwrap().into(),
                 access_criminal: lines.next().unwrap().into(),
             };
             super::login::add(db, login)?;

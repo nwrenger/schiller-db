@@ -47,7 +47,7 @@ impl ToSql for Permission {
 #[derive(Debug, PartialEq, Deserialize, Serialize, ToSchema)]
 pub struct Permissions {
     pub access_user: Permission,
-    pub access_absence: Permission,
+    pub access_workless: Permission,
     pub access_criminal: Permission,
 }
 
@@ -55,7 +55,7 @@ impl FromRow for Permissions {
     fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Permissions> {
         Ok(Permissions {
             access_user: row.get("access_user")?,
-            access_absence: row.get("access_absence")?,
+            access_workless: row.get("access_workless")?,
             access_criminal: row.get("access_criminal")?,
         })
     }
@@ -67,7 +67,7 @@ pub struct Login {
     pub hash: String,
     pub salt: String,
     pub access_user: Permission,
-    pub access_absence: Permission,
+    pub access_workless: Permission,
     pub access_criminal: Permission,
 }
 
@@ -106,7 +106,7 @@ impl FromRow for Login {
             hash: row.get("hash")?,
             salt: row.get("salt")?,
             access_user: row.get("access_user")?,
-            access_absence: row.get("access_absence")?,
+            access_workless: row.get("access_workless")?,
             access_criminal: row.get("access_criminal")?,
         })
     }
@@ -117,7 +117,7 @@ pub struct NewLogin {
     pub user: String,
     pub password: String,
     pub access_user: Permission,
-    pub access_absence: Permission,
+    pub access_workless: Permission,
     pub access_criminal: Permission,
 }
 
@@ -127,7 +127,7 @@ impl NewLogin {
             user,
             password,
             access_user,
-            access_absence,
+            access_workless,
             access_criminal,
         } = self;
         let password = password.trim().to_string();
@@ -145,7 +145,7 @@ impl NewLogin {
             hash,
             salt,
             access_user,
-            access_absence,
+            access_workless,
             access_criminal,
         })
     }
@@ -159,7 +159,7 @@ pub fn fetch(db: &Database, user: &str) -> Result<Login> {
         hash, \
         salt, \
         access_user, \
-        access_absence, \
+        access_workless, \
         access_criminal \
         from login \
         where user=?
@@ -174,7 +174,7 @@ pub fn fetch_permission(db: &Database, user: &str) -> Result<Permissions> {
     let mut stmt = db.con.prepare(
         "select \
         access_user, \
-        access_absence, \
+        access_workless, \
         access_criminal \
         from login \
         where user=?
@@ -214,7 +214,7 @@ pub fn add(db: &Database, login: NewLogin) -> Result<()> {
             login.hash,
             login.salt,
             login.access_user,
-            login.access_absence,
+            login.access_workless,
             login.access_criminal
         ],
     )?;
@@ -266,7 +266,7 @@ mod tests {
             user: "nils.wrenger".into(),
             password: "123456".into(),
             access_user: Permission::ReadOnly,
-            access_absence: Permission::Write,
+            access_workless: Permission::Write,
             access_criminal: Permission::None,
         };
         login::add(&db, login.clone()).unwrap();

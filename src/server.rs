@@ -25,12 +25,12 @@ use crate::db::{
 };
 use chrono::NaiveDate;
 
-use db::absence::{Absence, AbsenceSearch};
 use db::criminal::{Criminal, CriminalSearch};
 use db::login::{Login, Permission};
 use db::project::{Database, Error, Result};
 use db::stats::Stats;
 use db::user::User;
+use db::workless::{Workless, WorklessSearch};
 
 pub trait Access {
     fn check(l: Login) -> bool;
@@ -47,16 +47,16 @@ impl Access for UserWrite {
         matches!(l.access_user, Permission::Write)
     }
 }
-pub struct AbsenceReadOnly {}
-impl Access for AbsenceReadOnly {
+pub struct WorklessReadOnly {}
+impl Access for WorklessReadOnly {
     fn check(l: Login) -> bool {
-        matches!(l.access_absence, Permission::ReadOnly | Permission::Write)
+        matches!(l.access_workless, Permission::ReadOnly | Permission::Write)
     }
 }
-pub struct AbsenceWrite {}
-impl Access for AbsenceWrite {
+pub struct WorklessWrite {}
+impl Access for WorklessWrite {
     fn check(l: Login) -> bool {
-        matches!(l.access_absence, Permission::Write)
+        matches!(l.access_workless, Permission::Write)
     }
 }
 pub struct CriminalReadOnly {}
@@ -283,23 +283,25 @@ pub async fn delete_user(auth: Auth<UserWrite>, id: &str) -> Json<Result<()>> {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Got an Absence by a specific account and date", body = Absence),
-        (status = 401, description = "Unauthorized to fetch an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Got a Workless by a specific account, old company and date", body = Workless),
+        (status = 401, description = "Unauthorized to fetch a Workless", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     params(
         ("account", description = "The unique user account"),
+        ("old_company", description = "The old company"),
         ("date", description = "The date")
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[get("/absence/fetch/<account>/<date>")]
-pub async fn fetch_absence(
-    _auth: Auth<AbsenceReadOnly>,
+#[get("/workless/fetch/<account>/<old_company>/<date>")]
+pub async fn fetch_workless(
+    _auth: Auth<WorklessReadOnly>,
     account: &str,
+    old_company: &str,
     date: &str,
-) -> Json<Result<Absence>> {
+) -> Json<Result<Workless>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -307,52 +309,57 @@ pub async fn fetch_absence(
             return Json(Err(Error::InvalidDate));
         }
     };
-    Json(db::absence::fetch(&db, account, date))
+    Json(db::workless::fetch(&db, account, old_company, date))
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Searched all Absences", body = Vec<Absence>),
-        (status = 401, description = "Unauthorized to search all Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Searched all Workless", body = Vec<Workless>),
+        (status = 401, description = "Unauthorized to search all Workless", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[get("/absence/search?<name>&<date>&<limit>")]
-pub async fn search_absence(
-    _auth: Auth<AbsenceReadOnly>,
+#[get("/workless/search?<name>&<old_company>&<date>&<limit>")]
+pub async fn search_workless(
+    _auth: Auth<WorklessReadOnly>,
     name: Option<&str>,
+    old_company: Option<&str>,
     date: Option<&str>,
     limit: Option<usize>,
-) -> Json<Result<Vec<Absence>>> {
+) -> Json<Result<Vec<Workless>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::search(
+    Json(db::workless::search(
         &db,
-        AbsenceSearch::new(name.unwrap_or_default(), date.unwrap_or("%")),
+        WorklessSearch::new(
+            name.unwrap_or_default(),
+            old_company.unwrap_or("%"),
+            date.unwrap_or("%"),
+        ),
         limit.unwrap_or(200),
     ))
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Searched all Absences by roles", body = Vec<Absence>),
-        (status = 401, description = "Unauthorized to search all Absences by roles", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Searched all Workless by roles", body = Vec<Workless>),
+        (status = 401, description = "Unauthorized to search all Workless by roles", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[get("/absence/search_role?<name>&<date>&<role>&<limit>")]
-pub async fn search_absence_roles(
-    _auth: Auth<AbsenceReadOnly>,
+#[get("/workless/search_role?<name>&<date>&<role>&<limit>")]
+pub async fn search_workless_roles(
+    _auth: Auth<WorklessReadOnly>,
     name: Option<&str>,
     date: Option<&str>,
     role: Option<&str>,
     limit: Option<usize>,
-) -> Json<Result<Vec<Absence>>> {
+) -> Json<Result<Vec<Workless>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::search_role(
+    Json(db::workless::search_role(
         &db,
         name.unwrap_or(""),
         role.unwrap_or("%"),
@@ -370,10 +377,10 @@ pub async fn search_absence_roles(
         ("authorization" = []),
     )
 )]
-#[get("/absence/all_dates")]
-pub async fn all_dates(_auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>> {
+#[get("/workless/all_dates")]
+pub async fn all_dates(_auth: Auth<WorklessReadOnly>) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::all_dates(&db))
+    Json(db::workless::all_dates(&db))
 }
 
 #[utoipa::path(
@@ -385,14 +392,14 @@ pub async fn all_dates(_auth: Auth<AbsenceReadOnly>) -> Json<Result<Vec<String>>
         ("authorization" = []),
     )
 )]
-#[get("/absence/all_roles?<date>&<name>")]
-pub async fn all_roles_absence(
-    _auth: Auth<AbsenceReadOnly>,
+#[get("/workless/all_roles?<date>&<name>")]
+pub async fn all_roles_workless(
+    _auth: Auth<WorklessReadOnly>,
     date: Option<&str>,
     name: Option<&str>,
 ) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::all_roles(
+    Json(db::workless::all_roles(
         &db,
         date.unwrap_or("%"),
         name.unwrap_or(""),
@@ -400,32 +407,33 @@ pub async fn all_roles_absence(
 }
 
 #[utoipa::path(
-    request_body = Absence,
+    request_body = Workless,
     responses(
-        (status = 200, description = "Add an Absence sended successfully"),
-        (status = 401, description = "Unauthorized to add a Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Add an Workless sended successfully"),
+        (status = 401, description = "Unauthorized to add a Workless", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
     security (
         ("authorization" = []),
     )
 )]
-#[post("/absence", format = "json", data = "<absence>")]
-pub async fn add_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Json<Result<()>> {
-    warn!("POST /absence with data {absence:?}: {}", auth.user);
+#[post("/workless", format = "json", data = "<workless>")]
+pub async fn add_workless(auth: Auth<WorklessWrite>, workless: Json<Workless>) -> Json<Result<()>> {
+    warn!("POST /workless with data {workless:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
-    Json(db::absence::add(&db, &absence))
+    Json(db::workless::add(&db, &workless))
 }
 
 #[utoipa::path(
-    request_body = Absence,
+    request_body = Workless,
     responses (
-        (status = 200, description = "Update an Absence sended successfully"),
-        (status = 401, description = "Unauthorized to update an Absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Update an Workless sended successfully"),
+        (status = 401, description = "Unauthorized to update an Workless", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
     params(
         ("previous_account", description = "The unique user account"),
+        ("previous_old_company", description = "The old company"),
         ("previous_date", description = "The date")
     ),
     security (
@@ -433,18 +441,19 @@ pub async fn add_absence(auth: Auth<AbsenceWrite>, absence: Json<Absence>) -> Js
     )
 )]
 #[put(
-    "/absence/<previous_account>/<previous_date>",
+    "/workless/<previous_account>/<previous_old_company>/<previous_date>",
     format = "json",
-    data = "<absence>"
+    data = "<workless>"
 )]
-pub async fn update_absence(
-    auth: Auth<AbsenceWrite>,
-    absence: Json<Absence>,
+pub async fn update_workless(
+    auth: Auth<WorklessWrite>,
+    workless: Json<Workless>,
     previous_account: &str,
+    previous_old_company: &str,
     previous_date: &str,
 ) -> Json<Result<()>> {
     warn!(
-        "PUT /absence/{previous_account}/{previous_date} with data {absence:?}: {}",
+        "PUT /workless/{previous_account}/{previous_old_company}/{previous_date} with data {workless:?}: {}",
         auth.user
     );
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -454,34 +463,37 @@ pub async fn update_absence(
             return Json(Err(Error::InvalidDate));
         }
     };
-    Json(db::absence::update(
+    Json(db::workless::update(
         &db,
         previous_account,
+        previous_old_company,
         previous_date,
-        &absence,
+        &workless,
     ))
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Absence delete sended successfully"),
-        (status = 401, description = "Unauthorized to delete Absences", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Workless delete sended successfully"),
+        (status = 401, description = "Unauthorized to delete Workless", body = Error, example = json!({"Err": Error::Unauthorized})),
     ),
     params(
         ("account", description = "The unique user account"),
+        ("old_company", description = "The old company"),
         ("date", description = "The date")
     ),
     security(
         ("authorization" = []),
     )
 )]
-#[delete("/absence/<account>/<date>")]
-pub async fn delete_absence(
-    auth: Auth<AbsenceWrite>,
+#[delete("/workless/<account>/<old_company>/<date>")]
+pub async fn delete_workless(
+    auth: Auth<WorklessWrite>,
     account: &str,
+    old_company: &str,
     date: &str,
 ) -> Json<Result<()>> {
-    warn!("DELETE /absence/{account}/{date}: {}", auth.user);
+    warn!("DELETE /workless/{account}/{date}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
@@ -489,7 +501,7 @@ pub async fn delete_absence(
             return Json(Err(Error::InvalidDate));
         }
     };
-    Json(db::absence::delete(&db, account, date))
+    Json(db::workless::delete(&db, account, old_company, date))
 }
 
 #[utoipa::path(
@@ -541,7 +553,7 @@ pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<Stri
 )]
 #[get("/criminal/all_roles?<name>")]
 pub async fn all_roles_criminal(
-    _auth: Auth<AbsenceReadOnly>,
+    _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
 ) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -618,8 +630,8 @@ pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -
 #[utoipa::path(
     request_body = Criminal,
     responses(
-        (status = 200, description = "Update a absence sended successfully"),
-        (status = 401, description = "Unauthorized to update a absence", body = Error, example = json!({"Err": Error::Unauthorized})),
+        (status = 200, description = "Update a workless sended successfully"),
+        (status = 401, description = "Unauthorized to update a workless", body = Error, example = json!({"Err": Error::Unauthorized})),
         (status = 422, description = "The Json is parsed in a wrong format", body = Error, example = json!({"Err": Error::UnprocessableEntity})),
     ),
     params(
