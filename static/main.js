@@ -12,7 +12,6 @@ const old_company = document.getElementById("old-company");
 const date_of_dismiss = document.getElementById("date-of-dismiss");
 const currently_workless = document.getElementById("currently-workless");
 const new_company = document.getElementById("new-company");
-const date_of_hiring = document.getElementById("date-of-hiring");
 const total_time = document.getElementById("total-time");
 const kind = document.getElementById("kind");
 const accuser = document.getElementById("accuser");
@@ -134,15 +133,14 @@ function updateUserUI(data) {
 }
 
 // Updates the UI with workless data
-function updateAbsenceUI(data) {
+function updateWorklessUI(data) {
     show([true, false, true, true, true, true], true);
 
     workless_account.value = data.account;
     old_company.value = data.old_company;
     date_of_dismiss.value = data.date_of_dismiss;
-    currently_workless.value = data.currently;
+    currently_workless.value = decodeCurrently(data.currently);
     new_company.value = data.new_company;
-    date_of_hiring.value = data.date_of_hiring;
     total_time.value = data.total_time;
 }
 
@@ -325,7 +323,7 @@ function createUserList(param, nestedList, node, back, swappedKind) {
             if (select === "user") {
                 updateUserUI(user);
             } else if (select === "workless") {
-                updateAbsenceUI(user);
+                updateWorklessUI(user);
             } else if (select === "criminal") {
                 updateCriminalUI(user);
             }
@@ -552,7 +550,7 @@ function buttonAbortUser() {
 async function buttonAddWorkless() {
     document.getElementById("workless-add-button").disabled = true;
     document.getElementById("workless-add-button-spinner").hidden = false;
-    await request("workless", "POST", JSON.stringify({ account: workless_account.value, old_company: old_company.value, date_of_dismiss: date_of_dismiss.value, currently: JSON.parse(currently_workless.value), new_company: new_company.value, date_of_hiring: date_of_hiring.value, total_time: total_time.value }));
+    await request("workless", "POST", JSON.stringify({ account: workless_account.value, old_company: old_company.value, date_of_dismiss: date_of_dismiss.value, currently: encodeCurrently(currently_workless.value), new_company: new_company.value, total_time: total_time.value }));
     worklessReadOnly(true);
     await updateSide(current_data_user.date_of_dismiss);
     document.getElementById("workless-add-button").disabled = false;
@@ -562,7 +560,7 @@ async function buttonAddWorkless() {
 async function buttonConfirmWorkless() {
     document.getElementById("workless-confirm-button").disabled = true;
     document.getElementById("workless-confirm-button-spinner").hidden = false;
-    await request("workless/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.old_company) + "/" + encodeURIComponent(current_data_user.date_of_dismiss), "PUT", JSON.stringify({ account: workless_account.value, old_company: old_company.value, date_of_dismiss: date_of_dismiss.value, currently: JSON.parse(currently_workless.value), new_company: new_company.value, date_of_hiring: date_of_hiring.value, total_time: total_time.value }));
+    await request("workless/" + encodeURIComponent(current_data_user.account) + "/" + encodeURIComponent(current_data_user.old_company) + "/" + encodeURIComponent(current_data_user.date_of_dismiss), "PUT", JSON.stringify({ account: workless_account.value, old_company: old_company.value, date_of_dismiss: date_of_dismiss.value, currently: encodeCurrently(currently_workless.value), new_company: new_company.value, total_time: total_time.value }));
     worklessReadOnly(true);
     await updateSide(current_data_user.date_of_dismiss);
     document.getElementById("workless-confirm-button").disabled = false;
@@ -582,9 +580,8 @@ function buttonAbortWorkless() {
         workless_account.value = current_data_user.account;
         old_company.value = current_data_user.old_company;
         date_of_dismiss.value = current_data_user.date_of_dismiss;
-        currently_workless.value = current_data_user.currently;
+        currently_workless.value = decodeCurrently(current_data_user.currently);
         new_company.value = current_data_user.new_company;
-        date_of_hiring.value = current_data_user.date_of_hiring;
         total_time.value = current_data_user.total_time;
     }
 }
@@ -693,9 +690,8 @@ function add() {
         } else {
             date_of_dismiss.value = current_data_user.date_of_dismiss;
         }
-        currently_workless.value = "true";
+        currently_workless.value = decodeCurrently(true);
         new_company.value = "";
-        date_of_hiring.value = "";
         total_time.value = "";
         showChange("POST", ["workless-select-button", "currently-select-button"], "workless-add-button", "workless-confirm-button", "workless-abort-button");
     } else if (select === "criminal") {
@@ -732,9 +728,8 @@ function edit() {
         workless_account.value = current_data_user.account;
         old_company.value = current_data_user.old_company;
         date_of_dismiss.value = current_data_user.date_of_dismiss;
-        currently_workless.value = current_data_user.currently;
+        currently_workless.value = decodeCurrently(current_data_user.currently);
         new_company.value = current_data_user.new_company;
-        date_of_hiring.value = current_data_user.date_of_hiring;
         total_time.value = current_data_user.total_time;
         showChange("PUT", ["workless-select-button", "currently-select-button"], "workless-add-button", "workless-confirm-button", "workless-abort-button");
     } else if (select === "criminal") {
@@ -785,7 +780,6 @@ function worklessReadOnly(value) {
     old_company.readOnly = value;
     date_of_dismiss.readOnly = value;
     new_company.readOnly = value;
-    date_of_hiring.readOnly = value;
     total_time.readOnly = value;
 }
 
@@ -998,6 +992,22 @@ function selecting(message, which) {
 
 function selectingVerdict(message, which) {
     document.getElementById(which).value = message;
+}
+
+function encodeCurrently(value) {
+    if (value === "Ja") {
+        return true;
+    } else if (value === "Nein") {
+        return false;
+    }
+}
+
+function decodeCurrently(value) {
+    if (value) {
+        return "Ja";
+    } else {
+        return "Nein";
+    }
 }
 
 selecting("Bürger", "user");

@@ -198,7 +198,6 @@ pub fn create(db: &Database) -> Result<()> {
         date_of_dismiss text not null, \
         currently integer not null default 1, \
         new_company text not null, \
-        date_of_hiring text not null, \
         total_time text text not null, \
         primary key (account, old_company, date_of_dismiss)); \
     \

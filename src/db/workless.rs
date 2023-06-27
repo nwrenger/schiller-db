@@ -15,7 +15,6 @@ pub struct Workless {
     pub date_of_dismiss: NaiveDate,
     pub currently: bool,
     pub new_company: String,
-    pub date_of_hiring: NaiveDate,
     pub total_time: String,
 }
 
@@ -36,7 +35,6 @@ impl FromRow for Workless {
             date_of_dismiss: row.get("date_of_dismiss")?,
             currently: row.get("currently")?,
             new_company: row.get("new_company")?,
-            date_of_hiring: row.get("date_of_hiring")?,
             total_time: row.get("total_time")?,
         })
     }
@@ -51,7 +49,6 @@ pub fn fetch(db: &Database, account: &str, old_company: &str, date: NaiveDate) -
         date_of_dismiss, \
         currently, \
         new_company, \
-        date_of_hiring, \
         total_time \
         \
         from workless \
@@ -180,7 +177,6 @@ pub fn search(db: &Database, params: WorklessSearch, limit: usize) -> Result<Vec
         date_of_dismiss, \
         currently, \
         new_company, \
-        date_of_hiring, \
         total_time \
         \
         from workless \
@@ -208,14 +204,13 @@ pub fn add(db: &Database, workless: &Workless) -> Result<()> {
         return Err(Error::InvalidAbsence);
     }
     db.con.execute(
-        "INSERT INTO workless VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO workless VALUES (?, ?, ?, ?, ?, ?)",
         rusqlite::params![
             workless.account.trim(),
             workless.old_company.trim(),
             workless.date_of_dismiss,
             workless.currently,
             workless.new_company.trim(),
-            workless.date_of_hiring,
             workless.total_time.trim()
         ],
     )?;
@@ -239,14 +234,13 @@ pub fn update(
     let transaction = db.transaction()?;
     // update date
     transaction.execute(
-        "update workless set account=?, old_company=?, date_of_dismiss=?, currently=?, new_company=?, date_of_hiring=?, total_time=? where account=? and old_company=? and date_of_dismiss=?",
+        "update workless set account=?, old_company=?, date_of_dismiss=?, currently=?, new_company=?, total_time=? where account=? and old_company=? and date_of_dismiss=?",
         rusqlite::params![
             workless.account.trim(),
             workless.old_company.trim(),
             workless.date_of_dismiss,
             workless.currently,
             workless.new_company.trim(),
-            workless.date_of_hiring,
             workless.total_time.trim(),
             previous_account,
             previos_old_company,
@@ -292,7 +286,6 @@ mod tests {
             date_of_dismiss: NaiveDate::from_ymd_opt(2023, 06, 01).unwrap(),
             currently: false,
             new_company: "fuzz".into(),
-            date_of_hiring: NaiveDate::from_ymd_opt(2023, 06, 02).unwrap(),
             total_time: "24h".into(),
         };
         workless::add(&db, &workless).unwrap();
