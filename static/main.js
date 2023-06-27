@@ -13,6 +13,7 @@ const date_of_dismiss = document.getElementById("date-of-dismiss");
 const currently_workless = document.getElementById("currently-workless");
 const new_company = document.getElementById("new-company");
 const total_time = document.getElementById("total-time");
+const only_on_currently_no = document.getElementById("only-on-currently-no");
 const kind = document.getElementById("kind");
 const accuser = document.getElementById("accuser");
 const police_consultant = document.getElementById("police-consultant");
@@ -135,6 +136,12 @@ function updateUserUI(data) {
 // Updates the UI with workless data
 function updateWorklessUI(data) {
     show([true, false, true, true, true, true], true);
+
+    if (data.currently) {
+        only_on_currently_no.hidden = true;
+    } else {
+        only_on_currently_no.hidden = false;
+    }
 
     workless_account.value = data.account;
     old_company.value = data.old_company;
@@ -540,10 +547,7 @@ function buttonAbortUser() {
     if (activeElement === null) {
         cancel();
     } else {
-        forename.value = current_data_user.forename;
-        surname.value = current_data_user.surname;
-        account.value = current_data_user.account;
-        role.value = current_data_user.role;
+        updateUserUI(current_data_user);
     }
 }
 
@@ -576,13 +580,7 @@ function buttonAbortWorkless() {
     if (activeElement === null) {
         cancel();
     } else {
-        show([true, false, true, true, true, true], true);
-        workless_account.value = current_data_user.account;
-        old_company.value = current_data_user.old_company;
-        date_of_dismiss.value = current_data_user.date_of_dismiss;
-        currently_workless.value = decodeCurrently(current_data_user.currently);
-        new_company.value = current_data_user.new_company;
-        total_time.value = current_data_user.total_time;
+        updateWorklessUI(current_data_user);
     }
 }
 
@@ -615,18 +613,7 @@ function buttonAbortCriminal() {
     if (activeElement === null) {
         cancel();
     } else {
-        show([true, true, false, true, true, true], true);
-        criminal_account.value = current_data_user.account;
-        kind.value = current_data_user.kind;
-        accuser.value = current_data_user.accuser;
-        police_consultant.value = current_data_user.police_consultant;
-        lawyer_culprit.value = current_data_user.lawyer_culprit;
-        lawyer_accuser.value = current_data_user.lawyer_accuser;
-        facts.value = current_data_user.facts;
-        time_of_crime.value = current_data_user.time_of_crime;
-        location_of_crime.value = current_data_user.location_of_crime;
-        note.value = current_data_user.note;
-        verdict.value = current_data_user.verdict;
+        updateWorklessUI(current_data_user);
     }
 }
 
@@ -671,46 +658,25 @@ function add() {
     addButton.classList.add("active");
     editButton.classList.remove("active");
     if (select === "user") {
-        show([true, true, true, false, true, true]);
-        forename.value = "";
-        surname.value = "";
-        account.value = "";
-        if (!current_data_user.role) {
-            role.value = "";
-        } else {
-            role.value = current_data_user.role;
+        var role = "";
+        if (current_data_user.role) {
+            role = current_data_user.role;
         }
+        updateUserUI({ forename: "", surname: "", account: "", role: role });
         showChange("POST", "", "user-add-button", "user-confirm-button", "user-abort-button");
     } else if (select === "workless") {
-        show([true, false, true, true, true, true], true);
-        workless_account.value = "";
-        old_company.value = "";
-        if (!current_data_user.date_of_dismiss) {
-            date_of_dismiss.value = "";
-        } else {
-            date_of_dismiss.value = current_data_user.date_of_dismiss;
+        var date_of_dismiss = "";
+        if (current_data_user.date_of_dismiss) {
+            date_of_dismiss = current_data_user.date_of_dismiss;
         }
-        currently_workless.value = decodeCurrently(true);
-        new_company.value = "";
-        total_time.value = "";
+        updateWorklessUI({ account: "", old_company: "", date_of_dismiss: date_of_dismiss, currently_workless: decodeCurrently(false), new_company: "", total_time: "" });
         showChange("POST", ["workless-select-button", "currently-select-button"], "workless-add-button", "workless-confirm-button", "workless-abort-button");
     } else if (select === "criminal") {
-        show([true, true, false, true, true, true], true);
-        if (!current_data_user.account) {
-            criminal_account.value = "";
-        } else {
-            criminal_account.value = current_data_user.account;
+        var criminal_account = "";
+        if (current_data_user.account) {
+            criminal_account = current_data_user.account;
         }
-        kind.value = "";
-        accuser.value = "";
-        police_consultant.value = "";
-        lawyer_culprit.value = "";
-        lawyer_accuser.value = "";
-        facts.value = "";
-        time_of_crime.value = "";
-        location_of_crime.value = "";
-        note.value = "";
-        verdict.value = "";
+        updateCriminalUI({ account: criminal_account, kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" });
         showChange("POST", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button", "criminal-abort-button");
     }
 }
@@ -719,31 +685,13 @@ function edit() {
     editButton.classList.add("active");
     addButton.classList.remove("active");
     if (select === "user") {
-        forename.value = current_data_user.forename;
-        surname.value = current_data_user.surname;
-        account.value = current_data_user.account;
-        role.value = current_data_user.role;
+        updateUserUI(current_data_user);
         showChange("PUT", "", "user-add-button", "user-confirm-button", "user-abort-button");
     } else if (select === "workless") {
-        workless_account.value = current_data_user.account;
-        old_company.value = current_data_user.old_company;
-        date_of_dismiss.value = current_data_user.date_of_dismiss;
-        currently_workless.value = decodeCurrently(current_data_user.currently);
-        new_company.value = current_data_user.new_company;
-        total_time.value = current_data_user.total_time;
+        updateWorklessUI(current_data_user);
         showChange("PUT", ["workless-select-button", "currently-select-button"], "workless-add-button", "workless-confirm-button", "workless-abort-button");
     } else if (select === "criminal") {
-        criminal_account.value = current_data_user.account;
-        kind.value = current_data_user.kind;
-        accuser.value = current_data_user.accuser;
-        police_consultant.value = current_data_user.police_consultant;
-        lawyer_culprit.value = current_data_user.lawyer_culprit;
-        lawyer_accuser.value = current_data_user.lawyer_accuser;
-        facts.value = current_data_user.facts;
-        time_of_crime.value = current_data_user.time_of_crime;
-        location_of_crime.value = current_data_user.location_of_crime;
-        note.value = current_data_user.note;
-        verdict.value = current_data_user.verdict;
+        updateCriminalUI(current_data_user);
         showChange("PUT", ["criminal-select-button", "accuser-select-button", "police-consultant-select-button", "lawyer-culprit-select-button", "lawyer-accuser-select-button", "verdict-select-button"], "criminal-add-button", "criminal-confirm-button", "criminal-abort-button");
     }
 }
@@ -992,6 +940,15 @@ function selecting(message, which) {
 
 function selectingVerdict(message, which) {
     document.getElementById(which).value = message;
+}
+
+function selectingCurrently(message, which) {
+    document.getElementById(which).value = message;
+    if (message === "Ja") {
+        only_on_currently_no.hidden = true;
+    } else {
+        only_on_currently_no.hidden = false;
+    }
 }
 
 function encodeCurrently(value) {

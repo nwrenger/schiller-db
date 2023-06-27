@@ -210,16 +210,16 @@
                                 title="Auswahl">Auswahl</button>
                             <ul id="currently-select-dropdown" class="dropdown-menu">
                                 <li><button id="yes-currently" class="dropdown-item" type="button"
-                                        onclick="selectingVerdict('Ja','currently-workless')">Ja</button></li>
+                                        onclick="selectingCurrently('Ja','currently-workless')">Ja</button></li>
                                 <li><button id="no-currently" class="dropdown-item" type="button"
-                                        onclick="selectingVerdict('Nein','currently-workless')">Nein</button></li>
+                                        onclick="selectingCurrently('Nein','currently-workless')">Nein</button></li>
                             </ul>
                             <input id="currently-workless" type="text" class="form-control" placeholder="Auswahl"
                                 aria-label="Auswahl" readonly>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="only-on-currently-no" class="row" hidden>
                     <div class="col">
                         <label for="new-company" class="form-label">Neuer Betrieb</label>
                         <input id="new-company" type="text" class="form-control" placeholder="Neuer Betrieb"
