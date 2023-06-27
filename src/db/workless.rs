@@ -201,7 +201,7 @@ pub fn search(db: &Database, params: WorklessSearch, limit: usize) -> Result<Vec
 /// Adds a new date with presenters.
 pub fn add(db: &Database, workless: &Workless) -> Result<()> {
     if !workless.is_valid() {
-        return Err(Error::InvalidAbsence);
+        return Err(Error::InvalidWorkless);
     }
     db.con.execute(
         "INSERT INTO workless VALUES (?, ?, ?, ?, ?, ?)",
@@ -217,7 +217,7 @@ pub fn add(db: &Database, workless: &Workless) -> Result<()> {
     Ok(())
 }
 
-/// Updates the Absences.
+/// Updates the Workless.
 pub fn update(
     db: &Database,
     previous_account: &str,
@@ -228,7 +228,7 @@ pub fn update(
     let previous_account = previous_account.trim();
     let previos_old_company = previos_old_company.trim();
     if previous_account.is_empty() || previos_old_company.is_empty() || !workless.is_valid() {
-        return Err(Error::InvalidAbsence);
+        return Err(Error::InvalidWorkless);
     }
 
     let transaction = db.transaction()?;
@@ -257,7 +257,7 @@ pub fn delete(db: &Database, account: &str, old_company: &str, date: NaiveDate) 
     let account = account.trim();
     let old_company = old_company.trim();
     if account.is_empty() || old_company.is_empty() {
-        return Err(Error::InvalidAbsence);
+        return Err(Error::InvalidWorkless);
     }
     let transaction = db.transaction()?;
     // remove date and presenters

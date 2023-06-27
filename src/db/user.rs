@@ -184,7 +184,7 @@ pub fn update(db: &Database, previous_account: &str, user: &User) -> Result<()> 
 }
 
 /// Deletes the user.
-/// This includes all its absences.
+/// This includes all its workless.
 pub fn delete(db: &Database, account: &str) -> Result<()> {
     let account = account.trim();
     if account.is_empty() {

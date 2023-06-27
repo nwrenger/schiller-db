@@ -196,7 +196,7 @@ function encodeFormatDate(date) {
 }
 
 // Initializes the user list for the dates
-async function absenceUserList() {
+async function worklessUserList() {
     clearList();
 
     const dates = await request("/workless/all_dates", "GET");
@@ -221,8 +221,8 @@ async function absenceUserList() {
             current_date = decodeFormatDate(date);
             cancel();
 
-            const absences = await request(`/workless/search?date=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
-            createUserList(date, absences, sidebarList, true);
+            const workless = await request(`/workless/search?date=${encodeURIComponent(decodeFormatDate(date))}`, "GET");
+            createUserList(date, workless, sidebarList, true);
         });
     }
 }
@@ -400,9 +400,9 @@ async function addLogin() {
     const user = document.getElementById("login-add-user").value;
     const password = document.getElementById("login-add-password").value;
     const user_permissions = document.getElementById("login-add-user-permissions").value;
-    const absence_permissions = document.getElementById("login-add-workless-permissions").value;
+    const workless_permissions = document.getElementById("login-add-workless-permissions").value;
     const criminal_permissions = document.getElementById("login-add-criminal-permissions").value;
-    await request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_workless: absence_permissions, access_criminal: criminal_permissions }));
+    await request("login", "POST", JSON.stringify({ user: user, password: password, access_user: user_permissions, access_workless: workless_permissions, access_criminal: criminal_permissions }));
     document.getElementById("add-login-button").disabled = false;
     document.getElementById("add-login-button-spinner").hidden = true;
 }
@@ -447,7 +447,7 @@ function reset() {
             error("InvalidLocalKeys");
         });
     } else if (select === "workless") {
-        absenceUserList();
+        worklessUserList();
     } else if (select === "criminal") {
         criminalUserList();
     }

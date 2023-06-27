@@ -38,7 +38,7 @@ pub enum Error {
     /// Specific errors
     InvalidUser,
     InvalidLogin,
-    InvalidAbsence,
+    InvalidWorkless,
     InvalidCriminal,
     InvalidDate,
     InvalidKind,
