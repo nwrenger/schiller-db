@@ -300,6 +300,9 @@ function createUserList(param, nestedList, node, back, swappedKind) {
         } else {
             data = user.account;
         }
+        if (select === "workless" && user.currently) {
+            data = data + " - Arbeitslos";
+        }
         const userTextNode = document.createTextNode(data);
         userNode.className = "list-group-item list-group-item-action";
         userNode.appendChild(userTextNode);
