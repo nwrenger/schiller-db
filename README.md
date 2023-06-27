@@ -12,7 +12,7 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 ### Usage
 
-Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other User and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
+Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other Users and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
 
 ## Architecture - Including SNDI
 
@@ -44,7 +44,7 @@ Besides that, it also consists the management and logic for a server using [Rock
 
 The Server calls are:
 
-- 8 for data table criminal and Workless
+- 8 for data table criminal and workless
 - 6 for data table user
 - 5 for logins (create, fetch, edit, delete, delete_all)
 - stats - getting general statistics/infos
@@ -60,10 +60,10 @@ Schemas:
 Security:
 
 - User System, an Admin, defined thought the admin.env file
-- Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Workless, Criminal)
-- user can change their passwords
+- Admin can add User with Permissions what they can do and cannot do like: Reading/Writing for each Data Type (User, Workless, Criminal)
+- each user can change their passwords
 - the passwords are internally hashed and cannot be directly red out of the database
-- logging every Server call (excluding Swagger UI) to separate file called 'log.txt' with Information who did what
+- logging every Server call (excluding Swagger UI - general GET requests) to separate file called 'log.txt' with Information who did what
 
 ### Database Layer
 
