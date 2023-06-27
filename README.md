@@ -61,6 +61,7 @@ Security:
 
 - User System, an Admin, defined thought the admin.env file
 - Admin can add User with Permissions what they can do cannot do like: Reading/Writing for each Data Type (User, Workless, Criminal)
+- user can change their passwords
 - the passwords are internally hashed and cannot be directly red out of the database
 - logging every Server call (excluding Swagger UI) to separate file called 'log.txt' with Information who did what
 
@@ -95,4 +96,4 @@ The [SQLite](https://sqlite.org/index.html) database has the following schema:
 - [x] More specific search
 - [x] Network test (after we are finished with the UI)
 - [x] Using it in the project week -> worked really well
-- [x] Changes due to customer feedback -> Workless into workless
+- [x] Changes due to customer feedback -> absence into workless
