@@ -3,6 +3,7 @@
 
 	let username = '';
 	let password = '';
+
 	async function handleLogin(username: string, password: string) {
 		const auth = btoa(username + ':' + password);
 		// getting all roles
