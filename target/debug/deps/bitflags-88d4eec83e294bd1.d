@@ -1,0 +1,12 @@
+/home/icu/Documents/code/Rust/sndm/target/debug/deps/bitflags-88d4eec83e294bd1.rmeta: /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/lib.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/parser.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/traits.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/public.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/internal.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/external.rs
+
+/home/icu/Documents/code/Rust/sndm/target/debug/deps/libbitflags-88d4eec83e294bd1.rlib: /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/lib.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/parser.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/traits.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/public.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/internal.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/external.rs
+
+/home/icu/Documents/code/Rust/sndm/target/debug/deps/bitflags-88d4eec83e294bd1.d: /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/lib.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/parser.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/traits.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/public.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/internal.rs /home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/external.rs
+
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/lib.rs:
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/parser.rs:
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/traits.rs:
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/public.rs:
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/internal.rs:
+/home/icu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.1.0/src/external.rs:

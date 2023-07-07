@@ -1,99 +1,38 @@
-# Schillernover's Database Management or for Short SNDM
+# create-svelte
 
-A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcoming project week.
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-### Test Website
+## Creating a project
 
-A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo.
+If you're seeing this, you've probably already done this step. Congrats!
 
-### Download
+```bash
+# create a new project in the current directory
+npm create svelte@latest
 
-The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/sndm/releases).
+# create a new project in my-app
+npm create svelte@latest my-app
+```
 
-### Usage
+## Developing
 
-Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other Users and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-## Architecture - Including SNDI
+```bash
+npm run dev
 
-This application follows the 3-tier principle.
-* **UI Layer:** Getting the Data from Server Calls. It's named SNDI.
-* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration. It's named SNDM.
-* **Database Layer:** The SQLite database that stores the persistent data specific to a project.
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-### UI Layer - SNDI
+## Building
 
-Developed by me and a few others (look to contributions). You can see a current state of the development, by visiting a [Test Website](#test-website).
+To create a production version of your app:
 
-It's developed by using intern Server Calls, JS and Bootstrap (for the UI). I don't use any JS Webdev Framework like React.js (could be a bad idea). The code of [main.js](static/main.js) is really messy and could/should be refactored (won't probably ever done, but when you like to do that Open a Pull Request!).
+```bash
+npm run build
+```
 
-A Picture of the Main Page:
+You can preview the production build with `npm run preview`.
 
-<img src="images/website.png" alt="Database Schema" width=900/>
-
-### Application/Server Layer - SNDM
-
-This layer is implemented in Rust ([src](src)) and [Rocket](https://rocket.rs) (0.5 rc-3).
-
-It is responsible for the consistency checks and business logic.
-This layer also manages the database connection to store and fetch the project data.
-
-Besides that, it also consists the management and logic for a server using [Rocket](https://rocket.rs), including Swagger UI (using the Utoipa Crate).
-
-#### Server
-
-The Server calls are:
-
-- 8 for data table criminal and workless
-- 6 for data table user
-- 5 for logins (create, fetch, edit, delete, delete_all)
-- stats - getting general statistics/infos
-
-Swagger UI integrated via Utoipa:
-
-<img src="images/server_routes.png" alt="Database Schema" width=500 />
-
-Schemas:
-
-<img src="images/schemas.png" alt="Database Schema" width=500 />
-
-Security:
-
-- User System, an Admin, defined thought the admin.env file
-- Admin can add User with Permissions what they can do and cannot do like: Reading/Writing for each Data Type (User, Workless, Criminal)
-- each user can change their passwords
-- the passwords are internally hashed and cannot be directly red out of the database
-- logging every Server call (excluding Swagger UI - general GET requests) to separate file called 'log.txt' with Information who did what
-
-### Database Layer
-
-The [SQLite](https://sqlite.org/index.html) database has the following schema:
-
-<img src="images/sqlite_dia.png" alt="Database Schema" width=600 />
-
-(The bold printed texts are the primary keys!)
-
-## Current Todo's
-
-- [x] DB Management
-- [x] Making a real/openable DB File
-- [x] Fetching User Data from IServ
-- [x] Server Integration
-- [x] Swagger UI Integration
-- [x] Testing, Fixing, etc.
-- [x] Logging? Why not!
-- [x] SideBar -> User
-- [x] Searching (including workless, criminal, user)
-- [x] Main Input Container -> Stats when nothing and User when one is selected -> include changing and adding them
-- [x] Login -> at the current Logout Button make a profile menu
-- [x] In profile menu: Logins Creator with permission selection (makes our job a lot easier)
-- [x] Workless Management
-- [x] Criminal Management
-- [x] fix Add Button (currently a little bit buggy)
-- [x] Better Criminal/Workless adding process
-- [x] Integration for Mobile
-- [x] Finished Criminals Extended Data Fields
-- [x] More specific search
-- [x] Network test (after we are finished with the UI)
-- [x] Using it in the project week -> worked really well
-- [x] Changes due to customer feedback -> absence into workless
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

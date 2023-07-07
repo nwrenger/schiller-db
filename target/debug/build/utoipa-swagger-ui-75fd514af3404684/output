@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=res/swagger-ui-4.15.5.zip
+cargo:rustc-env=UTOIPA_SWAGGER_UI_VERSION=swagger-ui-4.15.5
+cargo:rustc-env=UTOIPA_SWAGGER_DIR=/home/icu/Documents/code/Rust/sndm/target/debug/build/utoipa-swagger-ui-75fd514af3404684/out

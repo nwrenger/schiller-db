@@ -1,0 +1,802 @@
+2023-06-01T17:28:08.256550974+02:00 [WARN] Started Logging
+2023-06-01T17:28:20.05388993+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-01T20:05:09.589858027+02:00 [WARN] Started Logging
+2023-06-01T20:05:21.262470829+02:00 [WARN] POST /user with data Json(User { account: ".", forename: ".", surname: ".", role: "." }): max.mustermann
+2023-06-01T20:09:48.732650779+02:00 [WARN] Started Logging
+2023-06-01T20:10:36.885992309+02:00 [WARN] POST /user with data Json(User { account: ".", forename: "kk", surname: "kk", role: "Jahrgang 12" }): max.mustermann
+2023-06-01T20:11:05.907156487+02:00 [WARN] Data guard `Json < Absence >` failed: Parse("{\"account\":\".\",\"date\":\"-undefined-undefined\",\"time\":\".\"}", Error("input contains invalid characters", line: 1, column: 44)).
+2023-06-01T20:11:14.188956565+02:00 [WARN] POST /criminal with data Json(Criminal { account: ".", kind: ".", data: "" }): max.mustermann
+2023-06-01T20:12:32.248348303+02:00 [WARN] PUT /criminal/hilary.cresswell/Theft with data Json(Criminal { account: "hilary.cresswell", kind: ".", data: "Stole a Smartphone" }): max.mustermann
+2023-06-01T20:15:48.095446095+02:00 [WARN] Started Logging
+2023-06-01T20:16:03.051397757+02:00 [WARN] POST /absence with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-01T20:16:20.401319513+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-01T20:16:27.437698678+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-01T20:16:39.732449419+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Theft", data: "Stole a Car" }): max.mustermann
+2023-06-01T20:16:55.685091701+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Theft", data: "Stole a Smartphone" }): max.mustermann
+2023-06-01T20:19:06.541910932+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Counterfeited Money", data: "Amount: Around 1000 Sheuros" }): max.mustermann
+2023-06-01T20:19:14.409778608+02:00 [WARN] Started Logging
+2023-06-01T20:19:25.560890936+02:00 [WARN] POST /user with data Json(User { account: "s s", forename: "s s", surname: "s s", role: "s s" }): max.mustermann
+2023-06-01T20:19:33.388269706+02:00 [WARN] PUT /user/s s with data Json(User { account: "s  s", forename: "s s", surname: "s s", role: "s s" }): max.mustermann
+2023-06-01T20:20:11.189468432+02:00 [WARN] PUT /user/s  s with data Json(User { account: "nils  sss", forename: "Nils", surname: "sss", role: "4" }): max.mustermann
+2023-06-01T20:20:22.671454282+02:00 [WARN] PUT /user/nils  sss with data Json(User { account: "nils   sss", forename: "Nils", surname: "sss", role: "4" }): max.mustermann
+2023-06-01T20:20:53.304743058+02:00 [WARN] PUT /user/nils   sss with data Json(User { account: "", forename: "Nils", surname: "sss", role: "4" }): max.mustermann
+2023-06-01T20:21:00.917616485+02:00 [WARN] PUT /user/nils   sss with data Json(User { account: "nils.sss", forename: "Nils", surname: "sss", role: "4" }): max.mustermann
+2023-06-01T20:21:45.039479403+02:00 [WARN] DELETE /user/nils.sss: max.mustermann
+2023-06-01T20:26:02.379520868+02:00 [WARN] Started Logging
+2023-06-01T20:38:02.805011875+02:00 [WARN] Started Logging
+2023-06-01T20:38:27.833281449+02:00 [WARN] POST /absence with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-01T20:38:44.025697405+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-01T20:38:58.466381328+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-01T20:39:21.812227506+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Counterfeited Money", data: "Amount: Around 1000 Sheuros" }): max.mustermann
+2023-06-01T20:39:36.601452339+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Theft", data: "Stole a Car" }): max.mustermann
+2023-06-01T20:39:49.54176195+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Theft", data: "Stole a Smartphone" }): max.mustermann
+2023-06-01T20:48:16.744078228+02:00 [WARN] Started Logging
+2023-06-01T20:48:33.821545259+02:00 [WARN] POST /login with data Json(Login { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-01T20:48:52.419063742+02:00 [WARN] POST /login with data Json(Login { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-04T14:19:01.457685543+02:00 [WARN] Started Logging
+2023-06-04T14:19:30.923259551+02:00 [WARN] missing auth Some("Basic bWF4Lm11c3Rlcm1hbm46MTI") from Some(127.0.0.1)
+2023-06-04T14:19:30.923366229+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-04T14:19:30.923500194+02:00 [WARN] missing auth Some("Basic bWF4Lm11c3Rlcm1hbm46MTI") from Some(127.0.0.1)
+2023-06-04T14:19:30.923555091+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-04T14:49:11.021754179+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-04T16:54:11.347677647+02:00 [WARN] Started Logging
+2023-06-04T16:56:43.391735245+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Counterfeited Money", data: "" }): max.mustermann
+2023-06-04T16:57:58.383188409+02:00 [WARN] DELETE /criminal/collette.thomas/Counterfeited Money: max.mustermann
+2023-06-04T16:58:01.528534689+02:00 [WARN] DELETE /criminal/collette.thomas/Theft: max.mustermann
+2023-06-04T16:59:39.946455258+02:00 [WARN] DELETE /criminal/emyr.jennings/Theft: max.mustermann
+2023-06-04T17:07:48.715785684+02:00 [WARN] PUT /criminal/duke.beattie/Counterfeited Money with data Json(Criminal { account: "duke.beattie", kind: "Counterfeited Money", data: "Amount: Around 1000 Sheuros." }): max.mustermann
+2023-06-04T17:09:24.835126904+02:00 [WARN] DELETE /absence/dora.markham/2023-06-01: max.mustermann
+2023-06-04T17:09:26.557612619+02:00 [WARN] DELETE /absence/giles.farrow/2023-05-31: max.mustermann
+2023-06-04T17:14:00.355103351+02:00 [WARN] PUT /absence/hilary.cresswell/2023-06-01 with data Json(Absence { account: "hilary.cresswell", date: 2023-06-07, time: Some("8:00-9:30") }): max.mustermann
+2023-06-04T17:14:11.615090211+02:00 [WARN] PUT /absence/hilary.cresswell/2023-06-07 with data Json(Absence { account: "hilary.cresswell", date: 2023-06-06, time: Some("8:00-9:30") }): max.mustermann
+2023-06-04T17:25:48.010320641+02:00 [WARN] DELETE /user/aaminah.seymour: max.mustermann
+2023-06-04T17:25:54.376186382+02:00 [WARN] POST /absence with data Json(Absence { account: "s", date: 2023-06-06, time: Some("s") }): max.mustermann
+2023-06-04T17:25:56.695569014+02:00 [WARN] DELETE /absence/s/2023-06-06: max.mustermann
+2023-06-04T17:26:01.907798974+02:00 [WARN] POST /criminal with data Json(Criminal { account: "s", kind: "s", data: "s" }): max.mustermann
+2023-06-04T17:26:15.883973558+02:00 [WARN] Data guard `Json < Absence >` failed: Parse("{\"account\":\"s\",\"date\":\"-undefined-undefined\",\"time\":\"s\"}", Error("input contains invalid characters", line: 1, column: 44)).
+2023-06-04T17:26:23.333924007+02:00 [WARN] POST /absence with data Json(Absence { account: "s", date: 2023-06-07, time: Some("s") }): max.mustermann
+2023-06-04T17:27:48.013007006+02:00 [WARN] POST /user with data Json(User { account: "k", forename: "k", surname: "k", role: "k" }): max.mustermann
+2023-06-04T17:27:50.078033117+02:00 [WARN] DELETE /user/k: max.mustermann
+2023-06-04T17:27:54.756863242+02:00 [WARN] DELETE /criminal/duke.beattie/s: max.mustermann
+2023-06-04T17:27:56.716732616+02:00 [WARN] DELETE /criminal/duke.beattie/Counterfeited Money: max.mustermann
+2023-06-04T17:28:05.989263266+02:00 [WARN] DELETE /criminal/s/s: max.mustermann
+2023-06-04T17:28:15.604822217+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "sss", data: "" }): max.mustermann
+2023-06-04T17:28:24.377117533+02:00 [WARN] POST /criminal with data Json(Criminal { account: "ethan.cantu", kind: "rrr", data: "" }): max.mustermann
+2023-06-04T17:29:55.099988656+02:00 [WARN] POST /criminal with data Json(Criminal { account: "s", kind: "s", data: "" }): max.mustermann
+2023-06-04T17:30:05.640900182+02:00 [WARN] DELETE /criminal/duke.beattie/s: max.mustermann
+2023-06-04T17:30:09.589090139+02:00 [WARN] DELETE /criminal/s/s: max.mustermann
+2023-06-04T17:31:52.567106694+02:00 [WARN] Started Logging
+2023-06-04T17:34:58.757763741+02:00 [WARN] PUT /criminal/ethan.cantu/rrr with data Json(Criminal { account: "ethan.cantu", kind: "rrr", data: "Amount: Around 1000 Sheuros" }): max.mustermann
+2023-06-04T17:45:04.443376428+02:00 [WARN] Started Logging
+2023-06-04T17:45:15.119001354+02:00 [WARN] DELETE /criminal/ethan.cantu/rrr: max.mustermann
+2023-06-04T17:45:16.675893188+02:00 [WARN] DELETE /criminal/duke.beattie/sss: max.mustermann
+2023-06-04T17:45:32.102166629+02:00 [WARN] DELETE /absence/s/2023-06-07: max.mustermann
+2023-06-04T17:45:33.36471557+02:00 [WARN] DELETE /absence/hilary.cresswell/2023-06-06: max.mustermann
+2023-06-04T17:45:54.300835657+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-04T17:46:10.961809922+02:00 [WARN] POST /absence with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-04T17:46:23.309903543+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-04T17:48:28.951504072+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Counterfeited Money", data: "Amount: Around 1000 Sheuros" }): max.mustermann
+2023-06-04T17:48:43.292731668+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Theft", data: "Stole a Car" }): max.mustermann
+2023-06-04T17:48:53.300006167+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Theft", data: "Stole a Smartphone" }): max.mustermann
+2023-06-04T17:49:39.5432569+02:00 [WARN] PUT /criminal/duke.beattie/Counterfeited Money with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", data: "Betrag: Um die 1000 Sheuros" }): max.mustermann
+2023-06-04T17:49:44.727126876+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", data: "Betrag: Um die 1000 Sheuross" }): max.mustermann
+2023-06-04T17:49:49.114237715+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", data: "Betrag: Um die 1000 Sheuros" }): max.mustermann
+2023-06-04T17:50:15.604966653+02:00 [WARN] PUT /criminal/emyr.jennings/Theft with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", data: "Hat ein Handy gestohlen" }): max.mustermann
+2023-06-04T17:50:29.86217607+02:00 [WARN] PUT /criminal/collette.thomas/Theft with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", data: "Hat ein Auto gestohlen" }): max.mustermann
+2023-06-04T17:51:18.251821249+02:00 [WARN] POST /user with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Jahrgang 12" }): max.mustermann
+2023-06-04T17:54:16.896740724+02:00 [WARN] Started Logging
+2023-06-04T18:01:13.724075078+02:00 [WARN] Started Logging
+2023-06-04T18:01:27.426080585+02:00 [WARN] PUT /absence/giles.farrow/2023-05-31 with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-04T18:04:36.927469343+02:00 [WARN] PUT /absence/giles.farrow/2023-05-31 with data Json(Absence { account: "giles.farrow", date: 2023-05-30, time: Some("") }): max.mustermann
+2023-06-04T18:04:44.966646401+02:00 [WARN] PUT /absence/giles.farrow/2023-05-30 with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-04T18:06:18.178769523+02:00 [WARN] PUT /absence/hilary.cresswell/2023-06-01 with data Json(Absence { account: "hilary.cresswell", date: 2023-06-08, time: Some("8:00-9:30") }): max.mustermann
+2023-06-04T18:06:27.599124965+02:00 [WARN] PUT /absence/hilary.cresswell/2023-06-08 with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-04T18:45:47.717787755+02:00 [WARN] Started Logging
+2023-06-04T18:45:55.363527147+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 6c" }): max.mustermann
+2023-06-04T18:46:56.726057726+02:00 [WARN] POST /absence with data Json(Absence { account: "s", date: 2023-06-12, time: Some("s") }): max.mustermann
+2023-06-04T18:47:58.053732043+02:00 [WARN] Started Logging
+2023-06-04T18:48:51.969154751+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-04T18:49:27.11074258+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-04T18:49:50.00722798+02:00 [WARN] DELETE /absence/s/2023-06-12: max.mustermann
+2023-06-04T18:52:14.621202558+02:00 [WARN] POST /absence with data Json(Absence { account: "s", date: 2023-06-14, time: Some("s") }): max.mustermann
+2023-06-04T18:53:18.368867405+02:00 [WARN] Started Logging
+2023-06-04T18:54:19.520886274+02:00 [WARN] DELETE /absence/s/2023-06-14: max.mustermann
+2023-06-04T18:54:28.810191742+02:00 [WARN] Data guard `Json < Absence >` failed: Parse("{\"account\":\"\",\"date\":\"\",\"time\":\"\"}", Error("premature end of input", line: 1, column: 23)).
+2023-06-07T20:36:57.615236333+02:00 [WARN] Started Logging
+2023-06-07T20:37:37.988231837+02:00 [WARN] POST /login with data Json(Login { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-07T20:37:47.404740391+02:00 [WARN] POST /login with data Json(Login { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-07T20:38:16.345383326+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-07T20:38:34.132572083+02:00 [WARN] POST /absence with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-07T20:38:51.23918947+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-07T20:41:07.841010978+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "safah.scott", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "c.) Schuldig" }): max.mustermann
+2023-06-07T20:42:24.726688913+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "c.) Schuldig" }): max.mustermann
+2023-06-07T20:44:28.419439737+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "a.) Noch Keins" }): max.mustermann
+2023-06-07T20:44:55.579745007+02:00 [WARN] PUT /criminal/emyr.jennings/Diebstahl with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "d.) Schuldig, Bußgeld von 1000 Scheuros" }): max.mustermann
+2023-06-07T20:47:41.352599198+02:00 [WARN] PUT /criminal/collette.thomas/Diebstahl with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "safah.scott", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "c.) Schuldig, Bußgeld von 200000 Scheuros" }): max.mustermann
+2023-06-07T20:52:08.187473232+02:00 [WARN] PUT /absence/dora.markham/2023-06-01 with data Json(Absence { account: "andrea.bates", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-07T20:52:18.922565761+02:00 [WARN] PUT /absence/andrea.bates/2023-06-01 with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-07T21:37:36.299237074+02:00 [WARN] Started Logging
+2023-06-07T21:39:42.79341674+02:00 [WARN] Started Logging
+2023-06-07T23:28:01.327587287+02:00 [WARN] Started Logging
+2023-06-07T23:28:23.037222187+02:00 [WARN] POST /criminal with data Json(Criminal { account: "d", kind: "d", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-07T23:30:16.185551688+02:00 [WARN] DELETE /criminal/d/d: max.mustermann
+2023-06-07T23:30:23.925590851+02:00 [WARN] Data guard `Json < Absence >` failed: Parse("{\"account\":\"\",\"date\":\"\",\"time\":\"\"}", Error("premature end of input", line: 1, column: 23)).
+2023-06-07T23:31:20.157487333+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-07T23:31:20.157580433+02:00 [WARN] Request guard `Auth < CriminalReadOnly >` failed: Unauthorized.
+2023-06-07T23:33:45.844394179+02:00 [WARN] Started Logging
+2023-06-07T23:33:56.613017726+02:00 [WARN] POST /criminal with data Json(Criminal { account: "d", kind: "d", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-07T23:33:58.935832097+02:00 [WARN] DELETE /criminal/d/d: max.mustermann
+2023-06-08T15:35:19.516238721+02:00 [WARN] Started Logging
+2023-06-08T15:36:17.123318142+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-08T15:36:17.123415401+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-08T15:37:39.632732732+02:00 [WARN] Started Logging
+2023-06-08T15:38:12.827115187+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-08T15:38:24.123310948+02:00 [WARN] POST /absence with data Json(Absence { account: "dora.markham", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-08T15:38:35.015646882+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-08T15:39:12.541452432+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "safah.scott", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "c.) Schuldig, Bußgeld von 200000 Scheuros" }): max.mustermann
+2023-06-08T15:39:42.26657867+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "b.) Schuldig, Bußgeld von 1000 Scheuros" }): max.mustermann
+2023-06-08T15:39:50.604577129+02:00 [WARN] PUT /criminal/collette.thomas/Diebstahl with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "safah.scott", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "b.) Schuldig, Bußgeld von 200000 Scheuros" }): max.mustermann
+2023-06-08T15:40:24.850706037+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "a.) Noch Keins" }): max.mustermann
+2023-06-08T15:40:49.434018983+02:00 [WARN] POST /login with data Json(Login { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-08T15:41:10.334968838+02:00 [WARN] POST /login with data Json(Login { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-08T20:25:51.76699991+02:00 [WARN] Started Logging
+2023-06-08T20:36:33.109862266+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "a.) Noch Keins" }): max.mustermann
+2023-06-10T22:47:12.618034967+02:00 [WARN] Started Logging
+2023-06-10T22:47:26.722631053+02:00 [WARN] PUT /absence/dora.markham/2023-06-01 with data Json(Absence { account: "dora.markham", date: 2023-06-08, time: Some("") }): max.mustermann
+2023-06-10T22:47:28.670343646+02:00 [WARN] DELETE /absence/dora.markham/2023-06-08: max.mustermann
+2023-06-10T23:28:40.226143672+02:00 [WARN] PUT /absence/hilary.cresswell/2023-06-01 with data Json(Absence { account: "hilary.cresswell", date: 2022-06-29, time: Some("8:00-9:30") }): max.mustermann
+2023-06-10T23:29:04.178342342+02:00 [WARN] PUT /absence/hilary.cresswell/2022-06-29 with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-11T21:52:24.567731346+02:00 [WARN] Started Logging
+2023-06-11T21:53:07.162136009+02:00 [WARN] PUT /absence/giles.farrow/2023-05-31 with data Json(Absence { account: "andrea.bates", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-11T21:53:28.67263141+02:00 [WARN] DELETE /absence/andrea.bates/2023-05-31: max.mustermann
+2023-06-11T21:54:02.41228133+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-11T21:59:09.255852133+02:00 [WARN] Started Logging
+2023-06-11T22:00:03.737477518+02:00 [WARN] POST /absence with data Json(Absence { account: "nils.wrenger", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-11T22:04:43.992888336+02:00 [WARN] POST /criminal with data Json(Criminal { account: "christian.schroeter", kind: "Faulheit", accuser: "beate.guenther", police_consultant: "arun.kundu", lawyer_culprit: "justus.bernhard", lawyer_accuser: "christoph.vogel", facts: "15 Minuten zu früh Unterrichtschluss", time_of_crime: "am 23.5. um 11:10 Uhr", location_of_crime: "CO9", note: "", verdict: "a.) Noch kein Prozess" }): max.mustermann
+2023-06-11T22:05:12.949887219+02:00 [WARN] PUT /criminal/christian.schroeter/Faulheit with data Json(Criminal { account: "christian.schroeter", kind: "Faulheit", accuser: "beate.guenther", police_consultant: "arun.kundu", lawyer_culprit: "justus.bernhard", lawyer_accuser: "christoph.vogel", facts: "15 Minuten zu früh Unterrichtschluss", time_of_crime: "am 23.5. um 11:10 Uhr", location_of_crime: "CO9", note: "", verdict: "a.) Noch kein Prozess" }): max.mustermann
+2023-06-11T22:07:34.218867174+02:00 [WARN] Started Logging
+2023-06-11T22:08:24.130038531+02:00 [WARN] Started Logging
+2023-06-11T22:08:56.718007347+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-11T22:09:13.433292933+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-11T22:17:48.487869361+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "b.) Schuldig, Bußgeld von 200000 Scheuros" }): max.mustermann
+2023-06-11T22:18:17.561947807+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "b.) Schuldig, Bußgeld von 1000 Scheuros" }): max.mustermann
+2023-06-11T22:18:49.553080605+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "a.) Noch Keins" }): max.mustermann
+2023-06-11T22:19:18.349605913+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-11T22:22:08.657709733+02:00 [WARN] missing auth credentials 'asdd:asd' from Some(127.0.0.1)
+2023-06-11T22:22:08.657784568+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:24:21.241825131+02:00 [WARN] missing auth credentials 'asdd:s' from Some(127.0.0.1)
+2023-06-11T22:24:21.241896932+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:25:07.436555953+02:00 [WARN] missing auth credentials 'asdd:s' from Some(127.0.0.1)
+2023-06-11T22:25:07.436634684+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:25:07.752707845+02:00 [WARN] missing auth credentials 'asdd:s' from Some(127.0.0.1)
+2023-06-11T22:25:07.752790679+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:27:00.380663572+02:00 [WARN] missing auth credentials 'sd:s' from Some(127.0.0.1)
+2023-06-11T22:27:00.380741252+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:27:00.907488106+02:00 [WARN] missing auth credentials 'sd:s' from Some(127.0.0.1)
+2023-06-11T22:27:00.90758384+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:34:36.627087184+02:00 [WARN] missing auth credentials 'f:h' from Some(127.0.0.1)
+2023-06-11T22:34:36.62716267+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:34:48.123035568+02:00 [WARN] missing auth credentials 'f:s' from Some(127.0.0.1)
+2023-06-11T22:34:48.12310758+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:35:04.746330397+02:00 [WARN] missing auth credentials '.fh:s' from Some(127.0.0.1)
+2023-06-11T22:35:04.746407753+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:35:15.5512186+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-11T22:35:15.551312637+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:36:56.047290811+02:00 [WARN] missing auth credentials '.fh:s' from Some(127.0.0.1)
+2023-06-11T22:36:56.047364519+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:36:56.79114122+02:00 [WARN] missing auth credentials '.fh:s' from Some(127.0.0.1)
+2023-06-11T22:36:56.791224161+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-11T22:40:23.083529269+02:00 [WARN] Started Logging
+2023-06-11T22:40:41.088030973+02:00 [WARN] POST /login with data Json(Login { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-11T22:40:55.944824164+02:00 [WARN] POST /login with data Json(Login { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-11T22:58:05.948442738+02:00 [WARN] Started Logging
+2023-06-11T22:59:21.908046669+02:00 [WARN] Started Logging
+2023-06-11T23:06:53.591078866+02:00 [WARN] Started Logging
+2023-06-11T23:07:24.797766134+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-11T23:07:34.754205979+02:00 [WARN] POST /absence with data Json(Absence { account: "hilary.cresswell", date: 2023-06-01, time: Some("8:00-9:30") }): max.mustermann
+2023-06-11T23:07:43.843137687+02:00 [WARN] POST /absence with data Json(Absence { account: "giles.farrow", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-11T23:08:22.378736488+02:00 [WARN] POST /criminal with data Json(Criminal { account: "collette.thomas", kind: "Diebstahl", accuser: "braiden.osborne", police_consultant: "vanessa.benson", lawyer_culprit: "tyrese.castillo", lawyer_accuser: "honor.cotton", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:35", location_of_crime: "Vor der Schule", note: "Das wird zu 100% nicht wirklich passieren...", verdict: "b.) Schuldig, Bußgeld von 200000 Scheuros" }): max.mustermann
+2023-06-11T23:08:46.963749617+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "b.) Schuldig, Bußgeld von 1000 Scheuros" }): max.mustermann
+2023-06-11T23:09:17.789216618+02:00 [WARN] POST /criminal with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "a.) Noch Keins" }): max.mustermann
+2023-06-12T15:49:19.981801549+02:00 [WARN] Started Logging
+2023-06-12T15:58:26.066091834+02:00 [WARN] Started Logging
+2023-06-12T16:01:29.139687713+02:00 [WARN] Started Logging
+2023-06-12T16:01:49.725090106+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "F", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T16:02:18.967182319+02:00 [WARN] DELETE /criminal/F/F: test.lehrer
+2023-06-12T16:02:21.58428792+02:00 [WARN] DELETE /criminal/F/F: test.lehrer
+2023-06-12T16:03:09.90351131+02:00 [WARN] DELETE /criminal/emyr.jennings/F: test.lehrer
+2023-06-12T16:03:14.990786829+02:00 [WARN] PUT /criminal/emyr.jennings/Diebstahl with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahls", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "b.) Schuldig, Bußgeld von 1000 Scheuros" }): test.lehrer
+2023-06-12T16:03:19.271503766+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T16:03:21.176324714+02:00 [WARN] DELETE /criminal/emyr.jennings/s: test.lehrer
+2023-06-12T16:03:25.899559279+02:00 [WARN] PUT /criminal/emyr.jennings/Diebstahls with data Json(Criminal { account: "emyr.jennings", kind: "Diebstahl", accuser: "star.ferry", police_consultant: "collette.thomas", lawyer_culprit: "dana.emery", lawyer_accuser: "raul.stuart", facts: "Hat ein Handy gestohlen", time_of_crime: "Um 9 Uhr", location_of_crime: "Auf dem Hervatinplatz (Schillerhof)", note: "kein Kommentar", verdict: "b.) Schuldig, Bußgeld von 1000 Scheuros" }): test.lehrer
+2023-06-12T16:07:11.15023905+02:00 [WARN] POST /criminal with data Json(Criminal { account: "emyr.jennings", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T16:08:33.850313745+02:00 [WARN] DELETE /criminal/emyr.jennings/s: test.lehrer
+2023-06-12T16:16:12.279861814+02:00 [WARN] POST /absence with data Json(Absence { account: "d", date: 2023-06-01, time: Some("") }): test.lehrer
+2023-06-12T16:16:16.428617601+02:00 [WARN] DELETE /absence/d/2023-06-01: test.lehrer
+2023-06-12T16:52:05.350384472+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "c.) Unschuldig" }): test.lehrer
+2023-06-12T16:52:14.961729428+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "b.) Schuldig" }): test.lehrer
+2023-06-12T17:14:24.280082824+02:00 [WARN] POST /absence with data Json(Absence { account: "s", date: 2023-06-01, time: Some("") }): test.lehrer
+2023-06-12T17:16:48.514112726+02:00 [WARN] DELETE /absence/s/2023-06-01: test.lehrer
+2023-06-12T17:17:27.582794159+02:00 [WARN] POST /absence with data Json(Absence { account: "collette.thomas", date: 2023-06-01, time: Some("") }): test.lehrer
+2023-06-12T17:23:36.150585957+02:00 [WARN] PUT /criminal/duke.beattie/Fälschung von Geld with data Json(Criminal { account: "duke.beattie", kind: "Fälschung von Geld", accuser: "vanessa.benson", police_consultant: "kendrick.major", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "vanessa.benson", facts: "Hat unechte Scheuros in die Schule geschmuggelt", time_of_crime: "Um 9:34 Uhr", location_of_crime: "Eingang", note: "Das wäre echt Dumm...", verdict: "c.) Unschuldig" }): test.lehrer
+2023-06-12T18:40:02.558448749+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-12T18:40:02.558517737+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-12T18:40:11.963416487+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-12T18:40:11.963481579+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-12T18:40:13.223764528+02:00 [WARN] missing auth credentials ':' from Some(127.0.0.1)
+2023-06-12T18:40:13.223837818+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-12T19:48:12.073204296+02:00 [WARN] Started Logging
+2023-06-12T19:55:18.05102379+02:00 [WARN] POST /criminal with data Json(Criminal { account: "", kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T19:56:53.746962298+02:00 [WARN] Started Logging
+2023-06-12T19:57:39.734502374+02:00 [WARN] POST /absence with data Json(Absence { account: "angelina.joyce", date: 2023-06-13, time: Some("") }): test.lehrer
+2023-06-12T20:15:37.469568651+02:00 [WARN] POST /criminal with data Json(Criminal { account: "s", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T20:27:34.007380072+02:00 [WARN] Data guard `Json < Absence >` failed: Parse("{\"account\":\"alisa.timms\",\"date\":\"\",\"time\":\"\"}", Error("premature end of input", line: 1, column: 34)).
+2023-06-12T20:27:41.980803008+02:00 [WARN] POST /absence with data Json(Absence { account: "alisa.timms", date: 2023-06-13, time: Some("") }): test.lehrer
+2023-06-12T20:37:40.90636538+02:00 [WARN] DELETE /criminal/s/s: test.lehrer
+2023-06-12T20:58:15.136214696+02:00 [WARN] Started Logging
+2023-06-12T20:58:56.977391839+02:00 [WARN] DELETE /absence/alisa.timms/2023-06-13: test.lehrer
+2023-06-12T20:58:58.507060583+02:00 [WARN] DELETE /absence/angelina.joyce/2023-06-13: test.lehrer
+2023-06-12T20:59:06.034326931+02:00 [WARN] POST /absence with data Json(Absence { account: "alisa.timms", date: 2023-05-31, time: Some("") }): test.lehrer
+2023-06-12T20:59:38.7704282+02:00 [WARN] POST /absence with data Json(Absence { account: "killian.austin", date: 2023-05-31, time: Some("8:00-8:30 Uhr") }): test.lehrer
+2023-06-12T21:00:37.046028832+02:00 [WARN] POST /absence with data Json(Absence { account: "conner.peacock", date: 2023-06-01, time: Some("") }): test.lehrer
+2023-06-12T21:02:59.719813087+02:00 [WARN] POST /criminal with data Json(Criminal { account: "roberto.pearce", kind: "Diebstahl", accuser: "shirley.richard", police_consultant: "tyrese.castillo", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "alisa.timms", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:01, Mo", location_of_crime: "Vor der Schule", note: "", verdict: "b.) Schuldig, um die 42069 Scheuros Strafgeld" }): test.lehrer
+2023-06-12T21:05:01.037494751+02:00 [WARN] POST /criminal with data Json(Criminal { account: "roberto.pearce", kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-12T21:05:11.733332952+02:00 [WARN] PUT /criminal/roberto.pearce/Diebstahl with data Json(Criminal { account: "roberto.pearce", kind: "Diebstahl", accuser: "shirley.richard", police_consultant: "tyrese.castillo", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "alisa.timms", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:01, Mo", location_of_crime: "Vor der Schule", note: "", verdict: "b.) Schuldig, um die 42069 Scheuros Strafgeld" }): test.lehrer
+2023-06-12T21:05:20.404569574+02:00 [WARN] PUT /criminal/roberto.pearce/Diebstahl with data Json(Criminal { account: "roberto.pearce", kind: "Diebstahl", accuser: "shirley.richard", police_consultant: "tyrese.castillo", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "alisa.timms", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:01, Mo", location_of_crime: "Vor der Schule", note: "", verdict: "b.) Schuldig, um die 42069 Scheuros Strafgeld" }): test.lehrer
+2023-06-12T21:08:02.235278857+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): test.lehrer
+2023-06-12T21:09:45.593631488+02:00 [WARN] POST /criminal with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): test.lehrer
+2023-06-13T22:53:43.676425194+02:00 [WARN] Started Logging
+2023-06-13T23:03:43.129131781+02:00 [WARN] POST /absence with data Json(Absence { account: "andrea.bates", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:03:50.38992229+02:00 [WARN] POST /absence with data Json(Absence { account: "arnav.mohamed", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:03:56.929281884+02:00 [WARN] POST /absence with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:04:04.298617311+02:00 [WARN] POST /absence with data Json(Absence { account: "roan.bennett", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:04:14.143693741+02:00 [WARN] POST /absence with data Json(Absence { account: "raul.stuart", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:04:20.825054027+02:00 [WARN] POST /absence with data Json(Absence { account: "adela.moore", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:04:26.212128372+02:00 [WARN] POST /absence with data Json(Absence { account: "tyler-james.Morse", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:04:31.715199521+02:00 [WARN] POST /absence with data Json(Absence { account: "tyrese.castillo", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-13T23:07:24.452174447+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Einbruch", accuser: "killian.austin", police_consultant: "abdul.edwards", lawyer_culprit: "tyrese.castillo", lawyer_accuser: "haseeb.mckinney", facts: "Einbruch in die Schule", time_of_crime: "Um 9:00 Uhr, Do", location_of_crime: "Schiller Schule, Eingang", note: "", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-13T23:42:59.869863528+02:00 [WARN] Started Logging
+2023-06-13T23:50:10.013989238+02:00 [WARN] Started Logging
+2023-06-13T23:50:25.931286325+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-13T23:50:50.733877825+02:00 [WARN] PUT /user/adela.moore with data Json(User { account: "adela.moore", forename: "Adela", surname: "Moore", role: "Klasse 10c" }): max.mustermann
+2023-06-13T23:50:56.840085499+02:00 [WARN] PUT /user/jeff.sellers with data Json(User { account: "jeff.sellers", forename: "Jeff", surname: "Sellers", role: "Klasse 10c" }): max.mustermann
+2023-06-13T23:51:01.898855186+02:00 [WARN] PUT /user/mina.knapp with data Json(User { account: "mina.knapp", forename: "Mina", surname: "Knapp", role: "Klasse 10c" }): max.mustermann
+2023-06-13T23:51:06.896562472+02:00 [WARN] PUT /user/lacie-mae.mcgee with data Json(User { account: "lacie-mae.mcgee", forename: "Lacie-Mae", surname: "Mcgee", role: "Klasse 10c" }): max.mustermann
+2023-06-13T23:56:51.463409733+02:00 [WARN] Started Logging
+2023-06-14T18:26:04.518091348+02:00 [WARN] Started Logging
+2023-06-14T18:58:55.392543722+02:00 [WARN] Started Logging
+2023-06-14T18:59:26.29188411+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-14T18:59:26.291974339+02:00 [WARN] Request guard `Auth < AbsenceReadOnly >` failed: Unauthorized.
+2023-06-14T20:06:27.086198559+02:00 [WARN] Started Logging
+2023-06-14T20:14:00.563606515+02:00 [WARN] Started Logging
+2023-06-14T21:45:48.783021351+02:00 [WARN] Started Logging
+2023-06-14T22:24:09.358856348+02:00 [WARN] Started Logging
+2023-06-14T22:24:22.449116072+02:00 [WARN] missing auth credentials 'max.mustermann :1234' from Some(127.0.0.1)
+2023-06-14T22:24:22.449191713+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-14T22:24:36.545618168+02:00 [WARN] missing auth credentials ' max.mustermann :1234' from Some(127.0.0.1)
+2023-06-14T22:24:36.545691865+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-15T20:55:31.074388873+02:00 [WARN] Started Logging
+2023-06-16T21:19:45.829123726+02:00 [WARN] Started Logging
+2023-06-16T21:41:49.182182347+02:00 [WARN] POST /login with data Json(Login { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-16T21:50:51.533718293+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "1234", new_user: "max.mustermann", new_password: "1" }): max.mustermann
+2023-06-16T21:50:55.113657679+02:00 [WARN] missing auth credentials 'max.mustermann:1234' from Some(127.0.0.1)
+2023-06-16T21:50:55.113735264+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:51:58.299482404+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "1", new_user: "max.mustermann", new_password: "12" }): max.mustermann
+2023-06-16T21:52:05.251224176+02:00 [WARN] missing auth credentials 'max.mustermann:1' from Some(127.0.0.1)
+2023-06-16T21:52:05.251349734+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:52:17.567366922+02:00 [WARN] missing auth credentials 'max.mustermann:1' from Some(127.0.0.1)
+2023-06-16T21:52:17.56747317+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:53:01.928812864+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "1", new_user: "max.mustermann", new_password: "1234" }): max.mustermann
+2023-06-16T21:53:14.909182662+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "12", new_user: "max.mustermann", new_password: "1234" }): max.mustermann
+2023-06-16T21:53:17.143434989+02:00 [WARN] missing auth credentials 'max.mustermann:12' from Some(127.0.0.1)
+2023-06-16T21:53:17.143542648+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:53:19.777574523+02:00 [WARN] missing auth credentials 'max.mustermann:12' from Some(127.0.0.1)
+2023-06-16T21:53:19.777649905+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:53:22.410503135+02:00 [WARN] missing auth credentials 'max.mustermann:12' from Some(127.0.0.1)
+2023-06-16T21:53:22.410576885+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:16.016312501+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "", new_user: "max.mustermann", new_password: "" }): max.mustermann
+2023-06-16T21:54:17.491487209+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:17.491559729+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:22.609503149+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:22.609575125+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:37.767212771+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:37.767286085+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:37.767498253+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:37.767570788+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:43.588100716+02:00 [WARN] missing auth credentials 'max.mustermann:12' from Some(127.0.0.1)
+2023-06-16T21:54:43.588211252+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:54.51515325+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "", new_user: "max.mustermann", new_password: "" }): max.mustermann
+2023-06-16T21:54:56.00438352+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:56.004456469+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:58.323840784+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:58.323913335+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:59.70497508+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:59.705049101+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:54:59.70524019+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:54:59.705299646+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:56:07.028426671+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "", new_user: "max.mustermann", new_password: "" }): max.mustermann
+2023-06-16T21:56:40.233552397+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:56:40.23362637+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:56:40.233826316+02:00 [WARN] missing auth credentials 'max.mustermann:' from Some(127.0.0.1)
+2023-06-16T21:56:40.233884496+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-16T21:56:49.688172012+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "", new_user: "max.mustermann", new_password: "" }): max.mustermann
+2023-06-16T21:57:02.263890729+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "1234", new_user: "max.mustermann", new_password: "`" }): max.mustermann
+2023-06-16T21:57:18.217478666+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "`", new_user: "max.mustermann", new_password: "1234" }): max.mustermann
+2023-06-16T22:01:23.179737416+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "", new_user: "max.mustermann", new_password: "" }): max.mustermann
+2023-06-16T22:18:48.939895215+02:00 [WARN] Started Logging
+2023-06-16T22:20:13.839145945+02:00 [WARN] Started Logging
+2023-06-16T22:27:41.541138055+02:00 [WARN] POST /absence with data Json(Absence { account: "catrin.villarreal", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-16T22:27:44.577191815+02:00 [WARN] DELETE /absence/catrin.villarreal/2023-05-31: max.mustermann
+2023-06-16T23:09:57.979560033+02:00 [WARN] PUT /login with data Json(UpdateLogin { previous_user: "max.mustermann", previous_password: "e", new_user: "max.mustermann", new_password: "e" }): max.mustermann
+2023-06-17T00:01:49.405932465+02:00 [WARN] Started Logging
+2023-06-17T00:11:08.104430843+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"test.lehrer\",\"password\":\"\"}", Error("missing field `access_user`", line: 1, column: 36)).
+2023-06-17T00:12:45.384339263+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"test.lehrer\",\"password\":\"\"}", Error("missing field `access_user`", line: 1, column: 36)).
+2023-06-17T00:13:28.400459326+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"test.lehrer\",\"password\":\"\"}", Error("missing field `access_user`", line: 1, column: 36)).
+2023-06-17T00:15:22.325218965+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"test.lehrer\",\"password\":\"\"}", Error("missing field `access_user`", line: 1, column: 36)).
+2023-06-17T00:15:27.93082173+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-17T00:15:27.930918117+02:00 [WARN] Request guard `Auth < UserWrite >` failed: Unauthorized.
+2023-06-17T00:18:39.424551879+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"max.mustermann\",\"password\":\"1\"}", Error("missing field `access_user`", line: 1, column: 40)).
+2023-06-17T00:19:38.27135718+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"max.mustermann\",\"password\":\"\",\"sss\":\"sss\"}", Error("missing field `access_user`", line: 1, column: 51)).
+2023-06-17T00:19:51.07718758+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"max.mustermann\",\"password\":\"\",\"access_user\":\"sss\"}", Error("unknown variant `sss`, expected one of `None`, `ReadOnly`, `Write`", line: 1, column: 58)).
+2023-06-17T00:20:12.154493131+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"max.mustermann\",\"password\":\"\"}", Error("missing field `access_user`", line: 1, column: 39)).
+2023-06-17T00:21:02.391892756+02:00 [WARN] Data guard `Json < NewLogin >` failed: Parse("{\"user\":\"max.mustermann\",\"password\":\"\",\"access_user\":\"Write\"}", Error("missing field `access_absence`", line: 1, column: 61)).
+2023-06-17T00:21:41.287660755+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T00:21:46.360729476+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T00:21:56.533412302+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:22:01.223624391+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:22:04.256559524+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:22:04.256784889+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:22:10.785113852+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:24:39.845781809+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T00:24:50.700013927+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T00:30:30.406784207+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:32:39.464981753+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "d", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T00:32:40.267729126+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:33:13.624464689+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-17T00:33:13.624533072+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:33:22.359982416+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:33:33.167410671+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:33:48.508377615+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:34:25.369834461+02:00 [WARN] Started Logging
+2023-06-17T00:35:54.741392838+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "string", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-17T00:36:09.671862591+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:36:09.67218905+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:37:16.199552491+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "s", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:37:18.413904578+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:37:20.380662371+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:37:22.08397553+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:37:26.948385746+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:37:26.948630239+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:38:33.770500643+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "d", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:39:49.919132013+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:39:49.919454579+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:39:57.017236398+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:40:07.378418227+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "s", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:40:50.458843546+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:40:50.459179839+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:40:57.580978226+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:41:07.280523202+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "d", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:41:15.596634082+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:41:48.991213772+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:41:48.991449149+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:41:56.088690098+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:42:02.618079532+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "s", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:42:04.862936347+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:42:33.065133741+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:42:33.065401803+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:42:37.103417015+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-17T00:42:42.590712165+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "d", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:49:30.168152735+02:00 [WARN] Started Logging
+2023-06-17T00:50:50.253693349+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:54:17.332936163+02:00 [WARN] Started Logging
+2023-06-17T00:54:26.172800141+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:54:55.418033054+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "s", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T00:55:03.096838986+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T01:04:03.694136147+02:00 [WARN] Started Logging
+2023-06-17T01:04:13.249422803+02:00 [WARN] PUT /login with data Json(NewLogin { user: "test.lehrer", password: "s", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): test.lehrer
+2023-06-17T01:05:25.795094115+02:00 [WARN] PUT /login with data Json(NewLogin { user: "alisa.timms", password: "string", access_user: None, access_absence: None, access_criminal: None }): test.lehrer
+2023-06-17T01:05:36.573238835+02:00 [WARN] PUT /login with data Json(NewLogin { user: "alisa.timms", password: "string", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-17T01:21:06.673674714+02:00 [WARN] Started Logging
+2023-06-17T01:21:23.166884184+02:00 [WARN] POST /criminal with data Json(Criminal { account: "sahil.singleton", kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-17T01:21:29.043348306+02:00 [WARN] POST /criminal with data Json(Criminal { account: "seth.rodgers", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): test.lehrer
+2023-06-17T01:22:32.451381777+02:00 [WARN] Started Logging
+2023-06-17T01:24:24.030171864+02:00 [WARN] Started Logging
+2023-06-17T01:28:02.608002823+02:00 [WARN] Started Logging
+2023-06-17T01:29:42.725593391+02:00 [WARN] Started Logging
+2023-06-17T01:30:36.71607337+02:00 [WARN] Started Logging
+2023-06-17T01:31:28.914408073+02:00 [WARN] Started Logging
+2023-06-17T01:35:32.747963085+02:00 [WARN] Started Logging
+2023-06-17T01:39:38.045447563+02:00 [WARN] Started Logging
+2023-06-17T01:39:45.810492952+02:00 [WARN] POST /absence with data Json(Absence { account: "", date: 2023-06-14, time: Some("") }): test.lehrer
+2023-06-17T01:39:53.667512379+02:00 [WARN] POST /absence with data Json(Absence { account: "emeli.herbert", date: 2023-06-15, time: Some("") }): test.lehrer
+2023-06-17T01:39:58.789864216+02:00 [WARN] POST /absence with data Json(Absence { account: "rihanna.osborn", date: 2023-06-15, time: Some("") }): test.lehrer
+2023-06-17T01:42:47.11024468+02:00 [WARN] Started Logging
+2023-06-17T01:44:00.964216916+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-17T01:44:13.645967893+02:00 [WARN] PUT /user/adela.moore with data Json(User { account: "adela.moore", forename: "Adela", surname: "Moore", role: "Klasse 10c" }): max.mustermann
+2023-06-17T01:44:27.156640358+02:00 [WARN] PUT /user/jeff.sellers with data Json(User { account: "jeff.sellers", forename: "Jeff", surname: "Sellers", role: "Klasse 10c" }): max.mustermann
+2023-06-17T01:44:38.649305285+02:00 [WARN] PUT /user/lacie-mae.mcgee with data Json(User { account: "lacie-mae.mcgee", forename: "Lacie-Mae", surname: "Mcgee", role: "Klasse 10c" }): max.mustermann
+2023-06-17T01:44:47.25637118+02:00 [WARN] PUT /user/mina.knapp with data Json(User { account: "mina.knapp", forename: "Mina", surname: "Knapp", role: "Klasse 10c" }): max.mustermann
+2023-06-17T01:44:55.844021434+02:00 [WARN] DELETE /absence/emeli.herbert/2023-06-15: max.mustermann
+2023-06-17T01:44:57.339099919+02:00 [WARN] DELETE /absence/rihanna.osborn/2023-06-15: max.mustermann
+2023-06-17T01:45:06.526648524+02:00 [WARN] POST /absence with data Json(Absence { account: "andrea.bates", date: 2023-06-15, time: Some("") }): max.mustermann
+2023-06-17T01:45:17.917406384+02:00 [WARN] POST /absence with data Json(Absence { account: "conner.peacock", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-17T01:45:28.04322856+02:00 [WARN] POST /absence with data Json(Absence { account: "adela.moore", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:45:34.10937861+02:00 [WARN] POST /absence with data Json(Absence { account: "alisa.timms", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:45:50.010644736+02:00 [WARN] POST /absence with data Json(Absence { account: "andrea.bates", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:45:58.43199793+02:00 [WARN] POST /absence with data Json(Absence { account: "arnav.mohamed", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:10.023850468+02:00 [WARN] POST /absence with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:26.070176766+02:00 [WARN] POST /absence with data Json(Absence { account: "killian.austin", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:31.600941494+02:00 [WARN] POST /absence with data Json(Absence { account: "raul.stuart", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:37.534135093+02:00 [WARN] POST /absence with data Json(Absence { account: "roan.bennett", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:48.676475364+02:00 [WARN] POST /absence with data Json(Absence { account: "tyler-james.Morse", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:46:55.77442927+02:00 [WARN] POST /absence with data Json(Absence { account: "tyrese.castillo", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-17T01:47:40.740490153+02:00 [WARN] DELETE /criminal/seth.rodgers/s: max.mustermann
+2023-06-17T01:48:15.031474705+02:00 [WARN] POST /criminal with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-17T01:48:49.620166712+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-17T01:49:14.299803555+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Einbruch", accuser: "killian.austin", police_consultant: "abdul.edwards", lawyer_culprit: "tyrese.castillo", lawyer_accuser: "haseeb.mckinney", facts: "Einbruch in die Schule", time_of_crime: "Um 9:00 Uhr, Do", location_of_crime: "Schiller Schule, Eingang", note: "", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-17T01:49:46.939706717+02:00 [WARN] POST /criminal with data Json(Criminal { account: "roberto.pearce", kind: "Diebstahl", accuser: "shirley.richard", police_consultant: "tyrese.castillo", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "alisa.timms", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:01, Mo", location_of_crime: "Vor der Schule", note: "", verdict: "b.) Schuldig, um die 42069 Scheuros Strafgeld" }): max.mustermann
+2023-06-17T01:54:21.834496593+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-17T13:32:17.176815709+02:00 [WARN] Started Logging
+2023-06-17T13:48:20.854140253+02:00 [WARN] Started Logging
+2023-06-17T13:50:57.041808043+02:00 [WARN] Started Logging
+2023-06-18T20:02:15.000660014+02:00 [WARN] Started Logging
+2023-06-18T20:02:22.867685921+02:00 [WARN] missing auth credentials 'nils.wrenger:2Fkf6hqYS5WX' from Some(127.0.0.1)
+2023-06-18T20:02:22.86782819+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-18T20:02:22.868092908+02:00 [WARN] missing auth credentials 'nils.wrenger:2Fkf6hqYS5WX' from Some(127.0.0.1)
+2023-06-18T20:02:22.868220227+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-18T20:02:36.350513583+02:00 [WARN] PUT /user/adela.moore with data Json(User { account: "adela.moore", forename: "Adela", surname: "Moore", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:03:06.427088473+02:00 [WARN] POST /absence with data Json(Absence { account: "tyla.spencer", date: 2023-06-15, time: Some("") }): max.mustermann
+2023-06-18T20:03:12.186827835+02:00 [WARN] DELETE /absence/tyla.spencer/2023-06-15: max.mustermann
+2023-06-18T20:03:25.675176542+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-18T20:03:59.251729836+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:04:06.671743339+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:04:13.917003314+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:07:51.135312048+02:00 [WARN] POST /absence with data Json(Absence { account: "abbie.gunn", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-18T20:07:54.629087617+02:00 [WARN] POST /absence with data Json(Absence { account: "roberto.pearce", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-18T20:08:05.388724121+02:00 [WARN] POST /absence with data Json(Absence { account: "a", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-18T20:08:08.600463836+02:00 [WARN] DELETE /absence/a/2023-05-31: max.mustermann
+2023-06-18T20:12:18.591861976+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "a", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:12:25.231235427+02:00 [WARN] DELETE /login/a: max.mustermann
+2023-06-18T20:12:29.564931938+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "a", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:12:32.640901696+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "a", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:14:56.602933078+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:17:31.657840944+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:18:28.480643072+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:18:30.33199665+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:18:35.292929035+02:00 [WARN] PUT /user/adela.moore with data Json(User { account: "adela.moore", forename: "Adela", surname: "Moore", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:18:40.134064679+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:19:39.936471955+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:25:17.625034338+02:00 [WARN] PUT /user/ayat.mac with data Json(User { account: "", forename: "Ayat", surname: "Mac", role: "Jahrgang 12" }): max.mustermann
+2023-06-18T20:25:30.675843645+02:00 [WARN] PUT /absence/conner.peacock/2023-06-01 with data Json(Absence { account: "", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-18T20:26:01.211226489+02:00 [WARN] PUT /absence/conner.peacock/2023-06-01 with data Json(Absence { account: "", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-18T20:29:01.564030714+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:29:10.432443544+02:00 [WARN] POST /login with data Json(NewLogin { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:29:16.92023092+02:00 [WARN] DELETE /all_logins: max.mustermann
+2023-06-18T20:29:16.968520582+02:00 [WARN] unable to delete admin 'max.mustermann'
+2023-06-18T20:29:47.875980201+02:00 [WARN] DELETE /all_logins: max.mustermann
+2023-06-18T20:29:47.876120282+02:00 [WARN] unable to delete admin 'max.mustermann'
+2023-06-18T20:29:51.043484424+02:00 [WARN] DELETE /all_logins: max.mustermann
+2023-06-18T20:29:51.043621331+02:00 [WARN] unable to delete admin 'max.mustermann'
+2023-06-18T20:29:51.594639799+02:00 [WARN] DELETE /all_logins: max.mustermann
+2023-06-18T20:29:51.594768355+02:00 [WARN] unable to delete admin 'max.mustermann'
+2023-06-18T20:29:57.742290218+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:29:58.357461433+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:29:58.597833413+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:29:58.78938147+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:29:58.985758984+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:29:59.186712553+02:00 [WARN] DELETE /login/s: max.mustermann
+2023-06-18T20:30:02.159510506+02:00 [WARN] DELETE /all_logins: max.mustermann
+2023-06-18T20:30:02.159662716+02:00 [WARN] unable to delete admin 'max.mustermann'
+2023-06-18T20:30:07.901210764+02:00 [WARN] POST /login with data Json(NewLogin { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:34:11.171116975+02:00 [WARN] POST /login with data Json(NewLogin { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-18T20:34:19.37306119+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:34:23.627347307+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:34:29.013741597+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:34:32.611929042+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-18T20:34:46.091437964+02:00 [WARN] POST /user with data Json(User { account: "a", forename: "a", surname: "a", role: "a" }): max.mustermann
+2023-06-18T20:34:49.050402293+02:00 [WARN] PUT /user/a with data Json(User { account: "a", forename: "a", surname: "a", role: "a" }): max.mustermann
+2023-06-18T20:34:50.871239854+02:00 [WARN] DELETE /user/a: max.mustermann
+2023-06-18T20:35:12.133355193+02:00 [WARN] POST /login with data Json(NewLogin { user: "test.lehrer", password: "123", access_user: ReadOnly, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:35:27.938100699+02:00 [WARN] POST /login with data Json(NewLogin { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-18T20:36:20.888668291+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:36:29.368074937+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:36:54.247080065+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:42:49.054148078+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:44:52.16461526+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:31.615891424+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:39.600116196+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:40.417310654+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:41.169050684+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:41.928790134+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:45:43.440353676+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:07.56094974+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:08.060519674+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:08.517272667+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:08.943832216+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:09.366559216+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:10.46430701+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:10.729572121+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:10.952262592+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:11.1396845+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:11.350539789+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:11.52642763+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:11.751506306+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:11.956278045+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:35.979240547+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:45.220760121+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:45.801833346+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:46.019082321+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:46.248140165+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:46:46.913891809+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:17.326413463+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:46.712795248+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:52.206854264+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:53.022529042+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:53.575289489+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:54.059945504+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:47:54.502695082+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:00.234341346+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:01.504772533+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:38.775124579+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:39.600844963+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:40.199913417+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:41.298732574+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:42.086250681+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:42.803458355+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:43.365742081+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:43.891789185+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:44.406650251+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:49:45.137985783+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:50:19.016719155+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:50:22.966678048+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:50:23.536880744+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:50:24.008419175+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:52:46.373468071+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:52:50.676510662+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:52:51.376808279+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:53:18.69361095+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:53:27.782457732+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:53:32.063623843+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:54:52.770218669+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:54:55.01339338+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:55:01.500205362+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "a", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:55:10.511217908+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T20:56:52.894200477+02:00 [WARN] PUT /user/adela.moore with data Json(User { account: "adela.moore", forename: "Adela", surname: "Moore", role: "Klasse 10c" }): max.mustermann
+2023-06-18T20:57:02.986941135+02:00 [WARN] DELETE /absence/killian.austin/2023-05-31: max.mustermann
+2023-06-18T20:58:24.79682402+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-18T20:58:32.456174582+02:00 [WARN] POST /criminal with data Json(Criminal { account: "lacey-mai.mccarty", kind: "", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-18T20:59:02.632954423+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-18T21:00:49.169674734+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:02:27.238655573+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:05:21.94465692+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:05:43.893203843+02:00 [WARN] POST /login with data Json(NewLogin { user: "alisa.timms", password: "", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-18T21:05:51.008072816+02:00 [WARN] POST /login with data Json(NewLogin { user: "alisa.timms", password: "1", access_user: ReadOnly, access_absence: ReadOnly, access_criminal: ReadOnly }): max.mustermann
+2023-06-18T21:06:12.839766211+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:21:35.879158522+02:00 [WARN] Started Logging
+2023-06-18T21:21:45.241214217+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:21:47.050470015+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:21:57.817644104+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:22:52.689969851+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:22:57.990726934+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:23:41.261461032+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: ".", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:23:51.143626186+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:24:27.124998045+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:24:37.152984459+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:24:42.60750333+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:25:28.010676768+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:25:39.068768524+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-18T21:26:28.686269225+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T18:07:24.180092166+02:00 [WARN] Started Logging
+2023-06-19T18:28:26.871286624+02:00 [WARN] Started Logging
+2023-06-19T18:28:42.756841559+02:00 [WARN] POST /criminal with data Json(Criminal { account: "sahil.singleton", kind: "1", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-19T18:28:48.051481745+02:00 [WARN] PUT /criminal/sahil.singleton/1 with data Json(Criminal { account: "sahil.singleton", kind: ".", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-19T18:28:58.992907737+02:00 [WARN] PUT /criminal/sahil.singleton/1 with data Json(Criminal { account: "sahil.singleton", kind: "#", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-19T18:29:01.293959182+02:00 [WARN] DELETE /criminal/sahil.singleton/1: max.mustermann
+2023-06-19T20:16:41.661099377+02:00 [WARN] Started Logging
+2023-06-19T20:17:00.117524211+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-19T20:17:02.026223969+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-19T20:17:07.977052417+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-19T20:17:09.38041888+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-19T20:17:22.320107234+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-19T20:17:24.124829561+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-19T20:17:40.877954192+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:18:16.649910853+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:18:22.544600793+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-19T20:18:27.123164388+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-19T20:20:23.740280314+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:21:10.440921101+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:21:12.008344344+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:21:16.188629511+02:00 [WARN] POST /login with data Json(NewLogin { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-19T20:21:17.936179836+02:00 [WARN] POST /login with data Json(NewLogin { user: "", password: "", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-19T20:21:28.795762748+02:00 [WARN] POST /login with data Json(NewLogin { user: "a", password: "a", access_user: None, access_absence: None, access_criminal: None }): max.mustermann
+2023-06-19T20:21:30.228589765+02:00 [WARN] DELETE /login/a: max.mustermann
+2023-06-19T20:23:03.872140174+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-19T20:23:10.525837249+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "s", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:24:42.006812231+02:00 [WARN] Started Logging
+2023-06-20T14:36:03.734309142+02:00 [WARN] missing auth Some("Basic mbm46cw==") from Some(127.0.0.1)
+2023-06-20T14:36:03.734393894+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:36:03.734502568+02:00 [WARN] missing auth Some("Basic mbm46cw==") from Some(127.0.0.1)
+2023-06-20T14:36:03.734556148+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:36:45.109767136+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:36:48.119107968+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:36:56.311214105+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:38:23.6089166+02:00 [WARN] missing auth Some("Basic s") from Some(127.0.0.1)
+2023-06-20T14:38:23.609030063+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:38:23.609331571+02:00 [WARN] missing auth Some("Basic s") from Some(127.0.0.1)
+2023-06-20T14:38:23.609407908+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-20T14:38:40.080438192+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:38:48.21048259+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:42:13.313271854+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T14:43:25.221391911+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:44:21.098018224+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T14:44:37.144980768+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_absence: Write, access_criminal: Write }): max.mustermann
+2023-06-20T20:06:34.838479889+02:00 [WARN] Started Logging
+2023-06-20T20:06:54.243318739+02:00 [WARN] PUT /absence/fletcher.mcbride/2023-05-31 with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-20T20:06:56.160973108+02:00 [WARN] PUT /absence/fletcher.mcbride/2023-05-31 with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-20T20:07:01.641799598+02:00 [WARN] PUT /absence/fletcher.mcbride/2023-05-31 with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-20T20:07:16.461598046+02:00 [WARN] PUT /absence/fletcher.mcbride/2023-05-31 with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-20T20:07:20.421783654+02:00 [WARN] PUT /absence/fletcher.mcbride/2023-05-31 with data Json(Absence { account: "fletcher.mcbride", date: 2023-05-31, time: Some("") }): max.mustermann
+2023-06-20T20:07:52.31053764+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:07:54.397520575+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:07:58.660588356+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-20T20:08:09.441296123+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:08:12.792889077+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:08:17.882576669+02:00 [WARN] PUT /criminal/roberto.pearce/Diebstahl with data Json(Criminal { account: "roberto.pearce", kind: "Diebstahl", accuser: "shirley.richard", police_consultant: "tyrese.castillo", lawyer_culprit: "tyler-james.Morse", lawyer_accuser: "alisa.timms", facts: "Hat ein Auto gestohlen", time_of_crime: "Um 8:01, Mo", location_of_crime: "Vor der Schule", note: "", verdict: "b.) Schuldig, um die 42069 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:09:09.558232024+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-20T20:10:51.062082739+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-20T20:10:59.036985497+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-20T20:10:59.037114385+02:00 [WARN] Request guard `Auth < CriminalReadOnly >` failed: Unauthorized.
+2023-06-20T20:11:16.726062742+02:00 [WARN] PUT /criminal/lacey-mai.mccarty/Diebstahl with data Json(Criminal { account: "lacey-mai.mccarty", kind: "Diebstahl", accuser: "seth.rodgers", police_consultant: "abdul.edwards", lawyer_culprit: "charlotte.penn", lawyer_accuser: "abdi.head", facts: "Hat 10 Scheuros gestohlen", time_of_crime: "Um 13:00 Uhr, Mi", location_of_crime: "Im Betrieb 24", note: "Im Prozess", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-20T20:11:20.703681457+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:11:24.913165679+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:11:28.712251476+02:00 [WARN] PUT /criminal/isabella.joyner/Fälschung von Geld with data Json(Criminal { account: "isabella.joyner", kind: "Fälschung von Geld", accuser: "jaxon.cunningham", police_consultant: "abbie.gunn", lawyer_culprit: "arnav.mohamed", lawyer_accuser: "conner.peacock", facts: "1000 Scheuros in die Schule geschmuggelt", time_of_crime: "8:45 Uhr, Do", location_of_crime: "Schuleingang", note: "Wurde dabei erwischt", verdict: "b.) Schuldig, 20 Scheuros Strafgeld" }): max.mustermann
+2023-06-20T20:19:42.324378044+02:00 [WARN] Started Logging
+2023-06-20T20:19:52.61971084+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:19:55.403132766+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:22:25.388901457+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:22:34.223404314+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:22:36.503552627+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:22:44.265870502+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:22:57.187385456+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:23:01.490772262+02:00 [WARN] POST /user with data Json(User { account: "s", forename: "s", surname: "s", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:23:07.910085702+02:00 [WARN] DELETE /user/s: max.mustermann
+2023-06-20T20:25:45.499281372+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:25:51.277904355+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:27:58.15649911+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:28:00.566486533+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:28:03.117993543+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:28:36.140089658+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:40.491583285+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:42.203026408+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:43.913161543+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:45.812549518+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:48.208954992+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:50.56357017+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "" }): max.mustermann
+2023-06-20T20:28:56.824360773+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:29:00.023537525+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:30:04.45380892+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:30:07.027780997+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:36:18.84810656+02:00 [WARN] POST /user with data Json(User { account: "", forename: "", surname: "", role: "Klasse 10c" }): max.mustermann
+2023-06-20T20:36:28.28762652+02:00 [WARN] PUT /user/ayat.mac with data Json(User { account: "ayat.mac", forename: "Ayat", surname: "Mac", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:36:31.739417477+02:00 [WARN] PUT /user/ayaan.mendez with data Json(User { account: "ayaan.mendez", forename: "Ayaan", surname: "Mendez", role: "Jahrgang 12" }): max.mustermann
+2023-06-20T20:37:13.522046518+02:00 [WARN] PUT /absence/conner.peacock/2023-06-01 with data Json(Absence { account: "conner.peacock", date: 2023-06-01, time: Some("") }): max.mustermann
+2023-06-26T23:04:28.946585801+02:00 [WARN] Started Logging
+2023-06-26T23:04:34.220168522+02:00 [WARN] missing auth credentials 'max.mustermann:1234' from Some(127.0.0.1)
+2023-06-26T23:04:34.220261834+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-26T23:04:34.2205264+02:00 [WARN] missing auth credentials 'max.mustermann:1234' from Some(127.0.0.1)
+2023-06-26T23:04:34.220601001+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-26T23:04:57.502109343+02:00 [WARN] missing auth credentials 'max.mustermann:1234' from Some(127.0.0.1)
+2023-06-26T23:04:57.502171405+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-26T23:04:58.709689936+02:00 [WARN] missing auth credentials 'max.mustermann:1234' from Some(127.0.0.1)
+2023-06-26T23:04:58.70975722+02:00 [WARN] Request guard `Auth < UserReadOnly >` failed: Unauthorized.
+2023-06-26T23:06:30.738644268+02:00 [WARN] Started Logging
+2023-06-26T23:07:02.791017858+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-26T23:07:02.791087745+02:00 [WARN] Request guard `Auth < WorklessReadOnly >` failed: Unauthorized.
+2023-06-26T23:07:29.479611569+02:00 [WARN] POST /workless with data Json(Workless { account: "max.mustermann", old_company: "1", date_of_dismiss: 2023-06-26, new_company: "2", date_of_hiring: 2023-06-26, total_time: "10min" }): max.mustermann
+2023-06-26T23:15:32.638969815+02:00 [WARN] Started Logging
+2023-06-26T23:15:54.587840491+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-26T23:15:54.587899158+02:00 [WARN] Request guard `Auth < WorklessReadOnly >` failed: Unauthorized.
+2023-06-26T23:17:06.665489153+02:00 [WARN] PUT /workless/max.mustermann/1/2023-06-26 with data Json(Workless { account: "alisa.timms", old_company: "1", date_of_dismiss: 2023-06-26, new_company: "2", date_of_hiring: 2023-06-26, total_time: "10min" }): max.mustermann
+2023-06-26T23:23:07.100778218+02:00 [WARN] Started Logging
+2023-06-26T23:41:00.146391677+02:00 [WARN] Started Logging
+2023-06-26T23:41:09.826439102+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\n  \"account\": \"string\",\n  \"old_company\": \"string\",\n  \"date_of_dismiss\": \"2023-06-26\",\n  \"new_company\": \"string\",\n  \"date_of_hiring\": \"2023-06-26\",\n  \"total_time\": \"string\"\n}", Error("missing field `currently`", line: 8, column: 1)).
+2023-06-26T23:41:24.995769244+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\n  \"account\": \"string\",\n  \"old_company\": \"string\",\n  \"date_of_dismiss\": \"2023-06-26\",\n  \"new_company\": \"string\",\n  \"date_of_hiring\": \"2023-06-26\",\n  \"total_time\": \"string\"\n}", Error("missing field `currently`", line: 8, column: 1)).
+2023-06-26T23:41:33.904198347+02:00 [WARN] missing auth None from Some(127.0.0.1)
+2023-06-26T23:41:33.904277727+02:00 [WARN] Request guard `Auth < WorklessWrite >` failed: Unauthorized.
+2023-06-26T23:41:42.459025205+02:00 [WARN] POST /workless with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, new_company: "string", date_of_hiring: 2023-06-26, currently: true, total_time: "string" }): max.mustermann
+2023-06-26T23:44:49.730076845+02:00 [WARN] Started Logging
+2023-06-26T23:45:28.860812113+02:00 [WARN] PUT /workless/alisa.timms/string/2023-06-26 with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:45:47.178648793+02:00 [WARN] PUT /workless/string/string/2023-06-26 with data Json(Workless { account: "alisa.timms", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:46:03.166865429+02:00 [WARN] Started Logging
+2023-06-26T23:46:19.083399167+02:00 [WARN] POST /workless with data Json(Workless { account: "alisa.timms", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:46:42.593936474+02:00 [WARN] PUT /workless/alisa.timms/string/2023-06-26 with data Json(Workless { account: "alisa.timms", old_company: "string", date_of_dismiss: 2023-06-26, currently: false, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:49:59.124449131+02:00 [WARN] Started Logging
+2023-06-26T23:50:10.995118373+02:00 [WARN] Started Logging
+2023-06-26T23:50:20.72638658+02:00 [WARN] POST /workless with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:51:29.257165157+02:00 [WARN] PUT /workless/string/string/2023-06-26 with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, currently: false, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:51:38.668803713+02:00 [WARN] POST /workless with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-26T23:53:50.450195307+02:00 [WARN] Started Logging
+2023-06-27T00:40:06.006867333+02:00 [WARN] PUT /workless/string/string/2023-06-26 with data Json(Workless { account: "string", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-27T00:40:11.362945407+02:00 [WARN] PUT /workless/string/string/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "string", date_of_dismiss: 2023-06-26, currently: true, new_company: "string", date_of_hiring: 2023-06-26, total_time: "string" }): max.mustermann
+2023-06-27T00:40:25.906993214+02:00 [WARN] PUT /workless/safah.scott/string/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:40:48.674757711+02:00 [WARN] POST /criminal with data Json(Criminal { account: "s", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-27T00:40:51.865755774+02:00 [WARN] PUT /criminal/s/s with data Json(Criminal { account: "s", kind: "s", accuser: "", police_consultant: "", lawyer_culprit: "", lawyer_accuser: "", facts: "", time_of_crime: "", location_of_crime: "", note: "", verdict: "" }): max.mustermann
+2023-06-27T00:40:56.574011401+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:41:08.775411024+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: false, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:45:26.339561708+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"safah.scott\",\"old_company\":\"1\",\"date_of_dismiss\":\"2023-06-26\",\"currently\":\"true\",\"new_company\":\"2\",\"date_of_hiring\":\"2023-06-26\",\"total_time\":\"3h\"}", Error("invalid type: string \"true\", expected a boolean", line: 1, column: 92)).
+2023-06-27T00:45:30.580152729+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"safah.scott\",\"old_company\":\"1\",\"date_of_dismiss\":\"2023-06-26\",\"currently\":\"false\",\"new_company\":\"2\",\"date_of_hiring\":\"2023-06-26\",\"total_time\":\"3h\"}", Error("invalid type: string \"false\", expected a boolean", line: 1, column: 93)).
+2023-06-27T00:48:04.296577532+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"safah.scott\",\"old_company\":\"1\",\"date_of_dismiss\":\"2023-06-26\",\"currently\":\"true\",\"new_company\":\"2\",\"date_of_hiring\":\"2023-06-26\",\"total_time\":\"3h\"}", Error("invalid type: string \"true\", expected a boolean", line: 1, column: 92)).
+2023-06-27T00:51:30.993272433+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: false, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:51:37.165123047+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:51:51.433232363+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:53:02.624617002+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T00:53:45.842141331+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T01:00:02.016371091+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: false, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T01:00:05.229197329+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T01:01:27.961860599+02:00 [WARN] PUT /workless/safah.scott/1/2023-06-26 with data Json(Workless { account: "safah.scott", old_company: "1", date_of_dismiss: 2023-06-26, currently: true, new_company: "2", date_of_hiring: 2023-06-26, total_time: "3h" }): max.mustermann
+2023-06-27T01:01:42.361752229+02:00 [WARN] POST /workless with data Json(Workless { account: "abdul.edwards", old_company: "klm,. ", date_of_dismiss: 2023-06-06, currently: true, new_company: "", date_of_hiring: 2023-06-14, total_time: "" }): max.mustermann
+2023-06-27T01:03:40.537425218+02:00 [WARN] DELETE /criminal/s/s: max.mustermann
+2023-06-27T01:03:43.686506984+02:00 [WARN] DELETE /workless/safah.scott/2023-06-26: max.mustermann
+2023-06-27T01:11:58.17028283+02:00 [WARN] Started Logging
+2023-06-27T01:12:40.596087924+02:00 [WARN] POST /criminal with data Json(Criminal { account: "shirley.richard", kind: "Diebstahl", accuser: "abdul.edwards", police_consultant: "tyrese.castillo", lawyer_culprit: "callen.lawson", lawyer_accuser: "dana.emery", facts: "Dies und das", time_of_crime: "Dann", location_of_crime: "Dort", note: "", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-27T01:13:00.443306199+02:00 [WARN] Started Logging
+2023-06-27T01:14:27.756696967+02:00 [WARN] Started Logging
+2023-06-27T01:15:17.792993844+02:00 [WARN] PUT /workless/abdul.edwards/klm,./2023-06-06 with data Json(Workless { account: "abdul.edwards", old_company: "Eisladen", date_of_dismiss: 2023-06-06, currently: false, new_company: "24. Sportanlage 'Fit im Schritt'", date_of_hiring: 2023-06-14, total_time: "2h" }): max.mustermann
+2023-06-27T12:20:43.827268642+02:00 [WARN] Started Logging
+2023-06-27T12:21:16.728927234+02:00 [WARN] PUT /workless/abdul.edwards/Eisladen/2023-06-06 with data Json(Workless { account: "abdul.edwards", old_company: "Eisladen", date_of_dismiss: 2023-06-06, currently: false, new_company: "24. Sportanlage 'Fit im Schritt'", total_time: "2h" }): max.mustermann
+2023-06-27T12:21:27.075689501+02:00 [WARN] Started Logging
+2023-06-27T12:52:35.531566099+02:00 [WARN] POST /workless with data Json(Workless { account: "jim.buck", old_company: "", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T12:52:43.915726377+02:00 [WARN] POST /workless with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T12:53:13.401740512+02:00 [WARN] POST /workless with data Json(Workless { account: "abdul.edwards", old_company: "Eisladen", date_of_dismiss: 2023-06-06, currently: false, new_company: "24. Sportanlage 'Fit im Schritt'", total_time: "2h" }): max.mustermann
+2023-06-27T12:53:46.394306353+02:00 [WARN] POST /criminal with data Json(Criminal { account: "shirley.richard", kind: "Diebstahl", accuser: "abdul.edwards", police_consultant: "tyrese.castillo", lawyer_culprit: "callen.lawson", lawyer_accuser: "dana.emery", facts: "Dies und das", time_of_crime: "Dann", location_of_crime: "Dort", note: "", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-27T13:03:19.487810118+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"jim.buck\",\"old_company\":\"Sportanlagenverwaltung\",\"date_of_dismiss\":\"2023-06-27\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 125)).
+2023-06-27T13:03:29.886258012+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"jim.buck\",\"old_company\":\"Sportanlagenverwaltung\",\"date_of_dismiss\":\"2023-06-27\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 125)).
+2023-06-27T13:05:14.873125601+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"s\",\"old_company\":\"s\",\"date_of_dismiss\":\"\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 53)).
+2023-06-27T13:07:54.716587547+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"jim.buck\",\"old_company\":\"Sportanlagenverwaltung\",\"date_of_dismiss\":\"2023-06-27\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 125)).
+2023-06-27T13:11:00.516249478+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"jim.buck\",\"old_company\":\"Sportanlagenverwaltung\",\"date_of_dismiss\":\"2023-06-27\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 125)).
+2023-06-27T13:11:04.001471697+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"2023-06-27\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 95)).
+2023-06-27T13:11:11.911916464+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"s\",\"old_company\":\"s\",\"date_of_dismiss\":\"2023-05-30\",\"new_company\":\"\",\"total_time\":\"\"}", Error("missing field `currently`", line: 1, column: 97)).
+2023-06-27T13:12:11.950766513+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 51)).
+2023-06-27T13:12:32.866135739+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 51)).
+2023-06-27T13:12:37.655374137+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 51)).
+2023-06-27T13:13:12.21867888+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"\",\"currently\":\"Ja\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 51)).
+2023-06-27T13:13:14.57614539+02:00 [WARN] Data guard `Json < Workless >` failed: Parse("{\"account\":\"\",\"old_company\":\"\",\"date_of_dismiss\":\"\",\"currently\":\"Ja\",\"new_company\":\"\",\"total_time\":\"\"}", Error("premature end of input", line: 1, column: 51)).
+2023-06-27T13:14:25.749722149+02:00 [WARN] POST /workless with data Json(Workless { account: "", old_company: "", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:14:46.211260858+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:14:51.24827364+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:14:54.427571864+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:14:56.111307027+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:15:09.566768116+02:00 [WARN] POST /workless with data Json(Workless { account: "abdi.head", old_company: "Reifenfabrik", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:16:13.342102948+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: false, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T13:16:33.747008466+02:00 [WARN] PUT /workless/jim.buck/Sportanlagenverwaltung/2023-06-27 with data Json(Workless { account: "jim.buck", old_company: "Sportanlagenverwaltung", date_of_dismiss: 2023-06-27, currently: false, new_company: "Sportanlage", total_time: "30min" }): max.mustermann
+2023-06-27T19:16:57.970194022+02:00 [WARN] Started Logging
+2023-06-27T19:17:05.410984788+02:00 [WARN] PUT /workless/abdi.head/Reifenfabrik/2023-06-27 with data Json(Workless { account: "abdi.head", old_company: "Reifenfabrik", date_of_dismiss: 2023-06-27, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T19:17:18.085060222+02:00 [WARN] POST /workless with data Json(Workless { account: "abbie.gunn", old_company: "1", date_of_dismiss: 2023-06-27, currently: true, new_company: "2", total_time: "3" }): max.mustermann
+2023-06-27T19:17:23.282202011+02:00 [WARN] PUT /workless/abbie.gunn/1/2023-06-27 with data Json(Workless { account: "abbie.gunn", old_company: "1", date_of_dismiss: 2023-06-27, currently: false, new_company: "2", total_time: "3" }): max.mustermann
+2023-06-27T19:17:25.438907292+02:00 [WARN] DELETE /workless/abbie.gunn/2023-06-27: max.mustermann
+2023-06-27T19:17:36.58946832+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T19:17:41.860302194+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T19:17:56.615809342+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T19:18:07.189463915+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T19:30:51.607562813+02:00 [WARN] Started Logging
+2023-06-27T19:41:21.395358409+02:00 [WARN] POST /workless with data Json(Workless { account: "abdul.edwards", old_company: "Tourismusbüro", date_of_dismiss: 2023-06-27, currently: false, new_company: "Unfallsbehörde", total_time: "2h" }): max.mustermann
+2023-06-27T19:41:51.410450064+02:00 [WARN] POST /workless with data Json(Workless { account: "arnav.mohamed", old_company: "Dachfliesen GMBH", date_of_dismiss: 2023-06-20, currently: false, new_company: "Kläranlage", total_time: "3h" }): max.mustermann
+2023-06-27T19:42:14.866757341+02:00 [WARN] POST /workless with data Json(Workless { account: "isaiah.howell", old_company: "Uhrenmanufaktur", date_of_dismiss: 2023-06-02, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T19:43:41.989443588+02:00 [WARN] POST /criminal with data Json(Criminal { account: "hilary.cresswell", kind: "Diebstahl", accuser: "eloisa.leach", police_consultant: "rihanna.osborn", lawyer_culprit: "safah.scott", lawyer_accuser: "abdi.head", facts: "Diebstahl von 50 Scheuro", time_of_crime: "Um 8, Montag", location_of_crime: "Pausenhalle/Platz der Nation", note: "Musste 100 Scheuro Busgeld zahlen", verdict: "b.) Schuldig" }): max.mustermann
+2023-06-27T19:44:01.954491378+02:00 [WARN] PUT /criminal/shirley.richard/Diebstahl with data Json(Criminal { account: "shirley.richard", kind: "Was auch immer...", accuser: "abdul.edwards", police_consultant: "tyrese.castillo", lawyer_culprit: "callen.lawson", lawyer_accuser: "dana.emery", facts: "Dies und das", time_of_crime: "Dann", location_of_crime: "Dort", note: "", verdict: "a.) Noch kein Verfahren" }): max.mustermann
+2023-06-27T19:46:44.615263204+02:00 [WARN] Started Logging
+2023-06-27T19:48:50.818034484+02:00 [WARN] PUT /user/aaminah.seymour with data Json(User { account: "aaminah.seymour", forename: "Aaminah", surname: "Seymour", role: "Jahrgang 12" }): max.mustermann
+2023-06-27T19:54:22.846712847+02:00 [WARN] PUT /workless/arnav.mohamed/Dachfliesen GMBH/2023-06-20 with data Json(Workless { account: "arnav.mohamed", old_company: "Dachfliesen GMBH", date_of_dismiss: 2023-06-20, currently: true, new_company: "Kläranlage", total_time: "3h" }): max.mustermann
+2023-06-27T19:54:27.270505267+02:00 [WARN] PUT /workless/arnav.mohamed/Dachfliesen GMBH/2023-06-20 with data Json(Workless { account: "arnav.mohamed", old_company: "Dachfliesen GMBH", date_of_dismiss: 2023-06-20, currently: false, new_company: "Kläranlage", total_time: "3h" }): max.mustermann
+2023-06-27T20:03:13.665314795+02:00 [WARN] PUT /user/abbie.gunn with data Json(User { account: "abbie.gunn", forename: "Abbie", surname: "Gunn", role: "Klasse 6c" }): max.mustermann
+2023-06-27T20:15:18.846072772+02:00 [WARN] POST /user with data Json(User { account: "s", forename: "a", surname: "s", role: "Jahrgang 12" }): max.mustermann
+2023-06-27T20:15:27.111215026+02:00 [WARN] DELETE /user/s: max.mustermann
+2023-06-27T20:30:10.045028345+02:00 [WARN] Started Logging
+2023-06-27T20:30:21.011031248+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T21:38:39.614538532+02:00 [WARN] Started Logging
+2023-06-27T21:46:12.705775843+02:00 [WARN] PUT /workless/isaiah.howell/Uhrenmanufaktur/2023-06-02 with data Json(Workless { account: "isaiah.howell", old_company: "Uhrenmanufaktur", date_of_dismiss: 2023-06-02, currently: false, new_company: "kl", total_time: "l,." }): max.mustermann
+2023-06-27T21:46:21.651844953+02:00 [WARN] PUT /workless/isaiah.howell/Uhrenmanufaktur/2023-06-02 with data Json(Workless { account: "isaiah.howell", old_company: "Uhrenmanufaktur", date_of_dismiss: 2023-06-02, currently: true, new_company: "", total_time: "" }): max.mustermann
+2023-06-27T21:53:34.689479385+02:00 [WARN] Started Logging
+2023-06-27T21:53:42.542095148+02:00 [WARN] PUT /login with data Json(NewLogin { user: "max.mustermann", password: "1234", access_user: Write, access_workless: Write, access_criminal: Write }): max.mustermann
+2023-06-27T21:55:45.451494482+02:00 [WARN] POST /criminal with data Json(Criminal { account: "adela.moore", kind: "Raubüberfall", accuser: "seth.rodgers", police_consultant: "graham.braun", lawyer_culprit: "tyla.spencer", lawyer_accuser: "francisco.cisneros", facts: "Hat 200 Scheuro bei Bank gestohlen", time_of_crime: "Di, 12:30 Uhr", location_of_crime: "Bank", note: "Rückzahlung und Zahlung von 200 Scheuro Bußgeld", verdict: "b.) Schuldig" }): max.mustermann
+2023-06-27T21:56:19.303772776+02:00 [WARN] POST /workless with data Json(Workless { account: "daisie.douglas", old_company: "Nudelfabrik", date_of_dismiss: 2023-06-20, currently: true, new_company: "", total_time: "" }): max.mustermann
