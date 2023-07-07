@@ -1,3 +1,10 @@
+<script lang="ts">
+    function error(error: String) {
+        // Not using Bootstrap Modals because of SSR building errors
+        throw error;
+    }
+</script>
+
 <svelte:head>
 	<title>SNDM</title>
 	<meta name="description" content="Main Page" />

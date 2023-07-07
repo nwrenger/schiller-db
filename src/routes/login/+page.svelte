@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-
 	let username = '';
 	let password = '';
 
@@ -53,13 +51,7 @@
 						<div class="card-body">
 							<h5 class="card-title p-1">Login</h5>
 							<div class="card-text">
-								<form
-									method="POST"
-									action="?/enter"
-									use:enhance={() => {
-										handleLogin(username, password);
-									}}
-								>
+								<form on:submit={() => handleLogin(username, password)}>
 									<div class="form-floating mb-3">
 										<input
 											type="text"
