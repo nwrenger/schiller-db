@@ -7,9 +7,6 @@ const dev = process.argv.includes('dev');
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		prerender: {
-			entries: ['/', '/login']
-		},
 		adapter: adapter({
 			pages: 'static',
 			assets: 'static',
