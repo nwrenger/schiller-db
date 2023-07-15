@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Modal } from "bootstrap";
+	import Modal from 'bootstrap/js/dist/modal';
 	import { dialog, staticBackdropLabel, modalBody } from '../store';
+	import { goto } from '$app/navigation';
 
 	// Use the store's values
 	let dialogElement: HTMLDivElement | null;
@@ -36,7 +37,7 @@
 			window.localStorage.setItem('current_user', username);
 			window.localStorage.setItem('permissions', JSON.stringify(data['Ok']));
 
-			window.open('/', '_self');
+			goto('/', { replaceState: true });
 		} else {
 			if (dialogElement && staticBackdropLabelElement && modalBodyElement) {
 				const modal = new Modal(dialogElement);
@@ -61,7 +62,7 @@
 	<div class="main">
 		<nav class="nav navbar bg-secondary-subtle">
 			<div class="container-fluid">
-				<a href="/login.html" class="navbar-brand">SNDI</a>
+				<a href="/login" class="navbar-brand">SNDI</a>
 			</div>
 		</nav>
 		<div class="container">

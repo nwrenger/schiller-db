@@ -1,26 +1,92 @@
 <script lang="ts">
-	// import { Modal } from 'bootstrap';
-	// import { dialog, staticBackdropLabel, modalBody } from './store';
+	import { goto } from '$app/navigation';
 
-	// // Use the store's values
-	// let dialogElement: HTMLDivElement | null;
-	// let staticBackdropLabelElement: HTMLHeadingElement | null;
-	// let modalBodyElement: HTMLDivElement | null;
+	/// Request Function
+	async function request(url: string, type: string, json: BodyInit | null | undefined) {
+		const response = await fetch(url, {
+			method: type,
+			headers: {
+				Authorization: 'Basic ' + auth,
+				'Content-Type': 'application/json; charset=utf-8'
+			},
+			body: json
+		});
 
-	// $: {
-	// 	dialogElement = $dialog;
-	// 	staticBackdropLabelElement = $staticBackdropLabel;
-	// 	modalBodyElement = $modalBody;
-	// }
-	// function error(error: string) {
-	// 	if (dialogElement && staticBackdropLabelElement && modalBodyElement) {
-	// 		const modal = new Modal(dialogElement);
-	// 		staticBackdropLabelElement.textContent = 'Fehler';
-	// 		modalBodyElement.textContent = error;
-	// 		modal.toggle();
-	// 	}
-	// 	throw error;
-	// }
+		let data = await response.json();
+
+		if (response.status === 200 && !data['Err']) {
+			return data['Ok'];
+		} else {
+			error(data['Err']);
+		}
+	}
+
+	/// Storage
+	var auth = localStorage.getItem('auth');
+	const current_user = localStorage.getItem('current_user');
+	var permissions = localStorage.getItem('permissions');
+	if (permissions) {
+		permissions = JSON.parse(permissions);
+	}
+
+	if (!auth || !current_user || !permissions) {
+		goto('/login', { replaceState: true });
+		error('InvalidLocalKeys');
+	}
+
+	/// Modals
+	import Modal from 'bootstrap/js/dist/modal';
+	import { dialog, staticBackdropLabel, modalBody } from './store';
+
+	let dialogElement: HTMLDivElement | null;
+	let staticBackdropLabelElement: HTMLHeadingElement | null;
+	let modalBodyElement: HTMLDivElement | null;
+
+	$: {
+		dialogElement = $dialog;
+		staticBackdropLabelElement = $staticBackdropLabel;
+		modalBodyElement = $modalBody;
+	}
+
+	function error(error: string) {
+		if (dialogElement && staticBackdropLabelElement && modalBodyElement) {
+			const modal = new Modal(dialogElement);
+			staticBackdropLabelElement.textContent = 'Fehler';
+			modalBodyElement.textContent = error;
+			modal.toggle();
+		}
+		throw error;
+	}
+
+	function currentUser() {
+		if (dialogElement && staticBackdropLabelElement && modalBodyElement && current_user) {
+			const modal = new Modal(dialogElement);
+			staticBackdropLabelElement.textContent = 'Info';
+			modalBodyElement.textContent = 'Der akutelle Benutzer ist ' + current_user;
+			modal.toggle();
+		}
+	}
+	/// Stat Vars
+	let name: string = '';
+	let version: string = '';
+	let developers: string = '';
+	let repo: string = '';
+	let description: string = '';
+	let users: string = '';
+
+	async function stats() {
+		const statsData = await request('/stats', 'GET', null);
+		const devs = statsData.developer.split(':');
+
+		name = statsData.name;
+		version = statsData.version;
+		developers = 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1];
+		repo = statsData.repo;
+		description = statsData.description;
+		users = statsData.users;
+	}
+
+	$: stats();
 </script>
 
 <svelte:head>
@@ -59,14 +125,27 @@
 						<li>
 							<h6 class="dropdown-header">Profil</h6>
 						</li>
-						<li><button class="dropdown-item" type="button">Aktueller Benutzer</button></li>
+						<li>
+							<button class="dropdown-item" type="button" on:click={() => currentUser()}
+								>Aktueller Benutzer</button
+							>
+						</li>
 						<li><button class="dropdown-item" type="button">Passwort ändern</button></li>
 						<li>
 							<button id="login-creator" class="dropdown-item" type="button"
 								>Logins Verwalten</button
 							>
 						</li>
-						<li><button class="dropdown-item" type="button">Ausloggen</button></li>
+						<li>
+							<button
+								class="dropdown-item"
+								type="button"
+								on:click={() => {
+									localStorage.clear();
+									goto('/login', { replaceState: true });
+								}}>Ausloggen</button
+							>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -960,7 +1039,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Name</h5>
-							<p class="card-text" id="name" />
+							<p class="card-text" id="name">{name}</p>
 						</div>
 					</div>
 				</div>
@@ -968,7 +1047,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Version</h5>
-							<p class="card-text" id="version" />
+							<p class="card-text" id="version">{version}</p>
 						</div>
 					</div>
 				</div>
@@ -978,7 +1057,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Entwickler</h5>
-							<p class="card-text" id="devs" />
+							<p class="card-text" id="devs">{developers}</p>
 						</div>
 					</div>
 				</div>
@@ -986,8 +1065,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Repository</h5>
-							<!-- svelte-ignore a11y-missing-content -->
-							<p class="card-text"><a target="_blank" id="repo" /></p>
+							<p class="card-text"><a target="_blank" id="repo" href={repo}>{repo}</a></p>
 						</div>
 					</div>
 				</div>
@@ -997,7 +1075,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Beschreibung</h5>
-							<p class="card-text" id="description" />
+							<p class="card-text" id="description">{description}</p>
 						</div>
 					</div>
 				</div>
@@ -1005,7 +1083,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Bürger insgesammt</h5>
-							<p class="card-text" id="users" />
+							<p class="card-text" id="users">{users}</p>
 						</div>
 					</div>
 				</div>
