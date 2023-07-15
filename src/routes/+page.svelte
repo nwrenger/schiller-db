@@ -66,6 +66,19 @@
 			modal.toggle();
 		}
 	}
+
+	/// Sidebar States
+	import { sidebarState } from './store';
+
+	$: console.log($sidebarState);
+	sidebarState.set('user');
+
+	/// Container States
+	import { containerState } from './store';
+
+	$: console.log($containerState);
+	containerState.set('stats');
+
 	/// Stat Vars
 	let name: string = '';
 	let version: string = '';
@@ -86,7 +99,9 @@
 		users = statsData.users;
 	}
 
-	$: stats();
+	$: if ($containerState === 'stats') { // do same thing for sidebar!!!
+        stats();
+    }
 </script>
 
 <svelte:head>
@@ -130,10 +145,19 @@
 								>Aktueller Benutzer</button
 							>
 						</li>
-						<li><button class="dropdown-item" type="button">Passwort ändern</button></li>
 						<li>
-							<button id="login-creator" class="dropdown-item" type="button"
-								>Logins Verwalten</button
+							<button
+								class="dropdown-item"
+								type="button"
+								on:click={() => containerState.set('password')}>Passwort ändern</button
+							>
+						</li>
+						<li>
+							<button
+								id="login-creator"
+								class="dropdown-item"
+								type="button"
+								on:click={() => containerState.set('login')}>Logins Verwalten</button
 							>
 						</li>
 						<li>
@@ -308,121 +332,75 @@
 				type="button"
 				title="Kategorie"
 				data-bs-toggle="dropdown"
-				aria-expanded="false">Bürger</button
+				aria-expanded="false"
+				>{$sidebarState === 'user' ? 'Bürger' : ''}{$sidebarState === 'workless'
+					? 'Arbeitslosenreg.'
+					: ''}{$sidebarState === 'criminal' ? 'Kriminalregister' : ''}</button
 			>
 			<ul class="dropdown-menu dropdown-menu-end">
 				<li>
 					<h6 class="dropdown-header">Kategorie</h6>
 				</li>
-				<li><button id="user" class="dropdown-item active" type="button">Bürger</button></li>
-				<li><button id="workless" class="dropdown-item" type="button">Arbeitslosenreg.</button></li>
-				<li><button id="criminal" class="dropdown-item" type="button">Kriminalregister</button></li>
+				<li>
+					<button
+						id="user"
+						class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
+						type="button"
+						on:click={() => sidebarState.set('user')}>Bürger</button
+					>
+				</li>
+				<li>
+					<button
+						id="workless"
+						class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
+						type="button"
+						on:click={() => sidebarState.set('workless')}>Arbeitslosenreg.</button
+					>
+				</li>
+				<li>
+					<button
+						id="criminal"
+						class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
+						type="button"
+						on:click={() => sidebarState.set('criminal')}>Kriminalregister</button
+					>
+				</li>
 			</ul>
 		</div>
 	</div>
 	<!-- Input Containers -->
 	<div class="mid p-3 bg-body-secondary">
-		<div id="user-container" hidden>
-			<div class="card-title row">
-				<div class="col">
-					<label for="forename" class="form-label">Vorname</label>
-					<input
-						id="forename"
-						type="text"
-						class="form-control"
-						placeholder="Vorname"
-						aria-label="Vorname"
-						readonly
-					/>
-				</div>
-				<div class="col">
-					<label for="surname" class="form-label">Nachname</label>
-					<input
-						id="surname"
-						type="text"
-						class="form-control"
-						placeholder="Nachname"
-						aria-label="Nachname"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="account" class="form-label">Account</label>
-					<input
-						id="account"
-						type="text"
-						class="form-control"
-						placeholder="Account"
-						aria-label="Account"
-						readonly
-					/>
-				</div>
-				<div class="col">
-					<label for="role" class="form-label">Gruppe</label>
-					<input
-						id="role"
-						type="text"
-						class="form-control"
-						placeholder="Gruppe"
-						aria-label="Gruppe"
-						readonly
-					/>
-				</div>
-			</div>
-			<button id="user-add-button" class="btn btn-outline-danger m-3" type="button" hidden
-				><span
-					id="user-add-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Hinzufügen</button
-			>
-			<button id="user-confirm-button" type="button" class="btn btn-outline-danger m-3" hidden
-				><span
-					id="user-confirm-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Bestätigen</button
-			>
-			<button id="user-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
-				>Abbrechen</button
-			>
-		</div>
-		<div id="workless-container" hidden>
-			<div class="card-title row">
-				<div class="col">
-					<label for="workless-select" class="form-label">Account</label>
-					<div class="input-group mb-3 workless-select">
-						<button
-							id="workless-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="workless-select-dropdown" class="dropdown-menu" />
+		{#if $containerState === 'user'}
+			<div id="user-container">
+				<div class="card-title row">
+					<div class="col">
+						<label for="forename" class="form-label">Vorname</label>
 						<input
-							id="workless-account"
+							id="forename"
+							type="text"
+							class="form-control"
+							placeholder="Vorname"
+							aria-label="Vorname"
+							readonly
+						/>
+					</div>
+					<div class="col">
+						<label for="surname" class="form-label">Nachname</label>
+						<input
+							id="surname"
+							type="text"
+							class="form-control"
+							placeholder="Nachname"
+							aria-label="Nachname"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="account" class="form-label">Account</label>
+						<input
+							id="account"
 							type="text"
 							class="form-control"
 							placeholder="Account"
@@ -430,413 +408,585 @@
 							readonly
 						/>
 					</div>
-				</div>
-				<div class="col">
-					<label for="old-company" class="form-label">Vorheriger Betrieb</label>
-					<input
-						id="old-company"
-						type="text"
-						class="form-control"
-						placeholder="Vorgeriger Betrieb"
-						aria-label="Vorgeriger Betrieb"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col form-group">
-					<label for="date-of-dismiss" class="form-label">Datum der Entlassung</label>
-					<input type="date" class="form-control" id="date-of-dismiss" readonly />
-				</div>
-				<div class="col">
-					<label for="currently-workless" class="form-label">Aktuell Arbeitslos</label>
-					<div class="input-group mb-3 currently-select">
-						<button
-							id="currently-select-button"
-							class="btn btn-outline-danger dropdown-toggle"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswahl">Auswahl</button
-						>
-						<ul id="currently-select-dropdown" class="dropdown-menu">
-							<li><button id="yes-currently" class="dropdown-item" type="button">Ja</button></li>
-							<li><button id="no-currently" class="dropdown-item" type="button">Nein</button></li>
-						</ul>
-						<input
-							id="currently-workless"
-							type="text"
-							class="form-control"
-							placeholder="Auswahl"
-							aria-label="Auswahl"
-							readonly
-						/>
-					</div>
-				</div>
-			</div>
-			<div id="only-on-currently-no" class="row" hidden>
-				<div class="col">
-					<label for="new-company" class="form-label">Neuer Betrieb</label>
-					<input
-						id="new-company"
-						type="text"
-						class="form-control"
-						placeholder="Neuer Betrieb"
-						aria-label="Neuer Betrieb"
-						readonly
-					/>
-				</div>
-				<div class="col">
-					<label for="total-time" class="form-label">Insgeammte arbeitslose Zeit</label>
-					<input
-						id="total-time"
-						type="text"
-						class="form-control"
-						placeholder="Insgeammte arbeitslose Zeit"
-						aria-label="Insgeammte arbeitslose Zeit"
-						readonly
-					/>
-				</div>
-			</div>
-			<button id="workless-add-button" class="btn btn-outline-danger m-3" type="button" hidden
-				><span
-					id="workless-add-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Hinzufügen</button
-			>
-			<button id="workless-confirm-button" class="btn btn-outline-danger m-3" type="button" hidden
-				><span
-					id="workless-confirm-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Bestätigen</button
-			>
-			<button id="workless-abort-button" class="btn btn-outline-danger m-3" type="button" hidden
-				>Abbrechen</button
-			>
-			<button
-				type="button"
-				class="btn btn-outline-danger m-3 justify-content-center get-user"
-				style="max-width: 160px;">Bürger abrufen</button
-			>
-		</div>
-		<div id="criminal-container" hidden>
-			<div class="card-title row">
-				<div class="col">
-					<label for="criminal-select" class="form-label">Beschuldigter</label>
-					<div class="input-group mb-3 criminal-select">
-						<button
-							id="criminal-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="criminal-select-dropdown" class="dropdown-menu" />
-						<input
-							id="criminal-account"
-							type="text"
-							class="form-control"
-							placeholder="Beschuldigter"
-							aria-label="Beschuldigter"
-							readonly
-						/>
-					</div>
-				</div>
-				<div class="col">
-					<label for="kind" class="form-label">Art</label>
-					<input
-						id="kind"
-						type="text"
-						class="form-control"
-						placeholder="Art"
-						aria-label="Art"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="accuser-select" class="form-label">Anzeiger</label>
-					<div class="input-group mb-3 accuser-select">
-						<button
-							id="accuser-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="accuser-select-dropdown" class="dropdown-menu" />
-						<input
-							id="accuser"
-							type="text"
-							class="form-control"
-							placeholder="Anzeiger"
-							aria-label="Anzeiger"
-							readonly
-						/>
-					</div>
-				</div>
-				<div class="col">
-					<label for="police-consultant" class="form-label">Sachberater Polizei</label>
-					<div class="input-group mb-3 police-consultant-select">
-						<button
-							id="police-consultant-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="police-consultant-select-dropdown" class="dropdown-menu" />
-						<input
-							id="police-consultant"
-							type="text"
-							class="form-control"
-							placeholder="Sachberater Polizei"
-							aria-label="Sachberater Polizei"
-							readonly
-						/>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="lawyer-culprit" class="form-label">Anwalt des Beschuldigtens</label>
-					<div class="input-group mb-3 lawyer-culprit-select">
-						<button
-							id="lawyer-culprit-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="lawyer-culprit-select-dropdown" class="dropdown-menu" />
-						<input
-							id="lawyer-culprit"
-							type="text"
-							class="form-control"
-							placeholder="Anwalt des Beschuldigtens"
-							aria-label="Anwalt des Beschuldigtens"
-							readonly
-						/>
-					</div>
-				</div>
-				<div class="col">
-					<label for="lawyer-accuser" class="form-label">Anwalt des Anzeigers</label>
-					<div class="input-group mb-3 lawyer-accuser-select">
-						<button
-							id="lawyer-accuser-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-							disabled
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="lawyer-accuser-select-dropdown" class="dropdown-menu" />
-						<input
-							id="lawyer-accuser"
-							type="text"
-							class="form-control"
-							placeholder="Anwalt des Anzeigers"
-							aria-label="Anwalt des Anzeigers"
-							readonly
-						/>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="facts" class="form-label">Tatbestand</label>
-					<input
-						id="facts"
-						type="text"
-						class="form-control"
-						placeholder="Tatbestand"
-						aria-label="Tatbestand"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="time-of-crime" class="form-label">Zeitpunkt der Tat</label>
-					<input
-						id="time-of-crime"
-						type="text"
-						class="form-control"
-						placeholder="Zeitpunkt der Tat"
-						aria-label="Zeitpunkt der Tat"
-						readonly
-					/>
-				</div>
-				<div class="col">
-					<label for="location-of-crime" class="form-label">Ort der Tat</label>
-					<input
-						id="location-of-crime"
-						type="text"
-						class="form-control"
-						placeholder="Ort der Tat"
-						aria-label="Ort der Tat"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="note" class="form-label">Kommentar</label>
-					<input
-						id="note"
-						type="text"
-						class="form-control"
-						placeholder="Kommentar"
-						aria-label="Kommentar"
-						readonly
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<label for="verdict" class="form-label">Urteil</label>
-					<div class="input-group mb-3 verdict-select">
-						<button
-							id="verdict-select-button"
-							class="btn btn-outline-danger dropdown-toggle"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen">Urteil</button
-						>
-						<ul id="verdict-select-dropdown" class="dropdown-menu">
-							<li>
-								<button id="no-yet" class="dropdown-item" type="button"
-									>a.) Noch kein Verfahren</button
-								>
-							</li>
-							<li><button id="guilty" class="dropdown-item" type="button">b.) Schuldig</button></li>
-							<li>
-								<button id="innocent" class="dropdown-item" type="button">c.) Unschuldig</button>
-							</li>
-						</ul>
-						<input
-							id="verdict"
-							type="text"
-							class="form-control"
-							placeholder="Urteil"
-							aria-label="Urteil"
-							readonly
-						/>
-					</div>
-				</div>
-			</div>
-			<button id="criminal-add-button" type="button" class="btn btn-outline-danger m-3" hidden
-				><span
-					id="criminal-add-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Hinzufügen</button
-			>
-			<button id="criminal-confirm-button" type="button" class="btn btn-outline-danger m-3" hidden
-				><span
-					id="criminal-confirm-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-					hidden
-				/>Bestätigen</button
-			>
-			<button id="criminal-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
-				>Abbrechen</button
-			>
-			<button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
-				>Bürger abrufen</button
-			>
-		</div>
-		<div id="login-container" hidden>
-			<div>
-				<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
-				<div class="card-title row add-login">
 					<div class="col">
+						<label for="role" class="form-label">Gruppe</label>
+						<input
+							id="role"
+							type="text"
+							class="form-control"
+							placeholder="Gruppe"
+							aria-label="Gruppe"
+							readonly
+						/>
+					</div>
+				</div>
+				<button id="user-add-button" class="btn btn-outline-danger m-3" type="button" hidden
+					><span
+						id="user-add-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Hinzufügen</button
+				>
+				<button id="user-confirm-button" type="button" class="btn btn-outline-danger m-3" hidden
+					><span
+						id="user-confirm-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Bestätigen</button
+				>
+				<button id="user-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
+					>Abbrechen</button
+				>
+			</div>
+		{:else if $containerState === 'workless'}
+			<div id="workless-container">
+				<div class="card-title row">
+					<div class="col">
+						<label for="workless-select" class="form-label">Account</label>
+						<div class="input-group mb-3 workless-select">
+							<button
+								id="workless-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="workless-select-dropdown" class="dropdown-menu" />
+							<input
+								id="workless-account"
+								type="text"
+								class="form-control"
+								placeholder="Account"
+								aria-label="Account"
+								readonly
+							/>
+						</div>
+					</div>
+					<div class="col">
+						<label for="old-company" class="form-label">Vorheriger Betrieb</label>
+						<input
+							id="old-company"
+							type="text"
+							class="form-control"
+							placeholder="Vorgeriger Betrieb"
+							aria-label="Vorgeriger Betrieb"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col form-group">
+						<label for="date-of-dismiss" class="form-label">Datum der Entlassung</label>
+						<input type="date" class="form-control" id="date-of-dismiss" readonly />
+					</div>
+					<div class="col">
+						<label for="currently-workless" class="form-label">Aktuell Arbeitslos</label>
+						<div class="input-group mb-3 currently-select">
+							<button
+								id="currently-select-button"
+								class="btn btn-outline-danger dropdown-toggle"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswahl">Auswahl</button
+							>
+							<ul id="currently-select-dropdown" class="dropdown-menu">
+								<li><button id="yes-currently" class="dropdown-item" type="button">Ja</button></li>
+								<li><button id="no-currently" class="dropdown-item" type="button">Nein</button></li>
+							</ul>
+							<input
+								id="currently-workless"
+								type="text"
+								class="form-control"
+								placeholder="Auswahl"
+								aria-label="Auswahl"
+								readonly
+							/>
+						</div>
+					</div>
+				</div>
+				<div id="only-on-currently-no" class="row" hidden>
+					<div class="col">
+						<label for="new-company" class="form-label">Neuer Betrieb</label>
+						<input
+							id="new-company"
+							type="text"
+							class="form-control"
+							placeholder="Neuer Betrieb"
+							aria-label="Neuer Betrieb"
+							readonly
+						/>
+					</div>
+					<div class="col">
+						<label for="total-time" class="form-label">Insgeammte arbeitslose Zeit</label>
+						<input
+							id="total-time"
+							type="text"
+							class="form-control"
+							placeholder="Insgeammte arbeitslose Zeit"
+							aria-label="Insgeammte arbeitslose Zeit"
+							readonly
+						/>
+					</div>
+				</div>
+				<button id="workless-add-button" class="btn btn-outline-danger m-3" type="button" hidden
+					><span
+						id="workless-add-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Hinzufügen</button
+				>
+				<button id="workless-confirm-button" class="btn btn-outline-danger m-3" type="button" hidden
+					><span
+						id="workless-confirm-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Bestätigen</button
+				>
+				<button id="workless-abort-button" class="btn btn-outline-danger m-3" type="button" hidden
+					>Abbrechen</button
+				>
+				<button
+					type="button"
+					class="btn btn-outline-danger m-3 justify-content-center get-user"
+					style="max-width: 160px;">Bürger abrufen</button
+				>
+			</div>
+		{:else if $containerState === 'criminal'}
+			<div id="criminal-container">
+				<div class="card-title row">
+					<div class="col">
+						<label for="criminal-select" class="form-label">Beschuldigter</label>
+						<div class="input-group mb-3 criminal-select">
+							<button
+								id="criminal-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="criminal-select-dropdown" class="dropdown-menu" />
+							<input
+								id="criminal-account"
+								type="text"
+								class="form-control"
+								placeholder="Beschuldigter"
+								aria-label="Beschuldigter"
+								readonly
+							/>
+						</div>
+					</div>
+					<div class="col">
+						<label for="kind" class="form-label">Art</label>
+						<input
+							id="kind"
+							type="text"
+							class="form-control"
+							placeholder="Art"
+							aria-label="Art"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="accuser-select" class="form-label">Anzeiger</label>
+						<div class="input-group mb-3 accuser-select">
+							<button
+								id="accuser-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="accuser-select-dropdown" class="dropdown-menu" />
+							<input
+								id="accuser"
+								type="text"
+								class="form-control"
+								placeholder="Anzeiger"
+								aria-label="Anzeiger"
+								readonly
+							/>
+						</div>
+					</div>
+					<div class="col">
+						<label for="police-consultant" class="form-label">Sachberater Polizei</label>
+						<div class="input-group mb-3 police-consultant-select">
+							<button
+								id="police-consultant-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="police-consultant-select-dropdown" class="dropdown-menu" />
+							<input
+								id="police-consultant"
+								type="text"
+								class="form-control"
+								placeholder="Sachberater Polizei"
+								aria-label="Sachberater Polizei"
+								readonly
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="lawyer-culprit" class="form-label">Anwalt des Beschuldigtens</label>
+						<div class="input-group mb-3 lawyer-culprit-select">
+							<button
+								id="lawyer-culprit-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="lawyer-culprit-select-dropdown" class="dropdown-menu" />
+							<input
+								id="lawyer-culprit"
+								type="text"
+								class="form-control"
+								placeholder="Anwalt des Beschuldigtens"
+								aria-label="Anwalt des Beschuldigtens"
+								readonly
+							/>
+						</div>
+					</div>
+					<div class="col">
+						<label for="lawyer-accuser" class="form-label">Anwalt des Anzeigers</label>
+						<div class="input-group mb-3 lawyer-accuser-select">
+							<button
+								id="lawyer-accuser-select-button"
+								class="btn btn-outline-danger dropdown-toggle hide-arrow"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen"
+								disabled
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="currentColor"
+									class="bi bi-search"
+									viewBox="0 0 16 16"
+								>
+									<path
+										d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+									/>
+								</svg>
+							</button>
+							<ul id="lawyer-accuser-select-dropdown" class="dropdown-menu" />
+							<input
+								id="lawyer-accuser"
+								type="text"
+								class="form-control"
+								placeholder="Anwalt des Anzeigers"
+								aria-label="Anwalt des Anzeigers"
+								readonly
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="facts" class="form-label">Tatbestand</label>
+						<input
+							id="facts"
+							type="text"
+							class="form-control"
+							placeholder="Tatbestand"
+							aria-label="Tatbestand"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="time-of-crime" class="form-label">Zeitpunkt der Tat</label>
+						<input
+							id="time-of-crime"
+							type="text"
+							class="form-control"
+							placeholder="Zeitpunkt der Tat"
+							aria-label="Zeitpunkt der Tat"
+							readonly
+						/>
+					</div>
+					<div class="col">
+						<label for="location-of-crime" class="form-label">Ort der Tat</label>
+						<input
+							id="location-of-crime"
+							type="text"
+							class="form-control"
+							placeholder="Ort der Tat"
+							aria-label="Ort der Tat"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="note" class="form-label">Kommentar</label>
+						<input
+							id="note"
+							type="text"
+							class="form-control"
+							placeholder="Kommentar"
+							aria-label="Kommentar"
+							readonly
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label for="verdict" class="form-label">Urteil</label>
+						<div class="input-group mb-3 verdict-select">
+							<button
+								id="verdict-select-button"
+								class="btn btn-outline-danger dropdown-toggle"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								title="Auswählen">Urteil</button
+							>
+							<ul id="verdict-select-dropdown" class="dropdown-menu">
+								<li>
+									<button id="no-yet" class="dropdown-item" type="button"
+										>a.) Noch kein Verfahren</button
+									>
+								</li>
+								<li>
+									<button id="guilty" class="dropdown-item" type="button">b.) Schuldig</button>
+								</li>
+								<li>
+									<button id="innocent" class="dropdown-item" type="button">c.) Unschuldig</button>
+								</li>
+							</ul>
+							<input
+								id="verdict"
+								type="text"
+								class="form-control"
+								placeholder="Urteil"
+								aria-label="Urteil"
+								readonly
+							/>
+						</div>
+					</div>
+				</div>
+				<button id="criminal-add-button" type="button" class="btn btn-outline-danger m-3" hidden
+					><span
+						id="criminal-add-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Hinzufügen</button
+				>
+				<button id="criminal-confirm-button" type="button" class="btn btn-outline-danger m-3" hidden
+					><span
+						id="criminal-confirm-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						hidden
+					/>Bestätigen</button
+				>
+				<button id="criminal-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
+					>Abbrechen</button
+				>
+				<button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
+					>Bürger abrufen</button
+				>
+			</div>
+		{:else if $containerState === 'login'}
+			<div id="login-container">
+				<div>
+					<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
+					<div class="card-title row add-login">
+						<div class="col">
+							<label for="login-users" class="form-label">Benutzer</label>
+							<div class="input-group mb-3 login-users">
+								<button
+									id="criminal-select-button"
+									class="btn btn-outline-danger dropdown-toggle hide-arrow"
+									type="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+									title="Auswählen"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										fill="currentColor"
+										class="bi bi-search"
+										viewBox="0 0 16 16"
+									>
+										<path
+											d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+										/>
+									</svg>
+								</button>
+								<ul id="login-add-select-dropdown" class="dropdown-menu" />
+								<input
+									id="login-add-user"
+									type="text"
+									class="form-control"
+									placeholder="Benutzer"
+									aria-label="Benutzer"
+								/>
+							</div>
+						</div>
+						<div class="col">
+							<label for="login-add-password" class="form-label">Passwort</label>
+							<input
+								id="login-add-password"
+								type="password"
+								class="form-control"
+								placeholder="Passwort"
+								aria-label="Passwort"
+							/>
+						</div>
+					</div>
+					<div class="row" style="padding-top: 5px;">
+						<div class="col">
+							<label for="login-add-user-permissions" class="form-label">Rechte für Bürger</label>
+							<select id="login-add-user-permissions" class="form-select" aria-label="Permissions">
+								<option value="None">None</option>
+								<option value="ReadOnly">ReadOnly</option>
+								<option value="Write">Write</option>
+							</select>
+						</div>
+						<div class="col">
+							<label for="login-add-workless-permissions" class="form-label"
+								>Rechte für Arbeitslose</label
+							>
+							<select
+								id="login-add-workless-permissions"
+								class="form-select"
+								aria-label="Permissions"
+							>
+								<option value="None">None</option>
+								<option value="ReadOnly">ReadOnly</option>
+								<option value="Write">Write</option>
+							</select>
+						</div>
+						<div class="col">
+							<label for="login-add-criminal-permissions" class="form-label"
+								>Rechte für das Kriminalregister</label
+							>
+							<select
+								id="login-add-criminal-permissions"
+								class="form-select"
+								aria-label="Permissions"
+							>
+								<option value="None">None</option>
+								<option value="ReadOnly">ReadOnly</option>
+								<option value="Write">Write</option>
+							</select>
+						</div>
+					</div>
+					<button id="add-login-button" type="button" class="btn btn-outline-danger m-3">
+						<span
+							id="add-login-button-spinner"
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
+							hidden
+						/>
+						Hinzufügen
+					</button>
+				</div>
+				<div>
+					<label for="delete-login" class="form-label">Einen Login entfernen:</label>
+					<div class="card-title row col delete-login">
 						<label for="login-users" class="form-label">Benutzer</label>
 						<div class="input-group mb-3 login-users">
 							<button
@@ -860,9 +1010,9 @@
 									/>
 								</svg>
 							</button>
-							<ul id="login-add-select-dropdown" class="dropdown-menu" />
+							<ul id="login-delete-select-dropdown" class="dropdown-menu" />
 							<input
-								id="login-add-user"
+								id="login-delete-user"
 								type="text"
 								class="form-control"
 								placeholder="Benutzer"
@@ -870,225 +1020,133 @@
 							/>
 						</div>
 					</div>
-					<div class="col">
-						<label for="login-add-password" class="form-label">Passwort</label>
-						<input
-							id="login-add-password"
-							type="password"
-							class="form-control"
-							placeholder="Passwort"
-							aria-label="Passwort"
+					<button id="delete-login-button" type="button" class="btn btn-outline-danger m-3">
+						<span
+							id="delete-login-button-spinner"
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
+							hidden
 						/>
-					</div>
+						Entfernen
+					</button>
 				</div>
-				<div class="row" style="padding-top: 5px;">
-					<div class="col">
-						<label for="login-add-user-permissions" class="form-label">Rechte für Bürger</label>
-						<select id="login-add-user-permissions" class="form-select" aria-label="Permissions">
-							<option value="None">None</option>
-							<option value="ReadOnly">ReadOnly</option>
-							<option value="Write">Write</option>
-						</select>
-					</div>
-					<div class="col">
-						<label for="login-add-workless-permissions" class="form-label"
-							>Rechte für Arbeitslose</label
-						>
-						<select
-							id="login-add-workless-permissions"
-							class="form-select"
-							aria-label="Permissions"
-						>
-							<option value="None">None</option>
-							<option value="ReadOnly">ReadOnly</option>
-							<option value="Write">Write</option>
-						</select>
-					</div>
-					<div class="col">
-						<label for="login-add-criminal-permissions" class="form-label"
-							>Rechte für das Kriminalregister</label
-						>
-						<select
-							id="login-add-criminal-permissions"
-							class="form-select"
-							aria-label="Permissions"
-						>
-							<option value="None">None</option>
-							<option value="ReadOnly">ReadOnly</option>
-							<option value="Write">Write</option>
-						</select>
-					</div>
-				</div>
-				<button id="add-login-button" type="button" class="btn btn-outline-danger m-3">
-					<span
-						id="add-login-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-						hidden
-					/>
-					Hinzufügen
-				</button>
-			</div>
-			<div>
-				<label for="delete-login" class="form-label">Einen Login entfernen:</label>
-				<div class="card-title row col delete-login">
-					<label for="login-users" class="form-label">Benutzer</label>
-					<div class="input-group mb-3 login-users">
-						<button
-							id="criminal-select-button"
-							class="btn btn-outline-danger dropdown-toggle hide-arrow"
-							type="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							title="Auswählen"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								fill="currentColor"
-								class="bi bi-search"
-								viewBox="0 0 16 16"
-							>
-								<path
-									d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-								/>
-							</svg>
-						</button>
-						<ul id="login-delete-select-dropdown" class="dropdown-menu" />
-						<input
-							id="login-delete-user"
-							type="text"
-							class="form-control"
-							placeholder="Benutzer"
-							aria-label="Benutzer"
+				<div>
+					<p style="margin: 0;">Alle Logins entfernen:</p>
+					<button
+						id="delete-all-logins-button"
+						type="button"
+						class="btn btn-outline-danger m-3 delete-all-logins"
+					>
+						<span
+							id="delete-all-logins-button-spinner"
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
+							hidden
 						/>
-					</div>
+						Alle Logins löschen
+					</button>
 				</div>
-				<button id="delete-login-button" type="button" class="btn btn-outline-danger m-3">
-					<span
-						id="delete-login-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-						hidden
-					/>
-					Entfernen
-				</button>
+				<button class="btn btn-outline-danger m-2" type="button" on:click={() => containerState.set('stats')}>Schließen</button>
 			</div>
-			<div>
-				<p style="margin: 0;">Alle Logins entfernen:</p>
-				<button
-					id="delete-all-logins-button"
-					type="button"
-					class="btn btn-outline-danger m-3 delete-all-logins"
-				>
-					<span
-						id="delete-all-logins-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-						hidden
-					/>
-					Alle Logins löschen
-				</button>
-			</div>
-			<button class="btn btn-outline-danger m-2" type="button">Schließen</button>
-		</div>
-		<div id="password-changer-container" hidden>
-			<div>
-				<label for="password-changer" class="form-label">Passwort ändern: </label>
-				<div class="card-title row password-changer">
-					<div class="col">
-						<label for="new-password" class="form-label">Neues Passwort</label>
-						<input
-							id="new-password"
-							type="password"
-							class="form-control"
-							placeholder="Neues Passwort"
-							aria-label="Neues Passwort"
+		{:else if $containerState === 'password'}
+			<div id="password-changer-container">
+				<div>
+					<label for="password-changer" class="form-label">Passwort ändern: </label>
+					<div class="card-title row password-changer">
+						<div class="col">
+							<label for="new-password" class="form-label">Neues Passwort</label>
+							<input
+								id="new-password"
+								type="password"
+								class="form-control"
+								placeholder="Neues Passwort"
+								aria-label="Neues Passwort"
+							/>
+						</div>
+						<div class="col">
+							<label for="new-password-wdh" class="form-label">Wiederholen</label>
+							<input
+								id="new-password-wdh"
+								type="password"
+								class="form-control"
+								placeholder="Wiederholen"
+								aria-label="Wiederholen"
+							/>
+						</div>
+					</div>
+					<button id="change-password-button" type="button" class="btn btn-outline-danger m-3">
+						<span
+							hidden
+							id="change-password-button-spinner"
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
 						/>
-					</div>
-					<div class="col">
-						<label for="new-password-wdh" class="form-label">Wiederholen</label>
-						<input
-							id="new-password-wdh"
-							type="password"
-							class="form-control"
-							placeholder="Wiederholen"
-							aria-label="Wiederholen"
-						/>
-					</div>
+						Ändern
+					</button>
 				</div>
-				<button id="change-password-button" type="button" class="btn btn-outline-danger m-3">
-					<span
-						id="change-password-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-					/>
-					Ändern
-				</button>
+				<button class="btn btn-outline-danger m-2" type="button" on:click={() => containerState.set('stats')}>Schließen</button>
 			</div>
-			<button class="btn btn-outline-danger m-2" type="button">Schließen</button>
-		</div>
-		<div id="stats-container">
-			<div class="row p-3">
-				<div class="col-sm-6 mb-3 mb-sm-0">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Name</h5>
-							<p class="card-text" id="name">{name}</p>
+		{:else if $containerState === 'stats'}
+			<div id="stats-container">
+				<div class="row p-3">
+					<div class="col-sm-6 mb-3 mb-sm-0">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Name</h5>
+								<p class="card-text" id="name">{name}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Version</h5>
+								<p class="card-text" id="version">{version}</p>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Version</h5>
-							<p class="card-text" id="version">{version}</p>
+				<div class="row p-3">
+					<div class="col-sm-6 mb-3 mb-sm-0">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Entwickler</h5>
+								<p class="card-text" id="devs">{developers}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Repository</h5>
+								<p class="card-text"><a target="_blank" id="repo" href={repo}>{repo}</a></p>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row p-3">
-				<div class="col-sm-6 mb-3 mb-sm-0">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Entwickler</h5>
-							<p class="card-text" id="devs">{developers}</p>
+				<div class="row p-3">
+					<div class="col-sm-6 mb-3 mb-sm-0">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Beschreibung</h5>
+								<p class="card-text" id="description">{description}</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Repository</h5>
-							<p class="card-text"><a target="_blank" id="repo" href={repo}>{repo}</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row p-3">
-				<div class="col-sm-6 mb-3 mb-sm-0">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Beschreibung</h5>
-							<p class="card-text" id="description">{description}</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Bürger insgesammt</h5>
-							<p class="card-text" id="users">{users}</p>
+					<div class="col-sm-6">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Bürger insgesammt</h5>
+								<p class="card-text" id="users">{users}</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </section>
 
