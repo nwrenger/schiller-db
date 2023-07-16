@@ -13,10 +13,10 @@
 		staticBackdropLabelElement = $staticBackdropLabel;
 		modalBodyElement = $modalBody;
 	}
-	
+
 	let username = '';
 	let password = '';
-	
+
 	async function handleLogin(username: string, password: string) {
 		const auth = btoa(username + ':' + password);
 		// getting all roles
@@ -28,9 +28,9 @@
 				'Content-Type': 'application/json; charset=utf-8'
 			}
 		});
-		
+
 		const data = await response.json();
-		
+
 		if (response.status === 200) {
 			//get with getItem and clear at logout completely with clear
 			window.localStorage.setItem('auth', auth);
@@ -41,8 +41,8 @@
 		} else {
 			if (dialogElement && staticBackdropLabelElement && modalBodyElement) {
 				const modal = new Modal(dialogElement);
-				staticBackdropLabelElement.textContent = "Fehler";
-				modalBodyElement .textContent = "Falsches Passwort!";
+				staticBackdropLabelElement.textContent = 'Fehler';
+				modalBodyElement.textContent = 'Falsches Passwort!';
 				modal.toggle();
 			}
 			const all_elements = document.getElementsByTagName('input');

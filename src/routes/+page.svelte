@@ -391,7 +391,8 @@
 						<button
 							class="list-group-item list-group-item-action"
 							class:active={activeEntry === entry}
-							on:click={() => handleClick(entry)}>{$sidebarState === 'criminal' ? entry.kind : entry.account}</button
+							on:click={() => handleClick(entry)}
+							>{$sidebarState === 'criminal' ? entry.kind : entry.account}</button
 						>
 					{:else}
 						<button
