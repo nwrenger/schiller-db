@@ -88,14 +88,18 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
         let header = request.headers().get("authorization").next();
 
         let Some(user_pass) = header
-                .and_then(|v| v.strip_prefix("Basic "))
-                .and_then(|v| BASE64.decode(v).ok())
-                .and_then(|v| String::from_utf8(v).ok()) else {
+            .and_then(|v| v.strip_prefix("Basic "))
+            .and_then(|v| BASE64.decode(v).ok())
+            .and_then(|v| String::from_utf8(v).ok())
+        else {
             warn!("missing auth {header:?} from {:?}", request.client_ip());
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
         let Some((user, password)) = user_pass.split_once(':') else {
-            warn!("wrong auth header '{user_pass}' from {:?}", request.client_ip());
+            warn!(
+                "wrong auth header '{user_pass}' from {:?}",
+                request.client_ip()
+            );
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
 
@@ -106,7 +110,10 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
         let Ok(login) = db::login::fetch(&db, user) else {
-            warn!("missing auth credentials '{user}:{password}' from {:?}", request.client_ip());
+            warn!(
+                "missing auth credentials '{user}:{password}' from {:?}",
+                request.client_ip()
+            );
             return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
         };
 

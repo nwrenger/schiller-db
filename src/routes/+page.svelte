@@ -374,7 +374,14 @@
 		<!-- List -->
 		<ul bind:this={container} class="sidebar-list list-group list-group-flush" id="sidebar-list">
 			{#await entries}
-				<li class="list-group-item">Lädt...</li>
+				<li class="list-group-item">
+					<span
+						id="change-password-button-spinner"
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+					/>
+				</li>
 			{:then data}
 				{#if alreadyNested}
 					<button
