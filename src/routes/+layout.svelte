@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { dialog, staticBackdropLabel, modalBody } from './store';
-	
+
 	let dialogElement: HTMLDivElement;
 	let staticBackdropLabelElement: HTMLHeadingElement;
 	let modalBodyElement: HTMLDivElement;
