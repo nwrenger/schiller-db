@@ -70,13 +70,11 @@
 	/// Sidebar States
 	import { sidebarState } from './store';
 
-	$: console.log($sidebarState);
 	sidebarState.set('user');
 
 	/// Container States
 	import { containerState } from './store';
 
-	$: console.log($containerState);
 	containerState.set('stats');
 
 	/// Stat Vars
@@ -99,9 +97,104 @@
 		users = statsData.users;
 	}
 
-	$: if ($containerState === 'stats') { // do same thing for sidebar!!!
-        stats();
-    }
+	$: if ($containerState === 'stats') {
+		// do same thing for sidebar!!!
+		stats();
+	}
+
+	/// Sidebar List
+	interface Entry {
+		account: string;
+		// user
+		forename: string;
+		surname: string;
+		role: string;
+		// workless
+		old_company: string;
+		date_of_dismiss: string;
+		currently: boolean;
+		new_company: string;
+		total_time: string;
+		// criminal
+		kind: string;
+		accuser: string;
+		police_consultant: string;
+		lawyer_culprit: string;
+		lawyer_accuser: string;
+		facts: string;
+		time_of_crime: string;
+		location_of_crime: string;
+		note: string;
+		verdict: string;
+	}
+
+	var alreadyNested: boolean = false;
+	var lastParam: string = '';
+
+	async function sidebar(type: string | null, nested: string | null) {
+		var data: Entry[] = [];
+		if (nested) {
+			if (type === 'user') {
+				data = await request(
+					`/user/search?role=${encodeURIComponent(JSON.parse(nested))}`,
+					'GET',
+					null
+				);
+			} else if (type === 'workless') {
+				data = await request(
+					`/workless/search?date=${encodeURIComponent(JSON.parse(nested))}`,
+					'GET',
+					null
+				);
+			} else if (type === 'criminal') {
+				data = await request(
+					`/criminal/search?name=${encodeURIComponent(JSON.parse(nested))}`,
+					'GET',
+					null
+				);
+			}
+			lastParam = JSON.parse(nested);
+			alreadyNested = true;
+		} else {
+			if (type === 'user') {
+				data = await request('/user/all_roles', 'GET', null);
+			} else if (type === 'workless') {
+				data = await request('/workless/all_dates', 'GET', null);
+			} else if (type === 'criminal') {
+				data = await request('/criminal/all_accounts', 'GET', null);
+			}
+			alreadyNested = false;
+		}
+		return data;
+	}
+
+	var entries: Promise<Entry[]> | never[] = [];
+
+	$: sidebarState.subscribe((value) => {
+		if (value) {
+			entries = sidebar(value, null);
+		}
+	});
+	let activeEntry: Entry | null = null;
+
+	const handleClick = (entry: Entry | null) => {
+		if (activeEntry !== entry) {
+			activeEntry = entry;
+			containerState.set($sidebarState);
+		}
+	};
+
+	async function getUser() {
+		const current = activeEntry?.account;
+		var data: Entry | null = null;
+		if (current) {
+			data = await request(`user/fetch/${encodeURIComponent(current)}`, 'GET', null);
+		}
+		containerState.set('user');
+		activeEntry = data;
+	}
+	/// Other
+	let container: HTMLUListElement;
 </script>
 
 <svelte:head>
@@ -278,7 +371,43 @@
 				</button>
 			</div>
 		</div>
-		<ul class="sidebar-list list-group list-group-flush" id="sidebar-list" />
+		<!-- List -->
+		<ul bind:this={container} class="sidebar-list list-group list-group-flush" id="sidebar-list">
+			{#await entries}
+				<li class="list-group-item">Lädt...</li>
+			{:then data}
+				{#if alreadyNested}
+					<button
+						class="list-group-item list-group-item-action list-group-item-danger"
+						on:click={() => {
+							entries = sidebar($sidebarState, null);
+							container.scrollTo(0, 0);
+							containerState.set('stats');
+						}}>Zurück - {lastParam} - {data.length}</button
+					>
+				{/if}
+				{#each data as entry}
+					{#if alreadyNested}
+						<button
+							class="list-group-item list-group-item-action"
+							class:active={activeEntry === entry}
+							on:click={() => handleClick(entry)}>{$sidebarState === 'criminal' ? entry.kind : entry.account}</button
+						>
+					{:else}
+						<button
+							class="list-group-item list-group-item-action"
+							on:click={() => {
+								entries = sidebar($sidebarState, JSON.stringify(entry));
+								container.scrollTo(0, 0);
+							}}>{entry}</button
+						>
+					{/if}
+				{:else}
+					<li class="list-group-item">Keine Einträge!</li>
+				{/each}
+			{/await}
+		</ul>
+		<!-- /List -->
 		<div class="sidebar-search input-group pb-1 px-1">
 			<button
 				id="advanced"
@@ -382,6 +511,7 @@
 							placeholder="Vorname"
 							aria-label="Vorname"
 							readonly
+							value={activeEntry ? activeEntry.forename : ''}
 						/>
 					</div>
 					<div class="col">
@@ -393,6 +523,7 @@
 							placeholder="Nachname"
 							aria-label="Nachname"
 							readonly
+							value={activeEntry ? activeEntry.surname : ''}
 						/>
 					</div>
 				</div>
@@ -406,6 +537,7 @@
 							placeholder="Account"
 							aria-label="Account"
 							readonly
+							value={activeEntry ? activeEntry.account : ''}
 						/>
 					</div>
 					<div class="col">
@@ -417,6 +549,7 @@
 							placeholder="Gruppe"
 							aria-label="Gruppe"
 							readonly
+							value={activeEntry ? activeEntry.role : ''}
 						/>
 					</div>
 				</div>
@@ -478,6 +611,7 @@
 								placeholder="Account"
 								aria-label="Account"
 								readonly
+								value={activeEntry ? activeEntry.account : ''}
 							/>
 						</div>
 					</div>
@@ -490,13 +624,20 @@
 							placeholder="Vorgeriger Betrieb"
 							aria-label="Vorgeriger Betrieb"
 							readonly
+							value={activeEntry ? activeEntry.old_company : ''}
 						/>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col form-group">
 						<label for="date-of-dismiss" class="form-label">Datum der Entlassung</label>
-						<input type="date" class="form-control" id="date-of-dismiss" readonly />
+						<input
+							type="date"
+							class="form-control"
+							id="date-of-dismiss"
+							readonly
+							value={activeEntry ? activeEntry.date_of_dismiss : ''}
+						/>
 					</div>
 					<div class="col">
 						<label for="currently-workless" class="form-label">Aktuell Arbeitslos</label>
@@ -507,7 +648,8 @@
 								type="button"
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
-								title="Auswahl">Auswahl</button
+								title="Auswahl"
+								disabled>Auswahl</button
 							>
 							<ul id="currently-select-dropdown" class="dropdown-menu">
 								<li><button id="yes-currently" class="dropdown-item" type="button">Ja</button></li>
@@ -520,6 +662,7 @@
 								placeholder="Auswahl"
 								aria-label="Auswahl"
 								readonly
+								value={activeEntry ? activeEntry.currently : ''}
 							/>
 						</div>
 					</div>
@@ -534,6 +677,7 @@
 							placeholder="Neuer Betrieb"
 							aria-label="Neuer Betrieb"
 							readonly
+							value={activeEntry ? activeEntry.new_company : ''}
 						/>
 					</div>
 					<div class="col">
@@ -545,6 +689,7 @@
 							placeholder="Insgeammte arbeitslose Zeit"
 							aria-label="Insgeammte arbeitslose Zeit"
 							readonly
+							value={activeEntry ? activeEntry.total_time : ''}
 						/>
 					</div>
 				</div>
@@ -572,6 +717,7 @@
 				<button
 					type="button"
 					class="btn btn-outline-danger m-3 justify-content-center get-user"
+					on:click={() => getUser()}
 					style="max-width: 160px;">Bürger abrufen</button
 				>
 			</div>
@@ -611,6 +757,7 @@
 								placeholder="Beschuldigter"
 								aria-label="Beschuldigter"
 								readonly
+								value={activeEntry ? activeEntry.account : ''}
 							/>
 						</div>
 					</div>
@@ -623,6 +770,7 @@
 							placeholder="Art"
 							aria-label="Art"
 							readonly
+							value={activeEntry ? activeEntry.kind : ''}
 						/>
 					</div>
 				</div>
@@ -660,6 +808,7 @@
 								placeholder="Anzeiger"
 								aria-label="Anzeiger"
 								readonly
+								value={activeEntry ? activeEntry.accuser : ''}
 							/>
 						</div>
 					</div>
@@ -696,6 +845,7 @@
 								placeholder="Sachberater Polizei"
 								aria-label="Sachberater Polizei"
 								readonly
+								value={activeEntry ? activeEntry.police_consultant : ''}
 							/>
 						</div>
 					</div>
@@ -734,6 +884,7 @@
 								placeholder="Anwalt des Beschuldigtens"
 								aria-label="Anwalt des Beschuldigtens"
 								readonly
+								value={activeEntry ? activeEntry.lawyer_culprit : ''}
 							/>
 						</div>
 					</div>
@@ -770,6 +921,7 @@
 								placeholder="Anwalt des Anzeigers"
 								aria-label="Anwalt des Anzeigers"
 								readonly
+								value={activeEntry ? activeEntry.lawyer_accuser : ''}
 							/>
 						</div>
 					</div>
@@ -784,6 +936,7 @@
 							placeholder="Tatbestand"
 							aria-label="Tatbestand"
 							readonly
+							value={activeEntry ? activeEntry.facts : ''}
 						/>
 					</div>
 				</div>
@@ -797,6 +950,7 @@
 							placeholder="Zeitpunkt der Tat"
 							aria-label="Zeitpunkt der Tat"
 							readonly
+							value={activeEntry ? activeEntry.time_of_crime : ''}
 						/>
 					</div>
 					<div class="col">
@@ -808,6 +962,7 @@
 							placeholder="Ort der Tat"
 							aria-label="Ort der Tat"
 							readonly
+							value={activeEntry ? activeEntry.location_of_crime : ''}
 						/>
 					</div>
 				</div>
@@ -821,6 +976,7 @@
 							placeholder="Kommentar"
 							aria-label="Kommentar"
 							readonly
+							value={activeEntry ? activeEntry.note : ''}
 						/>
 					</div>
 				</div>
@@ -834,7 +990,8 @@
 								type="button"
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
-								title="Auswählen">Urteil</button
+								title="Auswählen"
+								disabled>Urteil</button
 							>
 							<ul id="verdict-select-dropdown" class="dropdown-menu">
 								<li>
@@ -856,6 +1013,7 @@
 								placeholder="Urteil"
 								aria-label="Urteil"
 								readonly
+								value={activeEntry ? activeEntry.verdict : ''}
 							/>
 						</div>
 					</div>
@@ -881,8 +1039,11 @@
 				<button id="criminal-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
 					>Abbrechen</button
 				>
-				<button type="button" class="btn btn-outline-danger m-3 get-user" style="max-width: 160px;"
-					>Bürger abrufen</button
+				<button
+					type="button"
+					class="btn btn-outline-danger m-3 get-user"
+					style="max-width: 160px;"
+					on:click={() => getUser()}>Bürger abrufen</button
 				>
 			</div>
 		{:else if $containerState === 'login'}
@@ -1048,7 +1209,11 @@
 						Alle Logins löschen
 					</button>
 				</div>
-				<button class="btn btn-outline-danger m-2" type="button" on:click={() => containerState.set('stats')}>Schließen</button>
+				<button
+					class="btn btn-outline-danger m-2"
+					type="button"
+					on:click={() => containerState.set('stats')}>Schließen</button
+				>
 			</div>
 		{:else if $containerState === 'password'}
 			<div id="password-changer-container">
@@ -1087,7 +1252,11 @@
 						Ändern
 					</button>
 				</div>
-				<button class="btn btn-outline-danger m-2" type="button" on:click={() => containerState.set('stats')}>Schließen</button>
+				<button
+					class="btn btn-outline-danger m-2"
+					type="button"
+					on:click={() => containerState.set('stats')}>Schließen</button
+				>
 			</div>
 		{:else if $containerState === 'stats'}
 			<div id="stats-container">
