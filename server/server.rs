@@ -146,7 +146,7 @@ pub async fn index() -> Option<NamedFile> {
     NamedFile::open(path).await.ok()
 }
 
-#[get("/login")]
+#[get("/api/login")]
 pub async fn login() -> Option<NamedFile> {
     let path = Path::new("static").join("login.html");
     NamedFile::open(path).await.ok()
@@ -167,7 +167,7 @@ pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
         ("authorization" = []),
     )
 )]
-#[get("/stats")]
+#[get("/api/stats")]
 pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::stats::fetch(&db))
@@ -185,7 +185,7 @@ pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
         ("authorization" = []),
     )
 )]
-#[get("/user/fetch/<id>")]
+#[get("/api/user/fetch/<id>")]
 pub async fn fetch_user(_auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::fetch(&db, id))
@@ -200,7 +200,7 @@ pub async fn fetch_user(_auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User
         ("authorization" = []),
     )
 )]
-#[get("/user/search?<name>&<role>&<limit>")]
+#[get("/api/user/search?<name>&<role>&<limit>")]
 pub async fn search_user(
     _auth: Auth<UserReadOnly>,
     name: Option<&str>,
@@ -224,7 +224,7 @@ pub async fn search_user(
         ("authorization" = []),
     )
 )]
-#[get("/user/all_roles?<name>")]
+#[get("/api/user/all_roles?<name>")]
 pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::user::all_roles(&db, name.unwrap_or("")))
@@ -241,7 +241,7 @@ pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Re
         ("authorization" = []),
     )
 )]
-#[post("/user", format = "json", data = "<user>")]
+#[post("/api/user", format = "json", data = "<user>")]
 pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()>> {
     warn!("POST /user with data {user:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -262,7 +262,7 @@ pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()
         ("authorization" = []),
     )
 )]
-#[put("/user/<id>", format = "json", data = "<user>")]
+#[put("/api/user/<id>", format = "json", data = "<user>")]
 pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>, id: &str) -> Json<Result<()>> {
     warn!("PUT /user/{id} with data {user:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -281,7 +281,7 @@ pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>, id: &str) -> J
         ("authorization" = []),
     )
 )]
-#[delete("/user/<id>")]
+#[delete("/api/user/<id>")]
 pub async fn delete_user(auth: Auth<UserWrite>, id: &str) -> Json<Result<()>> {
     warn!("DELETE /user/{id}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -302,7 +302,7 @@ pub async fn delete_user(auth: Auth<UserWrite>, id: &str) -> Json<Result<()>> {
         ("authorization" = []),
     )
 )]
-#[get("/workless/fetch/<account>/<old_company>/<date>")]
+#[get("/api/workless/fetch/<account>/<old_company>/<date>")]
 pub async fn fetch_workless(
     _auth: Auth<WorklessReadOnly>,
     account: &str,
@@ -328,7 +328,7 @@ pub async fn fetch_workless(
         ("authorization" = []),
     )
 )]
-#[get("/workless/search?<name>&<old_company>&<date>&<limit>")]
+#[get("/api/workless/search?<name>&<old_company>&<date>&<limit>")]
 pub async fn search_workless(
     _auth: Auth<WorklessReadOnly>,
     name: Option<&str>,
@@ -357,7 +357,7 @@ pub async fn search_workless(
         ("authorization" = []),
     )
 )]
-#[get("/workless/search_role?<name>&<date>&<role>&<limit>")]
+#[get("/api/workless/search_role?<name>&<date>&<role>&<limit>")]
 pub async fn search_workless_roles(
     _auth: Auth<WorklessReadOnly>,
     name: Option<&str>,
@@ -384,7 +384,7 @@ pub async fn search_workless_roles(
         ("authorization" = []),
     )
 )]
-#[get("/workless/all_dates")]
+#[get("/api/workless/all_dates")]
 pub async fn all_dates(_auth: Auth<WorklessReadOnly>) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::workless::all_dates(&db))
@@ -399,7 +399,7 @@ pub async fn all_dates(_auth: Auth<WorklessReadOnly>) -> Json<Result<Vec<String>
         ("authorization" = []),
     )
 )]
-#[get("/workless/all_roles?<date>&<name>")]
+#[get("/api/workless/all_roles?<date>&<name>")]
 pub async fn all_roles_workless(
     _auth: Auth<WorklessReadOnly>,
     date: Option<&str>,
@@ -424,7 +424,7 @@ pub async fn all_roles_workless(
         ("authorization" = []),
     )
 )]
-#[post("/workless", format = "json", data = "<workless>")]
+#[post("/api/workless", format = "json", data = "<workless>")]
 pub async fn add_workless(auth: Auth<WorklessWrite>, workless: Json<Workless>) -> Json<Result<()>> {
     warn!("POST /workless with data {workless:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -448,7 +448,7 @@ pub async fn add_workless(auth: Auth<WorklessWrite>, workless: Json<Workless>) -
     )
 )]
 #[put(
-    "/workless/<previous_account>/<previous_old_company>/<previous_date>",
+    "/api/workless/<previous_account>/<previous_old_company>/<previous_date>",
     format = "json",
     data = "<workless>"
 )]
@@ -493,7 +493,7 @@ pub async fn update_workless(
         ("authorization" = []),
     )
 )]
-#[delete("/workless/<account>/<old_company>/<date>")]
+#[delete("/api/workless/<account>/<old_company>/<date>")]
 pub async fn delete_workless(
     auth: Auth<WorklessWrite>,
     account: &str,
@@ -524,7 +524,7 @@ pub async fn delete_workless(
         ("authorization" = []),
     )
 )]
-#[get("/criminal/fetch/<account>/<kind>")]
+#[get("/api/criminal/fetch/<account>/<kind>")]
 pub async fn fetch_criminal(
     _auth: Auth<CriminalReadOnly>,
     account: &str,
@@ -543,7 +543,7 @@ pub async fn fetch_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/criminal/all_accounts")]
+#[get("/api/criminal/all_accounts")]
 pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::criminal::all_accounts(&db))
@@ -558,7 +558,7 @@ pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<Stri
         ("authorization" = []),
     )
 )]
-#[get("/criminal/all_roles?<name>")]
+#[get("/api/criminal/all_roles?<name>")]
 pub async fn all_roles_criminal(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
@@ -576,7 +576,7 @@ pub async fn all_roles_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/criminal/search?<name>&<kind>&<limit>")]
+#[get("/api/criminal/search?<name>&<kind>&<limit>")]
 pub async fn search_criminal(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
@@ -600,7 +600,7 @@ pub async fn search_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/criminal/search_role?<name>&<role>&<limit>")]
+#[get("/api/criminal/search_role?<name>&<role>&<limit>")]
 pub async fn search_criminal_roles(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
@@ -627,7 +627,7 @@ pub async fn search_criminal_roles(
         ("authorization" = []),
     )
 )]
-#[post("/criminal", format = "json", data = "<criminal>")]
+#[post("/api/criminal", format = "json", data = "<criminal>")]
 pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -> Json<Result<()>> {
     warn!("POST /criminal with data {criminal:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -650,7 +650,7 @@ pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -
     )
 )]
 #[put(
-    "/criminal/<previous_account>/<previous_kind>",
+    "/api/criminal/<previous_account>/<previous_kind>",
     format = "json",
     data = "<criminal>"
 )]
@@ -686,7 +686,7 @@ pub async fn update_criminal(
         ("authorization" = []),
     )
 )]
-#[delete("/criminal/<account>/<kind>")]
+#[delete("/api/criminal/<account>/<kind>")]
 pub async fn delete_criminal(
     auth: Auth<CriminalWrite>,
     account: &str,
@@ -709,7 +709,7 @@ pub async fn delete_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/login/fetch/<user>")]
+#[get("/api/login/fetch/<user>")]
 pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Result<Permissions>> {
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
     Json(db::login::fetch_permission(&db, user))
@@ -726,7 +726,7 @@ pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Res
         ("authorization" = []),
     )
 )]
-#[post("/login", format = "json", data = "<login>")]
+#[post("/api/login", format = "json", data = "<login>")]
 pub async fn add_login(auth: Auth<UserWrite>, login: Json<NewLogin>) -> Json<Result<()>> {
     warn!("POST /login with data {login:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -744,7 +744,7 @@ pub async fn add_login(auth: Auth<UserWrite>, login: Json<NewLogin>) -> Json<Res
         ("authorization" = []),
     )
 )]
-#[put("/login", format = "json", data = "<login>")]
+#[put("/api/login", format = "json", data = "<login>")]
 pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Json<Result<()>> {
     warn!("PUT /login with data {login:?}: {}", auth.user);
     let db = Database::open(Cow::from(Path::new("./sndm.db"))).unwrap().0;
@@ -778,7 +778,7 @@ pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Js
         ("authorization" = []),
     )
 )]
-#[delete("/login/<user>")]
+#[delete("/api/login/<user>")]
 pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>> {
     warn!("DELETE /login/{user}: {}", auth.user);
     let user = user.trim();
@@ -801,7 +801,7 @@ pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>>
         ("authorization" = []),
     )
 )]
-#[delete("/all_logins")]
+#[delete("/api/all_logins")]
 pub async fn delete_all_logins(auth: Auth<UserWrite>) -> Json<Result<()>> {
     warn!("DELETE /all_logins: {}", auth.user);
 

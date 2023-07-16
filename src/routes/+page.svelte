@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { writable, type Writable } from 'svelte/store';
+
 	import { goto } from '$app/navigation';
+	import Navigation from './Navigation.svelte';
+	import User from './User.svelte';
 
 	/// Request Function
 	async function request(url: string, type: string, json: BodyInit | null | undefined) {
@@ -35,87 +39,52 @@
 	}
 
 	/// Modals
-	import Modal from 'bootstrap/js/dist/modal';
-	import { dialog, staticBackdropLabel, modalBody } from './store';
-
-	let dialogElement: HTMLDivElement | null;
-	let staticBackdropLabelElement: HTMLHeadingElement | null;
-	let modalBodyElement: HTMLDivElement | null;
-
-	$: {
-		dialogElement = $dialog;
-		staticBackdropLabelElement = $staticBackdropLabel;
-		modalBodyElement = $modalBody;
-	}
+	import Dialog from './Dialog.svelte';
+	let newDialog: Dialog;
 
 	function error(error: string) {
-		if (dialogElement && staticBackdropLabelElement && modalBodyElement) {
-			const modal = new Modal(dialogElement);
-			staticBackdropLabelElement.textContent = 'Fehler';
-			modalBodyElement.textContent = error;
-			modal.toggle();
-		}
+		newDialog.open(error);
 		throw error;
 	}
 
-	function currentUser() {
-		if (dialogElement && staticBackdropLabelElement && modalBodyElement && current_user) {
-			const modal = new Modal(dialogElement);
-			staticBackdropLabelElement.textContent = 'Info';
-			modalBodyElement.textContent = 'Der akutelle Benutzer ist ' + current_user;
-			modal.toggle();
-		}
-	}
-
-	/// Sidebar States
-	import { sidebarState } from './store';
-
-	sidebarState.set('user');
-
-	/// Container States
-	import { containerState } from './store';
-
-	containerState.set('stats');
-
-	/// Stat Vars
-	let name: string = '';
-	let version: string = '';
-	let developers: string = '';
-	let repo: string = '';
-	let description: string = '';
-	let users: string = '';
-
 	async function stats() {
-		const statsData = await request('/stats', 'GET', null);
+		const statsData = await request('/api/stats', 'GET', null);
 		const devs = statsData.developer.split(':');
 
-		name = statsData.name;
-		version = statsData.version;
-		developers = 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1];
-		repo = statsData.repo;
-		description = statsData.description;
-		users = statsData.users;
-	}
-
-	$: if ($containerState === 'stats') {
-		// do same thing for sidebar!!!
-		stats();
+		$mainView = {
+			ty: 'stats',
+			name: statsData.name,
+			version: statsData.version,
+			developers: 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1],
+			repo: statsData.repo,
+			description: statsData.description,
+			users: statsData.users
+		};
 	}
 
 	/// Sidebar List
-	interface Entry {
-		account: string;
-		// user
+	import NestedList from './NestedList.svelte';
+
+	interface User {
+		ty: 'user';
 		forename: string;
 		surname: string;
+		account: string;
 		role: string;
-		// workless
+	}
+
+	interface Workless {
+		ty: 'workless';
+		account: string;
 		old_company: string;
 		date_of_dismiss: string;
 		currently: boolean;
 		new_company: string;
 		total_time: string;
-		// criminal
+	}
+	interface Criminal {
+		ty: 'criminal';
+		account: string;
 		kind: string;
 		accuser: string;
 		police_consultant: string;
@@ -127,66 +96,65 @@
 		note: string;
 		verdict: string;
 	}
+	interface Login {
+		ty: 'login';
+	}
+	interface Password {
+		ty: 'password';
+	}
+	interface Stats {
+		ty: 'stats';
+		name: string;
+		version: string;
+		developers: string;
+		repo: string;
+		description: string;
+		users: string;
+	}
+
+	type ListItem = User | Workless | Criminal | string;
 
 	var alreadyNested: boolean = false;
-	var lastParam: string = '';
 
-	async function sidebar(type: string | null, nested: string | null) {
-		var data: Entry[] = [];
-		if (nested) {
-			if (type === 'user') {
+	async function sidebarData(nested: ListItem | null) {
+		if ($mainView == null || typeof($mainView) != "object") {
+			return []
+		}
+
+		var data: ListItem[] = [];
+		if (nested && typeof nested == 'string') {
+			if ($mainView.ty === 'user') {
+				data = await request(`/api/user/search?role=${encodeURIComponent(nested)}`, 'GET', null);
+			} else if ($mainView.ty === 'workless') {
 				data = await request(
-					`/user/search?role=${encodeURIComponent(JSON.parse(nested))}`,
+					`/api/workless/search?date=${encodeURIComponent(nested)}`,
 					'GET',
 					null
 				);
-			} else if (type === 'workless') {
+			} else if ($mainView.ty === 'criminal') {
 				data = await request(
-					`/workless/search?date=${encodeURIComponent(JSON.parse(nested))}`,
+					`/api/criminal/search?name=${encodeURIComponent(nested)}`,
 					'GET',
 					null
 				);
-			} else if (type === 'criminal') {
-				data = await request(
-					`/criminal/search?name=${encodeURIComponent(JSON.parse(nested))}`,
-					'GET',
-					null
-				);
-			}
-			if ($sidebarState === 'workless') {
-				lastParam = formatDate(nested);
-			} else {
-				lastParam = JSON.parse(nested);
 			}
 			alreadyNested = true;
 		} else {
-			if (type === 'user') {
-				data = await request('/user/all_roles', 'GET', null);
-			} else if (type === 'workless') {
-				data = await request('/workless/all_dates', 'GET', null);
-			} else if (type === 'criminal') {
-				data = await request('/criminal/all_accounts', 'GET', null);
+			if ($mainView.ty === 'user') {
+				data = await request('/api/user/all_roles', 'GET', null);
+			} else if ($mainView.ty === 'workless') {
+				data = await request('/api/workless/all_dates', 'GET', null);
+			} else if ($mainView.ty === 'criminal') {
+				data = await request('/api/criminal/all_accounts', 'GET', null);
 			}
 			alreadyNested = false;
 		}
 		return data;
 	}
 
-	var entries: Promise<Entry[]> | never[] = [];
+	let nestedList: NestedList<ListItem>;
 
-	$: sidebarState.subscribe((value) => {
-		if (value) {
-			entries = sidebar(value, null);
-		}
-	});
-	let activeEntry: Entry | null = null;
-
-	const handleClick = (entry: Entry | null) => {
-		if (activeEntry !== entry) {
-			activeEntry = entry;
-			containerState.set($sidebarState);
-		}
-	};
+	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
 
 	function formatDate(date: string) {
 		const [year, month, day] = JSON.parse(date).split('-');
@@ -195,17 +163,34 @@
 
 	/// Container
 	async function getUser() {
-		const current = activeEntry?.account;
-		var data: Entry | null = null;
-		if (current) {
-			data = await request(`user/fetch/${encodeURIComponent(current)}`, 'GET', null);
+		if (
+			$mainView &&
+			typeof $mainView == 'object' &&
+			($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
+		) {
+			const current = $mainView.account;
+			var data: User = await request(`/api/user/fetch/${encodeURIComponent(current)}`, 'GET', null);
+			$mainView = data;
 		}
-		containerState.set('user');
-		activeEntry = data;
 	}
 
 	/// Other
-	let container: HTMLUListElement;
+	function onListSelect(parents: ListItem[]): boolean {
+		console.log(`List Parents: ${parents.length}`);
+		if (
+			$mainView &&
+			typeof $mainView == 'object' &&
+			$mainView.ty == 'user' &&
+			parents.length == 1
+		)
+			return true;
+		return false;
+	}
+
+	async function fetchListItems(parents: ListItem[]): Promise<ListItem[]> {
+		console.log(`Fetch Parents: ${parents.at(-1)}`);
+		return await sidebarData(parents.at(-1) ?? null);
+	}
 </script>
 
 <svelte:head>
@@ -214,71 +199,14 @@
 </svelte:head>
 
 <section class="main">
-	<!-- Navbar TODO: Onclick and Onchange -->
-	<nav class="nav navbar bg-secondary-subtle">
-		<div class="container-fluid">
-			<a href="/" class="navbar-brand">SNDI</a>
-			<div class="d-flex">
-				<div class="btn-group dropdown">
-					<button
-						class="btn btn-outline-danger dropdown-toggle hide-arrow"
-						type="button"
-						title="Profil"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							fill="currentColor"
-							class="bi bi-person"
-							viewBox="0 0 16 16"
-						>
-							<path
-								d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"
-							/>
-						</svg>
-					</button>
-					<ul class="dropdown-menu dropdown-menu-end">
-						<li>
-							<h6 class="dropdown-header">Profil</h6>
-						</li>
-						<li>
-							<button class="dropdown-item" type="button" on:click={() => currentUser()}
-								>Aktueller Benutzer</button
-							>
-						</li>
-						<li>
-							<button
-								class="dropdown-item"
-								type="button"
-								on:click={() => containerState.set('password')}>Passwort ändern</button
-							>
-						</li>
-						<li>
-							<button
-								id="login-creator"
-								class="dropdown-item"
-								type="button"
-								on:click={() => containerState.set('login')}>Logins Verwalten</button
-							>
-						</li>
-						<li>
-							<button
-								class="dropdown-item"
-								type="button"
-								on:click={() => {
-									localStorage.clear();
-									goto('/login', { replaceState: true });
-								}}>Ausloggen</button
-							>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</nav>
+	<Navigation onSelect={(val) => {
+		if (val == "password" || val == "login") {
+			$mainView = {ty: val};
+		} else {
+			stats();
+		}
+	}} currentUser={current_user} />
+
 	<!-- Sidebar -->
 	<div class="sidebar bg-dark">
 		<div class="bg-dark-subtle">
@@ -382,53 +310,9 @@
 				</button>
 			</div>
 		</div>
-		<!-- List -->
-		<ul bind:this={container} class="sidebar-list list-group list-group-flush" id="sidebar-list">
-			{#await entries}
-				<li class="list-group-item">
-					<div class="d-flex justify-content-center">
-						<div class="spinner-grow" role="status">
-							<span class="visually-hidden">Loading...</span>
-						</div>
-					</div>
-				</li>
-			{:then data}
-				{#if alreadyNested}
-					<button
-						class="list-group-item list-group-item-action list-group-item-danger"
-						on:click={() => {
-							entries = sidebar($sidebarState, null);
-							container.scrollTo(0, 0);
-							containerState.set('stats');
-						}}>Zurück - {lastParam} - {data.length}</button
-					>
-				{/if}
-				{#each data as entry}
-					{#if alreadyNested}
-						<button
-							class="list-group-item list-group-item-action"
-							class:active={activeEntry === entry}
-							on:click={() => handleClick(entry)}
-							>{$sidebarState === 'criminal' ? entry.kind : entry.account}{$sidebarState ===
-								'workless' && entry.currently
-								? ' - Arbeitslos'
-								: ''}</button
-						>
-					{:else}
-						<button
-							class="list-group-item list-group-item-action"
-							on:click={() => {
-								entries = sidebar($sidebarState, JSON.stringify(entry));
-								container.scrollTo(0, 0);
-							}}>{$sidebarState === 'workless' ? formatDate(JSON.stringify(entry)) : entry}</button
-						>
-					{/if}
-				{:else}
-					<li class="list-group-item">Keine Einträge!</li>
-				{/each}
-			{/await}
-		</ul>
-		<!-- /List -->
+
+		<NestedList bind:this={nestedList} fetchItems={fetchListItems} onSelect={onListSelect} />
+
 		<div class="sidebar-search input-group pb-1 px-1">
 			<button
 				id="advanced"
@@ -494,7 +378,7 @@
 				<li>
 					<button
 						id="user"
-						class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
+						class={typeof($mainView) === 'user' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
 						on:click={() => {
 							sidebarState.set('user');
@@ -519,8 +403,7 @@
 						class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
 						on:click={() => {
-							sidebarState.set('criminal');
-							containerState.set('stats');
+							$mainView = null
 						}}>Kriminalregister</button
 					>
 				</li>
@@ -529,83 +412,9 @@
 	</div>
 	<!-- Input Containers -->
 	<div class="mid p-3 bg-body-secondary">
-		{#if $containerState === 'user'}
-			<div id="user-container">
-				<div class="card-title row">
-					<div class="col">
-						<label for="forename" class="form-label">Vorname</label>
-						<input
-							id="forename"
-							type="text"
-							class="form-control"
-							placeholder="Vorname"
-							aria-label="Vorname"
-							readonly
-							value={activeEntry ? activeEntry.forename : ''}
-						/>
-					</div>
-					<div class="col">
-						<label for="surname" class="form-label">Nachname</label>
-						<input
-							id="surname"
-							type="text"
-							class="form-control"
-							placeholder="Nachname"
-							aria-label="Nachname"
-							readonly
-							value={activeEntry ? activeEntry.surname : ''}
-						/>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<label for="account" class="form-label">Account</label>
-						<input
-							id="account"
-							type="text"
-							class="form-control"
-							placeholder="Account"
-							aria-label="Account"
-							readonly
-							value={activeEntry ? activeEntry.account : ''}
-						/>
-					</div>
-					<div class="col">
-						<label for="role" class="form-label">Gruppe</label>
-						<input
-							id="role"
-							type="text"
-							class="form-control"
-							placeholder="Gruppe"
-							aria-label="Gruppe"
-							readonly
-							value={activeEntry ? activeEntry.role : ''}
-						/>
-					</div>
-				</div>
-				<button id="user-add-button" class="btn btn-outline-danger m-3" type="button" hidden
-					><span
-						id="user-add-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-						hidden
-					/>Hinzufügen</button
-				>
-				<button id="user-confirm-button" type="button" class="btn btn-outline-danger m-3" hidden
-					><span
-						id="user-confirm-button-spinner"
-						class="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-						hidden
-					/>Bestätigen</button
-				>
-				<button id="user-abort-button" type="button" class="btn btn-outline-danger m-3" hidden
-					>Abbrechen</button
-				>
-			</div>
-		{:else if $containerState === 'workless'}
+		{#if $mainView && typeof $mainView == 'object' && $mainView.ty == 'user'}
+			<User user={$mainView} />
+		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
 			<div id="workless-container">
 				<div class="card-title row">
 					<div class="col">
@@ -641,7 +450,7 @@
 								placeholder="Account"
 								aria-label="Account"
 								readonly
-								value={activeEntry ? activeEntry.account : ''}
+								value={$mainView.account}
 							/>
 						</div>
 					</div>
@@ -654,7 +463,7 @@
 							placeholder="Vorgeriger Betrieb"
 							aria-label="Vorgeriger Betrieb"
 							readonly
-							value={activeEntry ? activeEntry.old_company : ''}
+							value={$mainView.old_company}
 						/>
 					</div>
 				</div>
@@ -666,7 +475,7 @@
 							class="form-control"
 							id="date-of-dismiss"
 							readonly
-							value={activeEntry ? activeEntry.date_of_dismiss : ''}
+							value={$mainView.date_of_dismiss}
 						/>
 					</div>
 					<div class="col">
@@ -692,7 +501,7 @@
 								placeholder="Auswahl"
 								aria-label="Auswahl"
 								readonly
-								value={activeEntry ? activeEntry.currently : ''}
+								value={$mainView.currently}
 							/>
 						</div>
 					</div>
@@ -707,7 +516,7 @@
 							placeholder="Neuer Betrieb"
 							aria-label="Neuer Betrieb"
 							readonly
-							value={activeEntry ? activeEntry.new_company : ''}
+							value={$mainView.new_company}
 						/>
 					</div>
 					<div class="col">
@@ -719,7 +528,7 @@
 							placeholder="Insgeammte arbeitslose Zeit"
 							aria-label="Insgeammte arbeitslose Zeit"
 							readonly
-							value={activeEntry ? activeEntry.total_time : ''}
+							value={$mainView.total_time}
 						/>
 					</div>
 				</div>
@@ -751,7 +560,7 @@
 					style="max-width: 160px;">Bürger abrufen</button
 				>
 			</div>
-		{:else if $containerState === 'criminal'}
+		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
 			<div id="criminal-container">
 				<div class="card-title row">
 					<div class="col">
@@ -787,7 +596,7 @@
 								placeholder="Beschuldigter"
 								aria-label="Beschuldigter"
 								readonly
-								value={activeEntry ? activeEntry.account : ''}
+								value={$mainView.account}
 							/>
 						</div>
 					</div>
@@ -800,7 +609,7 @@
 							placeholder="Art"
 							aria-label="Art"
 							readonly
-							value={activeEntry ? activeEntry.kind : ''}
+							value={$mainView.kind}
 						/>
 					</div>
 				</div>
@@ -838,7 +647,7 @@
 								placeholder="Anzeiger"
 								aria-label="Anzeiger"
 								readonly
-								value={activeEntry ? activeEntry.accuser : ''}
+								value={$mainView.accuser}
 							/>
 						</div>
 					</div>
@@ -875,7 +684,7 @@
 								placeholder="Sachberater Polizei"
 								aria-label="Sachberater Polizei"
 								readonly
-								value={activeEntry ? activeEntry.police_consultant : ''}
+								value={$mainView.police_consultant}
 							/>
 						</div>
 					</div>
@@ -914,7 +723,7 @@
 								placeholder="Anwalt des Beschuldigtens"
 								aria-label="Anwalt des Beschuldigtens"
 								readonly
-								value={activeEntry ? activeEntry.lawyer_culprit : ''}
+								value={$mainView.lawyer_culprit}
 							/>
 						</div>
 					</div>
@@ -951,7 +760,7 @@
 								placeholder="Anwalt des Anzeigers"
 								aria-label="Anwalt des Anzeigers"
 								readonly
-								value={activeEntry ? activeEntry.lawyer_accuser : ''}
+								value={$mainView.lawyer_accuser}
 							/>
 						</div>
 					</div>
@@ -966,7 +775,7 @@
 							placeholder="Tatbestand"
 							aria-label="Tatbestand"
 							readonly
-							value={activeEntry ? activeEntry.facts : ''}
+							value={$mainView.facts}
 						/>
 					</div>
 				</div>
@@ -980,7 +789,7 @@
 							placeholder="Zeitpunkt der Tat"
 							aria-label="Zeitpunkt der Tat"
 							readonly
-							value={activeEntry ? activeEntry.time_of_crime : ''}
+							value={$mainView.time_of_crime}
 						/>
 					</div>
 					<div class="col">
@@ -992,7 +801,7 @@
 							placeholder="Ort der Tat"
 							aria-label="Ort der Tat"
 							readonly
-							value={activeEntry ? activeEntry.location_of_crime : ''}
+							value={$mainView.location_of_crime}
 						/>
 					</div>
 				</div>
@@ -1006,7 +815,7 @@
 							placeholder="Kommentar"
 							aria-label="Kommentar"
 							readonly
-							value={activeEntry ? activeEntry.note : ''}
+							value={$mainView.note}
 						/>
 					</div>
 				</div>
@@ -1043,7 +852,7 @@
 								placeholder="Urteil"
 								aria-label="Urteil"
 								readonly
-								value={activeEntry ? activeEntry.verdict : ''}
+								value={$mainView.verdict}
 							/>
 						</div>
 					</div>
@@ -1076,7 +885,7 @@
 					on:click={() => getUser()}>Bürger abrufen</button
 				>
 			</div>
-		{:else if $containerState === 'login'}
+		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}
 			<div id="login-container">
 				<div>
 					<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
@@ -1242,10 +1051,10 @@
 				<button
 					class="btn btn-outline-danger m-2"
 					type="button"
-					on:click={() => containerState.set('stats')}>Schließen</button
+					on:click={() => stats()}>Schließen</button
 				>
 			</div>
-		{:else if $containerState === 'password'}
+		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
 			<div id="password-changer-container">
 				<div>
 					<label for="password-changer" class="form-label">Passwort ändern: </label>
@@ -1285,17 +1094,17 @@
 				<button
 					class="btn btn-outline-danger m-2"
 					type="button"
-					on:click={() => containerState.set('stats')}>Schließen</button
+					on:click={() => stats()}>Schließen</button
 				>
 			</div>
-		{:else if $containerState === 'stats'}
+		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}
 			<div id="stats-container">
 				<div class="row p-3">
 					<div class="col-sm-6 mb-3 mb-sm-0">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Name</h5>
-								<p class="card-text" id="name">{name}</p>
+								<p class="card-text" id="name">{$mainView.name}</p>
 							</div>
 						</div>
 					</div>
@@ -1303,7 +1112,7 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Version</h5>
-								<p class="card-text" id="version">{version}</p>
+								<p class="card-text" id="version">{$mainView.version}</p>
 							</div>
 						</div>
 					</div>
@@ -1313,7 +1122,7 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Entwickler</h5>
-								<p class="card-text" id="devs">{developers}</p>
+								<p class="card-text" id="devs">{$mainView.developers}</p>
 							</div>
 						</div>
 					</div>
@@ -1321,7 +1130,9 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Repository</h5>
-								<p class="card-text"><a target="_blank" id="repo" href={repo}>{repo}</a></p>
+								<p class="card-text">
+									<a target="_blank" id="repo" href={$mainView.repo}>{$mainView.repo}</a>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -1331,7 +1142,7 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Beschreibung</h5>
-								<p class="card-text" id="description">{description}</p>
+								<p class="card-text" id="description">{$mainView.description}</p>
 							</div>
 						</div>
 					</div>
@@ -1339,7 +1150,7 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Bürger insgesammt</h5>
-								<p class="card-text" id="users">{users}</p>
+								<p class="card-text" id="users">{$mainView.users}</p>
 							</div>
 						</div>
 					</div>
@@ -1347,6 +1158,7 @@
 			</div>
 		{/if}
 	</div>
+	<Dialog bind:this={newDialog} />
 </section>
 
 <style>
@@ -1367,14 +1179,6 @@
 		}
 	}
 
-	.nav {
-		grid-area: nav;
-	}
-
-	.navbar-brand {
-		font-size: x-large;
-	}
-
 	.sidebar {
 		grid-area: sidebar;
 		display: flex;
@@ -1383,15 +1187,6 @@
 
 	.hide-arrow::after {
 		display: none !important;
-	}
-
-	.sidebar-list {
-		flex: 1;
-		overflow-y: scroll;
-	}
-
-	.list-group-item-action {
-		cursor: pointer;
 	}
 
 	.p-2 {

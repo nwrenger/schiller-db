@@ -7,6 +7,10 @@ authors = ["Nils Wrenger <nils@wrenger.net>", "Leonard Böttcher <leonard.boettc
 repository = "https://github.com/nwrenger/sndm"
 license = "MIT"
 
+[[bin]]
+name = "sndm"
+path = "server/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
@@ -20,7 +24,7 @@ rusqlite = {version = "0.29.0", features = ["bundled", "chrono"]}
 chrono = {version = "0.4", features = ["serde"]}
 rocket = { version = "0.5.0-rc.3", features = ["json"] }
 utoipa = { version = "3.3.0", features = ["rocket_extras", "chrono", "preserve_order"] }
-utoipa-swagger-ui = { version = "3.1.3", features = ["rocket"] }
+utoipa-swagger-ui = { version = "3.1.3", features = ["rocket", "debug-embed"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = "0.4"
