@@ -153,7 +153,11 @@
 					null
 				);
 			}
-			lastParam = JSON.parse(nested);
+			if ($sidebarState === 'workless') {
+				lastParam = formatDate(nested);
+			} else {
+				lastParam = JSON.parse(nested);
+			}
 			alreadyNested = true;
 		} else {
 			if (type === 'user') {
@@ -184,6 +188,12 @@
 		}
 	};
 
+	function formatDate(date: string) {
+		const [year, month, day] = JSON.parse(date).split('-');
+		return `${day}.${month}.${year}`;
+	}
+
+	/// Container
 	async function getUser() {
 		const current = activeEntry?.account;
 		var data: Entry | null = null;
@@ -193,12 +203,13 @@
 		containerState.set('user');
 		activeEntry = data;
 	}
+
 	/// Other
 	let container: HTMLUListElement;
 </script>
 
 <svelte:head>
-	<title>SNDM</title>
+	<title>Main</title>
 	<meta name="description" content="Main Page" />
 </svelte:head>
 
@@ -398,7 +409,10 @@
 							class="list-group-item list-group-item-action"
 							class:active={activeEntry === entry}
 							on:click={() => handleClick(entry)}
-							>{$sidebarState === 'criminal' ? entry.kind : entry.account}</button
+							>{$sidebarState === 'criminal' ? entry.kind : entry.account}{$sidebarState ===
+								'workless' && entry.currently
+								? ' - Arbeitslos'
+								: ''}</button
 						>
 					{:else}
 						<button
@@ -406,7 +420,7 @@
 							on:click={() => {
 								entries = sidebar($sidebarState, JSON.stringify(entry));
 								container.scrollTo(0, 0);
-							}}>{entry}</button
+							}}>{$sidebarState === 'workless' ? formatDate(JSON.stringify(entry)) : entry}</button
 						>
 					{/if}
 				{:else}
@@ -482,7 +496,10 @@
 						id="user"
 						class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
-						on:click={() => sidebarState.set('user')}>Bürger</button
+						on:click={() => {
+							sidebarState.set('user');
+							containerState.set('stats');
+						}}>Bürger</button
 					>
 				</li>
 				<li>
@@ -490,7 +507,10 @@
 						id="workless"
 						class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
-						on:click={() => sidebarState.set('workless')}>Arbeitslosenreg.</button
+						on:click={() => {
+							sidebarState.set('workless');
+							containerState.set('stats');
+						}}>Arbeitslosenreg.</button
 					>
 				</li>
 				<li>
@@ -498,7 +518,10 @@
 						id="criminal"
 						class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
-						on:click={() => sidebarState.set('criminal')}>Kriminalregister</button
+						on:click={() => {
+							sidebarState.set('criminal');
+							containerState.set('stats');
+						}}>Kriminalregister</button
 					>
 				</li>
 			</ul>
