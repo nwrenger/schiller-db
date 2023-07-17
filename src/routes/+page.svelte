@@ -150,6 +150,10 @@
 	let sidebarState: Writable<string | null> = writable('user');
 
 	$: console.log($mainView);
+	
+	$: if ($mainView && typeof $mainView == 'object')
+		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
+			if (nestedList) nestedList.deselectAll();
 
 	sidebarState.subscribe(() => {
 		if (nestedList) nestedList.reset();

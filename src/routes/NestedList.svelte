@@ -17,6 +17,10 @@
         items = fetchItems(parents);
     }
 
+    export function deselectAll() {
+        active = null;
+    }
+
     let active: T | null;
     let items: Promise<T[]> = fetchItems([]);
     let parents: T[] = [];
