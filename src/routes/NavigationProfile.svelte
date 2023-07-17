@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { Writable } from 'svelte/store';
 
 	export let currentUser: string;
-	export let onSelect: (val: string) => void;
+	export let onSelect: ((val: string) => void) | null;
 </script>
 
 <div class="d-flex">
@@ -33,8 +32,12 @@
 				<h6 class="dropdown-header">{currentUser}</h6>
 			</li>
 			<li>
-				<button class="dropdown-item" type="button" on:click={() => onSelect('password')}
-					>Passwort ändern</button
+				<button
+					class="dropdown-item"
+					type="button"
+					on:click={() => {
+						if (onSelect) onSelect('password');
+					}}>Passwort ändern</button
 				>
 			</li>
 			<li>
@@ -42,7 +45,9 @@
 					id="login-creator"
 					class="dropdown-item"
 					type="button"
-					on:click={() => onSelect('login')}>Logins Verwalten</button
+					on:click={() => {
+						if (onSelect) onSelect('login');
+					}}>Logins Verwalten</button
 				>
 			</li>
 			<li>

@@ -51,7 +51,7 @@
 		if (!($mainView && typeof $mainView == 'object' && $mainView.ty == 'stats')) {
 			const statsData = await request('/api/stats', 'GET', null);
 			const devs = statsData.developer.split(':');
-	
+
 			$mainView = {
 				ty: 'stats',
 				name: statsData.name,
@@ -152,7 +152,7 @@
 	let sidebarState: Writable<string | null> = writable('user');
 
 	$: console.log($mainView);
-	
+
 	$: if ($mainView && typeof $mainView == 'object')
 		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
 			if (nestedList) nestedList.deselectAll();

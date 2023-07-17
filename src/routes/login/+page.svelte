@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Navigation from "../Navigation.svelte";
-	import Dialog from "../Dialog.svelte";
+	import Navigation from '../Navigation.svelte';
+	import Dialog from '../Dialog.svelte';
 	import { goto } from '$app/navigation';
-	import LoginForm from "./LoginForm.svelte";
+	import LoginForm from './LoginForm.svelte';
 
 	let newDialog: Dialog;
 
@@ -17,7 +17,7 @@
 				'Content-Type': 'application/json; charset=utf-8'
 			}
 		});
-		
+
 		if (response.status === 200) {
 			const data = await response.json();
 			//get with getItem and clear at logout completely with clear
@@ -27,8 +27,8 @@
 
 			goto('/', { replaceState: true });
 		} else {
-			newDialog.open("Falsches Passwort!");
-			
+			newDialog.open('Falsches Passwort!');
+
 			const all_elements = document.getElementsByTagName('input');
 			for (const element of all_elements) {
 				element.classList.add('is-invalid');
@@ -44,12 +44,12 @@
 
 <section>
 	<div class="main">
-		<Navigation />
+		<Navigation currentUser={null} onSelect={null} />
 
 		<div class="container">
 			<div class="row p-2 h-75 align-items-center justify-content-center">
 				<div class="col-md-6">
-					<LoginForm handleLogin={handleLogin} />
+					<LoginForm {handleLogin} />
 				</div>
 			</div>
 		</div>
