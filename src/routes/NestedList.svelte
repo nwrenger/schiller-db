@@ -6,8 +6,14 @@
 
     export var fetchItems: (parents: T[]) => Promise<T[]>;
     export var onSelect: (parents: T[]) => boolean;
+    export var stats: () => void;
 
     export function reload() {
+        items = fetchItems(parents);
+    }
+
+    export function reset() {
+        parents.pop();
         items = fetchItems(parents);
     }
 
@@ -31,8 +37,8 @@
             <button
                 class="list-group-item list-group-item-action list-group-item-danger"
                 on:click={() => {
-                    parents.pop();
-                    items = fetchItems(parents);
+                    reset();
+                    stats();
                 }}>Zurück - {parents.join(" - ")}</button
             >
         {/if}

@@ -114,40 +114,32 @@
 
 	type ListItem = User | Workless | Criminal | string;
 
-	var alreadyNested: boolean = false;
-
 	async function sidebarData(nested: ListItem | null) {
-		if ($mainView == null || typeof($mainView) != "object") {
-			return []
-		}
-
 		var data: ListItem[] = [];
 		if (nested && typeof nested == 'string') {
-			if ($mainView.ty === 'user') {
+			if ($sidebarState === 'user') {
 				data = await request(`/api/user/search?role=${encodeURIComponent(nested)}`, 'GET', null);
-			} else if ($mainView.ty === 'workless') {
+			} else if ($sidebarState === 'workless') {
 				data = await request(
 					`/api/workless/search?date=${encodeURIComponent(nested)}`,
 					'GET',
 					null
 				);
-			} else if ($mainView.ty === 'criminal') {
+			} else if ($sidebarState === 'criminal') {
 				data = await request(
 					`/api/criminal/search?name=${encodeURIComponent(nested)}`,
 					'GET',
 					null
 				);
 			}
-			alreadyNested = true;
 		} else {
-			if ($mainView.ty === 'user') {
+			if ($sidebarState === 'user') {
 				data = await request('/api/user/all_roles', 'GET', null);
-			} else if ($mainView.ty === 'workless') {
+			} else if ($sidebarState === 'workless') {
 				data = await request('/api/workless/all_dates', 'GET', null);
-			} else if ($mainView.ty === 'criminal') {
+			} else if ($sidebarState === 'criminal') {
 				data = await request('/api/criminal/all_accounts', 'GET', null);
 			}
-			alreadyNested = false;
 		}
 		return data;
 	}
@@ -155,6 +147,14 @@
 	let nestedList: NestedList<ListItem>;
 
 	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
+	let sidebarState: Writable<string | null> = writable('user');
+
+	$: console.log($mainView);
+
+	sidebarState.subscribe(() => {
+		if (nestedList) nestedList.reset();
+		stats();
+	});
 
 	function formatDate(date: string) {
 		const [year, month, day] = JSON.parse(date).split('-');
@@ -170,20 +170,18 @@
 		) {
 			const current = $mainView.account;
 			var data: User = await request(`/api/user/fetch/${encodeURIComponent(current)}`, 'GET', null);
-			$mainView = data;
+			$mainView = { ...data, ty: 'user' } as User;
 		}
 	}
 
 	/// Other
 	function onListSelect(parents: ListItem[]): boolean {
 		console.log(`List Parents: ${parents.length}`);
-		if (
-			$mainView &&
-			typeof $mainView == 'object' &&
-			$mainView.ty == 'user' &&
-			parents.length == 1
-		)
-			return true;
+		if ($mainView && typeof $mainView == 'object' && Array.isArray(parents)) {
+			if (parents.length == 1) return true;
+			const data = parents[1] as User | Workless | Criminal;
+			$mainView = { ...data, ty: $sidebarState } as User | Workless | Criminal;
+		}
 		return false;
 	}
 
@@ -199,13 +197,16 @@
 </svelte:head>
 
 <section class="main">
-	<Navigation onSelect={(val) => {
-		if (val == "password" || val == "login") {
-			$mainView = {ty: val};
-		} else {
-			stats();
-		}
-	}} currentUser={current_user} />
+	<Navigation
+		onSelect={(val) => {
+			if (val == 'password' || val == 'login') {
+				$mainView = { ty: val };
+			} else {
+				stats();
+			}
+		}}
+		currentUser={current_user}
+	/>
 
 	<!-- Sidebar -->
 	<div class="sidebar bg-dark">
@@ -311,7 +312,12 @@
 			</div>
 		</div>
 
-		<NestedList bind:this={nestedList} fetchItems={fetchListItems} onSelect={onListSelect} />
+		<NestedList
+			bind:this={nestedList}
+			fetchItems={fetchListItems}
+			onSelect={onListSelect}
+			{stats}
+		/>
 
 		<div class="sidebar-search input-group pb-1 px-1">
 			<button
@@ -378,11 +384,10 @@
 				<li>
 					<button
 						id="user"
-						class={typeof($mainView) === 'user' ? 'dropdown-item active' : 'dropdown-item'}
+						class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
 						on:click={() => {
 							sidebarState.set('user');
-							containerState.set('stats');
 						}}>Bürger</button
 					>
 				</li>
@@ -393,7 +398,6 @@
 						type="button"
 						on:click={() => {
 							sidebarState.set('workless');
-							containerState.set('stats');
 						}}>Arbeitslosenreg.</button
 					>
 				</li>
@@ -403,7 +407,7 @@
 						class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
 						type="button"
 						on:click={() => {
-							$mainView = null
+							sidebarState.set('criminal');
 						}}>Kriminalregister</button
 					>
 				</li>
@@ -1048,10 +1052,8 @@
 						Alle Logins löschen
 					</button>
 				</div>
-				<button
-					class="btn btn-outline-danger m-2"
-					type="button"
-					on:click={() => stats()}>Schließen</button
+				<button class="btn btn-outline-danger m-2" type="button" on:click={() => stats()}
+					>Schließen</button
 				>
 			</div>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
@@ -1091,10 +1093,8 @@
 						Ändern
 					</button>
 				</div>
-				<button
-					class="btn btn-outline-danger m-2"
-					type="button"
-					on:click={() => stats()}>Schließen</button
+				<button class="btn btn-outline-danger m-2" type="button" on:click={() => stats()}
+					>Schließen</button
 				>
 			</div>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}

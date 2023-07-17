@@ -6,7 +6,9 @@
 
     export function open(msg: string) {
         message = msg;
-        dialog.showModal();
+        if (!dialog.attributes.getNamedItem('open')) {
+            dialog.showModal();
+        }
     }
 </script>
 

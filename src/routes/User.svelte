@@ -84,7 +84,7 @@
     </div>
 
     <button id="user-add-button" class="btn btn-outline-danger m-3" type="button" 
-        hidden={!editable && isNew} on:click={onChange}>
+        hidden={!editable} on:click={onChange}>
         <span
             id="user-add-button-spinner"
             class="spinner-border spinner-border-sm"

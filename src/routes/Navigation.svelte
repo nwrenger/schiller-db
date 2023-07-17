@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
     import { page } from '$app/stores';
 	import NavigationProfile from './NavigationProfile.svelte';
 
