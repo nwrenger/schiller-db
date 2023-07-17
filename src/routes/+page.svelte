@@ -48,18 +48,20 @@
 	}
 
 	async function stats() {
-		const statsData = await request('/api/stats', 'GET', null);
-		const devs = statsData.developer.split(':');
-
-		$mainView = {
-			ty: 'stats',
-			name: statsData.name,
-			version: statsData.version,
-			developers: 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1],
-			repo: statsData.repo,
-			description: statsData.description,
-			users: statsData.users
-		};
+		if (!($mainView && typeof $mainView == 'object' && $mainView.ty == 'stats')) {
+			const statsData = await request('/api/stats', 'GET', null);
+			const devs = statsData.developer.split(':');
+	
+			$mainView = {
+				ty: 'stats',
+				name: statsData.name,
+				version: statsData.version,
+				developers: 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1],
+				repo: statsData.repo,
+				description: statsData.description,
+				users: statsData.users
+			};
+		}
 	}
 
 	/// Sidebar List
