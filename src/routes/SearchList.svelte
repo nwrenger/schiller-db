@@ -1,24 +1,25 @@
 <script lang="ts">
 	type T = $$Generic<toString>;
 
-	export var fetchItems: (params: string, role: string | null) => Promise<T[]>;
+	export var fetchItems: (params: string, role: string | null, date: string | null) => Promise<T[]>;
 	export var onSelect: (entry: T | null) => void;
 	export var stats: () => void;
 	export var params: string;
 	export var role: string | null;
+	export var date: string | null;
 	export var nested: boolean = false;
 
 	export function reload() {
-        items = fetchItems(params, role);
+		items = fetchItems(params, role, date);
 	}
-    
+
 	export function deselectAll() {
-        active = null;
+		active = null;
 	}
-    
+
 	let active: T | null;
 	let items: Promise<T[]> | never[] = [];
-    $: items = fetchItems(params, role);
+	$: items = fetchItems(params, role, date);
 </script>
 
 {#await items}
@@ -37,7 +38,7 @@
 			params = '';
 			role = null;
 			stats();
-		}}>Zurück - {`"${params}"`}{role ? ` - ${role}` : ''}</button
+		}}>Zurück {params || !role ? `- "${params}"` : ''}{role ? ` - ${role}` : ''}</button
 	>
 	{#each data as entry}
 		<button

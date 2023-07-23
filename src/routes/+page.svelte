@@ -96,10 +96,10 @@
 	async function fetchNestedListItems(parents: ListItem[]): Promise<ListItem[]> {
 		console.log(`Fetch Parents: ${parents.at(-1)}`);
 		if (parents && Array.isArray(parents)) {
-			if ($sidebarState === 'user' ) {
+			if ($sidebarState === 'user') {
 				searchRole = parents.at(-1)?.toString() as string;
 			} else if ($sidebarState === 'workless') {
-				date = parents.at(-1)?.toString() as string;
+				searchDate = parents.at(-1)?.toString() as string;
 			}
 		}
 		return await nestedListData(parents.at(-1) ?? null);
@@ -145,6 +145,7 @@
 		params: string,
 		kind: string | null,
 		role: string | null,
+		date: string | null,
 		limit: number | null
 	) {
 		var data: User[] | Workless[] | Criminal[] = [];
@@ -158,13 +159,23 @@
 					null
 				);
 			} else if (kind === 'workless') {
-				data = await request(
-					`/api/workless/search_role?name=${encodeURIComponent(params)}&role=${encodeURIComponent(
-						role
-					)}&limit=${limit}`,
-					'GET',
-					null
-				);
+				if (date) {
+					data = await request(
+						`/api/workless/search_role?name=${encodeURIComponent(params)}&role=${encodeURIComponent(
+							role
+						)}&date=${encodeURIComponent(date)}&limit=${limit}`,
+						'GET',
+						null
+					);
+				} else {
+					data = await request(
+						`/api/workless/search_role?name=${encodeURIComponent(params)}&role=${encodeURIComponent(
+							role
+						)}&limit=${limit}`,
+						'GET',
+						null
+					);
+				}
 			} else if (kind === 'criminal') {
 				data = await request(
 					`/api/criminal/search_role?name=${encodeURIComponent(params)}&role=${encodeURIComponent(
@@ -182,11 +193,21 @@
 					null
 				);
 			} else if (kind === 'workless') {
-				data = await request(
-					`/api/workless/search?name=${encodeURIComponent(params)}&limit=${limit}`,
-					'GET',
-					null
-				);
+				if (date) {
+					data = await request(
+						`/api/workless/search?name=${encodeURIComponent(params)}&date=${encodeURIComponent(
+							date
+						)}&limit=${limit}`,
+						'GET',
+						null
+					);
+				} else {
+					data = await request(
+						`/api/workless/search?name=${encodeURIComponent(params)}&limit=${limit}`,
+						'GET',
+						null
+					);
+				}
 			} else if (kind === 'criminal') {
 				data = await request(
 					`/api/criminal/search?name=${encodeURIComponent(params)}&limit=${limit}`,
@@ -203,12 +224,15 @@
 
 	var searchParams: string = '';
 	var searchRole: string | null = null;
-	// for role select, todo set
-	var date: string | null = null;
+	var searchDate: string | null = null;
 
-	async function fetchSearchListItems(params: string, role: string | null): Promise<(User | Workless | Criminal)[]> {
+	async function fetchSearchListItems(
+		params: string,
+		role: string | null,
+		date: string | null
+	): Promise<(User | Workless | Criminal)[]> {
 		console.log(`Fetch Search: ${params}, ${role}`);
-		return await search(params, $sidebarState, role, null);
+		return await search(params, $sidebarState, role, date, null);
 	}
 
 	function onSearchListSelect(item: User | Workless | Criminal | null) {
@@ -221,19 +245,33 @@
 	/// Advanced Search
 	async function selectData(params: string, date: string | null): Promise<[]> {
 		var data = [];
-		if ($sidebarState === "user") {
-			data = await request(`/api/user/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
-		} else if ($sidebarState === "workless") {
+		if ($sidebarState === 'user') {
+			data = await request(`/api/user/all_roles?name=${encodeURIComponent(params)}`, 'GET', null);
+		} else if ($sidebarState === 'workless') {
 			if (date) {
-				data = await request(`/api/workless/all_roles?name=${encodeURIComponent(params)}&date=${encodeURIComponent(date)}`, "GET", null);
+				data = await request(
+					`/api/workless/all_roles?name=${encodeURIComponent(params)}&date=${encodeURIComponent(
+						date
+					)}`,
+					'GET',
+					null
+				);
 			} else {
-				data = await request(`/api/workless/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
+				data = await request(
+					`/api/workless/all_roles?name=${encodeURIComponent(params)}`,
+					'GET',
+					null
+				);
 			}
-		} else if ($sidebarState === "criminal") {
-			data = await request(`/api/criminal/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
+		} else if ($sidebarState === 'criminal') {
+			data = await request(
+				`/api/criminal/all_roles?name=${encodeURIComponent(params)}`,
+				'GET',
+				null
+			);
 		}
 		return data;
-    }
+	}
 
 	async function fetchRoleSelectItems(params: string, date: string | null) {
 		console.log(`Fetch Role Select: ${params}, ${date}`);
@@ -266,6 +304,7 @@
 
 	sidebarState.subscribe(() => {
 		searchParams = '';
+		searchRole = null;
 		if (nested && nestedList) {
 			nestedList.reset();
 		} else if (searchList) {
@@ -434,11 +473,19 @@
 					{stats}
 					bind:params={searchParams}
 					bind:role={searchRole}
+					date={searchDate}
 					bind:nested
 				/>
 			{/if}
 		</ul>
-		<SidebarSearch bind:params={searchParams} bind:role={searchRole} {date} bind:nested={nested} {sidebarState} {fetchRoleSelectItems}/>
+		<SidebarSearch
+			bind:params={searchParams}
+			bind:role={searchRole}
+			date={searchDate}
+			bind:nested
+			{sidebarState}
+			{fetchRoleSelectItems}
+		/>
 	</div>
 	<!-- Input Containers -->
 	<div class="mid p-3 bg-body-secondary">

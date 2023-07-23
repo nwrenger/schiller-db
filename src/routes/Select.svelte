@@ -1,9 +1,15 @@
 <script lang="ts">
-	import type { User } from "./UserView.svelte";
+	import type { User } from './UserView.svelte';
 	export var value = '';
 	export var label = '';
 	export let editable: boolean = false;
-    export var search: (params: string, kind: string, role: string | null, limit: number | null) => Promise<User[]>;
+	export var search: (
+		params: string,
+		kind: string | null,
+		role: string | null,
+		date: string | null,
+		limit: number | null
+	) => Promise<User[]>;
 
 	let items: Promise<User[]> | never[] = [];
 </script>
@@ -19,9 +25,9 @@
 			aria-expanded="false"
 			title="Auswählen"
 			disabled={!editable}
-            on:click={() => {
-                items = search(value, 'user', null, 10);
-            }}
+			on:click={() => {
+				items = search(value, 'user', null, null, 10);
+			}}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +56,7 @@
 					<button
 						class="dropdown-item"
 						on:click={() => {
-                            value = entry.account;
+							value = entry.account;
 						}}>{entry.account}</button
 					>
 				{:else}
@@ -71,7 +77,7 @@
 </div>
 
 <style>
-    .hide-arrow::after {
+	.hide-arrow::after {
 		display: none !important;
 	}
 </style>

@@ -24,8 +24,9 @@
 	export var getUser: () => void;
 	export var search: (
 		params: string,
-		kind: string,
+		kind: string | null,
 		role: string | null,
+		date: string | null,
 		limit: number | null
 	) => Promise<any[]>;
 

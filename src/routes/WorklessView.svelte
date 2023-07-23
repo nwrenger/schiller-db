@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
-    export interface Workless {
-		ty: "workless"
+	export interface Workless {
+		ty: 'workless';
 		account: string;
 		old_company: string;
 		date_of_dismiss: string;
@@ -12,15 +12,16 @@
 
 <script lang="ts">
 	import Select from './Select.svelte';
-    
+
 	export let workless: Workless | null;
 	export let editable: boolean = false;
 	export let isNew: boolean = false;
 	export var getUser: () => void;
 	export var search: (
 		params: string,
-		kind: string,
+		kind: string | null,
 		role: string | null,
+		date: string | null,
 		limit: number | null
 	) => Promise<any[]>;
 
@@ -31,7 +32,7 @@
 	let new_company = '';
 	let total_time = '';
 
-    $: setWorkless(workless);
+	$: setWorkless(workless);
 
 	function setWorkless(workless: Workless | null) {
 		if (workless) {
@@ -52,7 +53,15 @@
 	}
 
 	function onChange() {
-		workless = { ty: "workless", account, old_company, date_of_dismiss, currently, new_company, total_time };
+		workless = {
+			ty: 'workless',
+			account,
+			old_company,
+			date_of_dismiss,
+			currently,
+			new_company,
+			total_time
+		};
 		console.log(`Change ${workless}`);
 	}
 </script>
