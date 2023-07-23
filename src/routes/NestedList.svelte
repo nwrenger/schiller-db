@@ -34,7 +34,6 @@
 	let parents: T[] = [];
 </script>
 
-<ul class="sidebar-list list-group list-group-flush" id="sidebar-list">
 	{#await items}
 		<li class="list-group-item">
 			<div class="d-flex justify-content-center">
@@ -72,15 +71,9 @@
 			<li class="list-group-item">Keine Einträge!</li>
 		{/each}
 	{/await}
-</ul>
 
 <style>
-	.sidebar-list {
-		flex: 1;
-		overflow-y: scroll;
-	}
-
-	.list-group-item-action {
+.list-group-item-action {
 		cursor: pointer;
 	}
 </style>

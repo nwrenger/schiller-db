@@ -1,6 +1,6 @@
 <div class="app">
 	<!-- Main -->
-	<main style="height: 100%;">
+	<main>
 		<slot />
 	</main>
 </div>

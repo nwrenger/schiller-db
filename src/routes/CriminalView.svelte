@@ -41,7 +41,7 @@
 	let note = '';
 	let verdict = '';
 
-	setCriminal(criminal);
+	$: setCriminal(criminal);
 
 	function setCriminal(criminal: Criminal | null) {
 		if (criminal) {

@@ -1,7 +1,6 @@
 <script lang="ts">
 	/// Imports
 	import { writable, type Writable } from 'svelte/store';
-
 	import { goto } from '$app/navigation';
 	import Navigation from './Navigation.svelte';
 	import NestedList from './NestedList.svelte';
@@ -54,6 +53,8 @@
 
 	/// Modals
 	import Dialog from './Dialog.svelte';
+	import SearchList from './SearchList.svelte';
+	import SidebarSearch from './SidebarSearch.svelte';
 	let newDialog: Dialog;
 
 	function error(error: string) {
@@ -94,16 +95,17 @@
 
 	async function fetchNestedListItems(parents: ListItem[]): Promise<ListItem[]> {
 		console.log(`Fetch Parents: ${parents.at(-1)}`);
-		return await sidebarData(parents.at(-1) ?? null);
+		if (parents && Array.isArray(parents)) {
+			if ($sidebarState === 'user' ) {
+				searchRole = parents.at(-1)?.toString() as string;
+			} else if ($sidebarState === 'workless') {
+				date = parents.at(-1)?.toString() as string;
+			}
+		}
+		return await nestedListData(parents.at(-1) ?? null);
 	}
 
-	// temporarily setting this to true
-	var nested: boolean = true;
-
-	/// Sidebar List
-	type ListItem = User | Workless | Criminal | string;
-
-	async function sidebarData(nested: ListItem | null) {
+	async function nestedListData(nested: ListItem | null) {
 		var data: ListItem[] = [];
 		if (nested && typeof nested == 'string') {
 			if ($sidebarState === 'user') {
@@ -133,36 +135,18 @@
 		return data;
 	}
 
-	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
-	let sidebarState: Writable<string | null> = writable('user');
+	// temporarily setting this to true
+	var nested: boolean = true;
 
-	$: console.log($mainView);
-
-	// todo: update for search list
-	$: if ($mainView && typeof $mainView == 'object')
-		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
-			if (nestedList) nestedList.deselectAll();
-
-	$: if ($mainView && typeof $mainView == 'object')
-		if ($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal') {
-			console.log('edit buttons');
-		} else {
-			console.log('no edit buttons');
-		}
-
-	// todo: update for search list
-	sidebarState.subscribe(() => {
-		if (nestedList) nestedList.reset();
-		stats();
-	});
-
-	function formatDate(date: string) {
-		const [year, month, day] = JSON.parse(date).split('-');
-		return `${day}.${month}.${year}`;
-	}
+	$: console.log(nested);
 
 	/// Search
-	async function search(params: string, kind: string, role: string | null, limit: number | null) {
+	async function search(
+		params: string,
+		kind: string | null,
+		role: string | null,
+		limit: number | null
+	) {
 		var data: User[] | Workless[] | Criminal[] = [];
 		if (role) {
 			if (kind === 'user') {
@@ -214,6 +198,87 @@
 		return data;
 	}
 
+	/// Search List
+	let searchList: SearchList<User | Workless | Criminal>;
+
+	var searchParams: string = '';
+	var searchRole: string | null = null;
+	// for role select, todo set
+	var date: string | null = null;
+
+	async function fetchSearchListItems(params: string, role: string | null): Promise<(User | Workless | Criminal)[]> {
+		console.log(`Fetch Search: ${params}, ${role}`);
+		return await search(params, $sidebarState, role, null);
+	}
+
+	function onSearchListSelect(item: User | Workless | Criminal | null) {
+		console.log(`List Item: ${JSON.stringify(item)}`);
+		if ($mainView && typeof $mainView == 'object' && item) {
+			$mainView = { ...item, ty: $sidebarState } as User | Workless | Criminal;
+		}
+	}
+
+	/// Advanced Search
+	async function selectData(params: string, date: string | null): Promise<[]> {
+		var data = [];
+		if ($sidebarState === "user") {
+			data = await request(`/api/user/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
+		} else if ($sidebarState === "workless") {
+			if (date) {
+				data = await request(`/api/workless/all_roles?name=${encodeURIComponent(params)}&date=${encodeURIComponent(date)}`, "GET", null);
+			} else {
+				data = await request(`/api/workless/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
+			}
+		} else if ($sidebarState === "criminal") {
+			data = await request(`/api/criminal/all_roles?name=${encodeURIComponent(params)}`, "GET", null);
+		}
+		return data;
+    }
+
+	async function fetchRoleSelectItems(params: string, date: string | null) {
+		console.log(`Fetch Role Select: ${params}, ${date}`);
+		return await selectData(params, date);
+	}
+
+	/// Sidebar List
+	type ListItem = User | Workless | Criminal | string;
+
+	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
+	let sidebarState: Writable<string | null> = writable('user');
+
+	$: console.log($mainView);
+
+	// todo: update for search list
+	$: if ($mainView && typeof $mainView == 'object')
+		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
+			if (nested && nestedList) {
+				nestedList.deselectAll();
+			} else if (searchList) {
+				searchList.deselectAll();
+			}
+
+	$: if ($mainView && typeof $mainView == 'object')
+		if ($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal') {
+			console.log('edit buttons');
+		} else {
+			console.log('no edit buttons');
+		}
+
+	sidebarState.subscribe(() => {
+		searchParams = '';
+		if (nested && nestedList) {
+			nestedList.reset();
+		} else if (searchList) {
+			nested = true;
+		}
+		stats();
+	});
+
+	function formatDate(date: string) {
+		const [year, month, day] = JSON.parse(date).split('-');
+		return `${day}.${month}.${year}`;
+	}
+
 	/// Other
 	async function getUser() {
 		if (
@@ -221,11 +286,14 @@
 			typeof $mainView == 'object' &&
 			($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
 		) {
-			// todo update for search list
-			if (nestedList) nestedList.deselectAll();
 			const current = $mainView.account;
 			var data: User = await request(`/api/user/fetch/${encodeURIComponent(current)}`, 'GET', null);
 			$mainView = { ...data, ty: 'user' } as User;
+			if (nested && nestedList) {
+				nestedList.deselectAll();
+			} else if (searchList) {
+				searchList.deselectAll();
+			}
 		}
 	}
 </script>
@@ -350,111 +418,27 @@
 				</button>
 			</div>
 		</div>
-		{#if nested}
-			<NestedList
-				bind:this={nestedList}
-				fetchItems={fetchNestedListItems}
-				onSelect={onNestedListSelect}
-				{stats}
-			/>
-		{:else}
-			<div />
-		{/if}
-
-		<div class="sidebar-search input-group pb-1 px-1">
-			<button
-				id="advanced"
-				class="btn btn-outline-secondary dropdown-toggle hide-arrow"
-				type="button"
-				aria-expanded="false"
-				data-bs-toggle="dropdown"
-				data-bs-auto-close="outside"
-				title="Nach Parametern Suchen"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					fill="currentColor"
-					class="bi bi-gear"
-					viewBox="0 0 16 16"
-				>
-					<path
-						d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
-					/>
-					<path
-						d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
-					/>
-				</svg>
-			</button>
-			<ul class="dropdown-menu" id="group-select-dropdown">
-				<li>
-					<h6 class="dropdown-header">Gruppe</h6>
-				</li>
-				<form class="px-3 py-1" action="javascript:handleAdvanced()">
-					<div class="mb-2">
-						<select id="group-select" class="form-select" aria-label="Group Select" />
-					</div>
-					<button id="button-group-select" type="submit" class="btn btn-primary">
-						<span
-							id="spinner-group-select"
-							class="spinner-border spinner-border-sm"
-							role="status"
-							aria-hidden="true"
-							hidden
-						/>
-						Suchen
-					</button>
-				</form>
-			</ul>
-			<input type="text" class="form-control" placeholder="Suche" id="search" />
-			<button
-				id="select-button"
-				class="btn btn-outline-secondary dropdown-toggle"
-				type="button"
-				title="Kategorie"
-				data-bs-toggle="dropdown"
-				aria-expanded="false"
-				>{$sidebarState === 'user' ? 'Bürger' : ''}{$sidebarState === 'workless'
-					? 'Arbeitslosenreg.'
-					: ''}{$sidebarState === 'criminal' ? 'Kriminalregister' : ''}</button
-			>
-			<ul class="dropdown-menu dropdown-menu-end">
-				<li>
-					<h6 class="dropdown-header">Kategorie</h6>
-				</li>
-				<li>
-					<button
-						id="user"
-						class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
-						type="button"
-						on:click={() => {
-							sidebarState.set('user');
-						}}>Bürger</button
-					>
-				</li>
-				<li>
-					<button
-						id="workless"
-						class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
-						type="button"
-						on:click={() => {
-							sidebarState.set('workless');
-						}}>Arbeitslosenreg.</button
-					>
-				</li>
-				<li>
-					<button
-						id="criminal"
-						class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
-						type="button"
-						on:click={() => {
-							sidebarState.set('criminal');
-						}}>Kriminalregister</button
-					>
-				</li>
-			</ul>
-		</div>
+		<ul class="sidebar-list list-group list-group-flush" id="sidebar-list">
+			{#if nested}
+				<NestedList
+					bind:this={nestedList}
+					fetchItems={fetchNestedListItems}
+					onSelect={onNestedListSelect}
+					{stats}
+				/>
+			{:else}
+				<SearchList
+					bind:this={searchList}
+					fetchItems={fetchSearchListItems}
+					onSelect={onSearchListSelect}
+					{stats}
+					bind:params={searchParams}
+					bind:role={searchRole}
+					bind:nested
+				/>
+			{/if}
+		</ul>
+		<SidebarSearch bind:params={searchParams} bind:role={searchRole} {date} bind:nested={nested} {sidebarState} {fetchRoleSelectItems}/>
 	</div>
 	<!-- Input Containers -->
 	<div class="mid p-3 bg-body-secondary">
@@ -499,16 +483,13 @@
 		flex-direction: column;
 	}
 
-	.hide-arrow::after {
-		display: none !important;
+	.sidebar-list {
+		flex: 1;
+		overflow-y: scroll;
 	}
 
 	.p-2 {
 		padding-left: 15px !important;
-	}
-
-	.sidebar-search {
-		flex: 0;
 	}
 
 	.mid {

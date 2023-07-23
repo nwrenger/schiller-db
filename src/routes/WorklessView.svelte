@@ -31,7 +31,7 @@
 	let new_company = '';
 	let total_time = '';
 
-    setWorkless(workless);
+    $: setWorkless(workless);
 
 	function setWorkless(workless: Workless | null) {
 		if (workless) {

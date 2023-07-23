@@ -18,7 +18,7 @@
 	let account = '';
 	let role = '';
 
-	setUser(user);
+	$: setUser(user);
 
 	function setUser(user: User | null) {
 		if (user) {
