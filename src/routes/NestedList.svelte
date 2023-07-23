@@ -4,9 +4,12 @@
 		toString(): string;
 	}
 
-	// currently ignoring that criminal has to have the kind instead the account shown when nested
 	function isObject(obj: any): obj is { account: string } {
 		return obj && typeof obj.account === "string" ;
+	}
+	
+	function isCriminalNested(obj: any): obj is { ty: 'criminal', kind: any } {
+		return obj && typeof obj.kind === "string";
 	}
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
@@ -63,7 +66,7 @@
 						items = fetchItems(parents);
 						active = null;
 					}
-				}}>{isObject(entry) ? entry.account : entry.toString()}</button
+				}}>{isObject(entry) ? isCriminalNested(entry) ? entry.kind : entry.account : entry.toString()}</button
 			>
 		{:else}
 			<li class="list-group-item">Keine Einträge!</li>

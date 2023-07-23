@@ -1,29 +1,41 @@
-<script lang="ts">
-	interface User {
+<script lang="ts" context="module">
+	export interface User {
+		ty: 'user';
 		forename: string;
 		surname: string;
 		account: string;
 		role: string;
 	}
+</script>
 
+<script lang="ts">
 	export let user: User | null;
 	export let editable: boolean = false;
 	export let isNew: boolean = false;
-
-	$: if (user) {
-		forename = user.forename;
-		surname = user.surname;
-		account = user.account;
-		role = user.role;
-	}
 
 	let forename = '';
 	let surname = '';
 	let account = '';
 	let role = '';
 
+	setUser(user);
+
+	function setUser(user: User | null) {
+		if (user) {
+			forename = user.forename;
+			surname = user.surname;
+			account = user.account;
+			role = user.role;
+		} else {
+			forename = '';
+			surname = '';
+			account = '';
+			role = '';
+		}
+	}
+
 	function onChange() {
-		user = { forename, surname, account, role };
+		user = { ty: 'user', forename, surname, account, role };
 		console.log(`Change ${user}`);
 	}
 </script>
@@ -86,7 +98,7 @@
 		id="user-add-button"
 		class="btn btn-outline-danger m-3"
 		type="button"
-		hidden={!editable}
+		hidden={!(editable && isNew)}
 		on:click={onChange}
 	>
 		<span
@@ -102,7 +114,7 @@
 		id="user-confirm-button"
 		type="button"
 		class="btn btn-outline-danger m-3"
-		hidden={!editable && !isNew}
+		hidden={!(editable && !isNew)}
 		on:click={onChange}
 	>
 		<span
@@ -119,7 +131,10 @@
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!editable}
-		on:click={() => (editable = false)}
+		on:click={() => {
+			editable = false;
+			setUser(user);
+		}}
 	>
 		Abbrechen
 	</button>
