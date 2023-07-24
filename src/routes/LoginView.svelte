@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-	import Select from "./Select.svelte";
+	import Select from './Select.svelte';
 	export var stats: () => void;
 	export var search: (
 		params: string,
