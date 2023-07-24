@@ -335,7 +335,7 @@
 </script>
 
 <svelte:head>
-	<title>SchillerStateDB</title>
+	<title>SchillerDB</title>
 	<meta name="description" content="Main Page" />
 </svelte:head>
 

@@ -1,4 +1,4 @@
-# Schillernover's Database Management or for short SchillerStateDB / schiller-db
+# Schillernover's Database Management or for short SchillerDB / schiller-db
 
 A repo with the server-side backend and the frontend of the Database Application of the Schillerschool for the upcoming project week.
 
