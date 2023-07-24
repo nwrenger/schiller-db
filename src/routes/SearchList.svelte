@@ -17,6 +17,14 @@
 		active = null;
 	}
 
+	export function isSelected() {
+		if (active) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	let active: T | null;
 	let items: Promise<T[]> | never[] = [];
 	$: items = fetchItems(params, role, date);
