@@ -2,7 +2,7 @@
 	import type { User } from './UserView.svelte';
 	export var value = '';
 	export var label = '';
-	export let editable: boolean = false;
+	export let editable: boolean = true;
 	export var search: (
 		params: string,
 		kind: string | null,

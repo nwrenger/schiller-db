@@ -496,7 +496,7 @@
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
 			<CriminalView criminal={$mainView} {getUser} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}
-			<LoginView {stats} />
+			<LoginView {stats} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
 			<PasswordView {stats} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}

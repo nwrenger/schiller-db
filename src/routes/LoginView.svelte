@@ -5,47 +5,24 @@
 </script>
 
 <script lang="ts">
+	import Select from "./Select.svelte";
 	export var stats: () => void;
+	export var search: (
+		params: string,
+		kind: string | null,
+		role: string | null,
+		date: string | null,
+		limit: number | null
+	) => Promise<any[]>;
+	var addAccount: string = '';
+	var deleteAccount: string = '';
 </script>
 
 <div id="login-container">
 	<div>
 		<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
 		<div class="card-title row add-login">
-			<div class="col">
-				<label for="login-users" class="form-label">Benutzer</label>
-				<div class="input-group mb-3 login-users">
-					<button
-						id="criminal-select-button"
-						class="btn btn-outline-danger dropdown-toggle hide-arrow"
-						type="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-						title="Auswählen"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							fill="currentColor"
-							class="bi bi-search"
-							viewBox="0 0 16 16"
-						>
-							<path
-								d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-							/>
-						</svg>
-					</button>
-					<ul id="login-add-select-dropdown" class="dropdown-menu" />
-					<input
-						id="login-add-user"
-						type="text"
-						class="form-control"
-						placeholder="Benutzer"
-						aria-label="Benutzer"
-					/>
-				</div>
-			</div>
+			<Select bind:value={addAccount} {search} label={'Benutzer'} />
 			<div class="col">
 				<label for="login-add-password" class="form-label">Passwort</label>
 				<input
@@ -99,39 +76,8 @@
 	</div>
 	<div>
 		<label for="delete-login" class="form-label">Einen Login entfernen:</label>
-		<div class="card-title row col delete-login">
-			<label for="login-users" class="form-label">Benutzer</label>
-			<div class="input-group mb-3 login-users">
-				<button
-					id="criminal-select-button"
-					class="btn btn-outline-danger dropdown-toggle hide-arrow"
-					type="button"
-					data-bs-toggle="dropdown"
-					aria-expanded="false"
-					title="Auswählen"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						fill="currentColor"
-						class="bi bi-search"
-						viewBox="0 0 16 16"
-					>
-						<path
-							d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-						/>
-					</svg>
-				</button>
-				<ul id="login-delete-select-dropdown" class="dropdown-menu" />
-				<input
-					id="login-delete-user"
-					type="text"
-					class="form-control"
-					placeholder="Benutzer"
-					aria-label="Benutzer"
-				/>
-			</div>
+		<div class="card-title row delete-login">
+			<Select bind:value={deleteAccount} {search} label={'Benutzer'} />
 		</div>
 		<button id="delete-login-button" type="button" class="btn btn-outline-danger m-3">
 			<span
