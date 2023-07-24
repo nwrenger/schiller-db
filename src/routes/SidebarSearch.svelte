@@ -6,6 +6,8 @@
 	export var date: string | null;
 	export var nested: boolean;
 	export var sidebarState: Writable<string | null>;
+
+	export var stats: () => void;
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
@@ -50,6 +52,7 @@
 					aria-label="Group Select"
 					bind:value={role}
 					on:click={() => {
+						stats();
 						nested = false;
 					}}
 				>
@@ -78,6 +81,7 @@
 		id="search"
 		bind:value={params}
 		on:click={() => {
+			stats();
 			nested = false;
 		}}
 	/>

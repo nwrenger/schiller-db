@@ -84,7 +84,7 @@
 	let nestedList: NestedList<ListItem>;
 
 	function onNestedListSelect(parents: ListItem[]): boolean {
-		console.log(`List Parents: ${parents.length}`);
+		// console.log(`List Parents: ${parents.length}`);
 		if ($mainView && typeof $mainView == 'object' && Array.isArray(parents)) {
 			if (parents.length == 1) return true;
 			const data = parents[1] as User | Workless | Criminal;
@@ -94,7 +94,7 @@
 	}
 
 	async function fetchNestedListItems(parents: ListItem[]): Promise<ListItem[]> {
-		console.log(`Fetch Parents: ${parents.at(-1)}`);
+		// console.log(`Fetch Parents: ${parents.at(-1)}`);
 		if (parents && Array.isArray(parents)) {
 			if ($sidebarState === 'user') {
 				searchRole = parents.at(-1)?.toString() as string;
@@ -137,8 +137,6 @@
 
 	// temporarily setting this to true
 	var nested: boolean = true;
-
-	$: console.log(nested);
 
 	/// Search
 	async function search(
@@ -231,12 +229,12 @@
 		role: string | null,
 		date: string | null
 	): Promise<(User | Workless | Criminal)[]> {
-		console.log(`Fetch Search: ${params}, ${role}`);
+		// console.log(`Fetch Search: ${params}, ${role}`);
 		return await search(params, $sidebarState, role, date, null);
 	}
 
 	function onSearchListSelect(item: User | Workless | Criminal | null) {
-		console.log(`List Item: ${JSON.stringify(item)}`);
+		// console.log(`List Item: ${JSON.stringify(item)}`);
 		if ($mainView && typeof $mainView == 'object' && item) {
 			$mainView = { ...item, ty: $sidebarState } as User | Workless | Criminal;
 		}
@@ -274,7 +272,7 @@
 	}
 
 	async function fetchRoleSelectItems(params: string, date: string | null) {
-		console.log(`Fetch Role Select: ${params}, ${date}`);
+		// console.log(`Fetch Role Select: ${params}, ${date}`);
 		return await selectData(params, date);
 	}
 
@@ -286,7 +284,6 @@
 
 	$: console.log($mainView);
 
-	// todo: update for search list
 	$: if ($mainView && typeof $mainView == 'object')
 		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
 			if (nested && nestedList) {
@@ -484,6 +481,7 @@
 			date={searchDate}
 			bind:nested
 			{sidebarState}
+			{stats}
 			{fetchRoleSelectItems}
 		/>
 	</div>
