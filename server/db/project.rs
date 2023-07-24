@@ -178,7 +178,6 @@ impl Database {
     /// This operation is only safe if called once.
     /// Stacking transactions on top of each other is not allowed!
     pub fn transaction(&self) -> rusqlite::Result<rusqlite::Transaction> {
-        #[allow(cast_ref_to_mut)]
         let con = unsafe { &mut *(addr_of!(self.con) as *mut Connection) };
         con.transaction()
     }
