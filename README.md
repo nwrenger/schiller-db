@@ -1,6 +1,6 @@
 # Schillernover's Database Management or for Short SNDM
 
-A repo with the server-side backend and the frontend (SNDI, Schillernova's Database Interface) of the Database Application of the Schillerschool for the upcoming project week.
+A repo with the server-side backend and the frontend of the Database Application of the Schillerschool for the upcoming project week.
 
 ### Test Website
 
@@ -14,24 +14,24 @@ The latest builds can be downloaded from the [releases page](https://github.com/
 
 Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other Users and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
 
-## Architecture - Including SNDI
+## Architecture
 
 This application follows the 3-tier principle.
-* **UI Layer:** Getting the Data from Server Calls. It's named SNDI.
-* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration. It's named SNDM.
+* **UI Layer:** Getting the Data from Server Calls.
+* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
 * **Database Layer:** The SQLite database that stores the persistent data specific to a project.
 
-### UI Layer - SNDI
+### UI Layer
 
 Developed by me and a few others (look to contributions). You can see a current state of the development, by visiting a [Test Website](#test-website).
 
-It's developed by using intern Server Calls, JS and Bootstrap (for the UI). I don't use any JS Webdev Framework like React.js (could be a bad idea). The code of [main.js](static/main.js) is really messy and could/should be refactored (won't probably ever done, but when you like to do that Open a Pull Request!).
+It's developed by using intern Server Calls, Svelte and Bootstrap (for the UI). I finally finished the refactoring of the old plain JS version to this new and improved Svelte version. It's now way better structured and easier to develop new stuff. And Svelte generally is a big upgrade compared to old plain JS, it's a really good WebDev Framework.
 
 A Picture of the Main Page:
 
 <img src="images/website.png" alt="Database Schema" width=900/>
 
-### Application/Server Layer - SNDM
+### Application/Server Layer
 
 This layer is implemented in Rust ([src](src)) and [Rocket](https://rocket.rs) (0.5 rc-3).
 
