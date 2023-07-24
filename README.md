@@ -1,4 +1,4 @@
-# Schillernover's Database Management or for Short SNDM
+# Schillernover's Database Management or for short SchillerStateDB / schiller-db
 
 A repo with the server-side backend and the frontend of the Database Application of the Schillerschool for the upcoming project week.
 
@@ -8,7 +8,7 @@ A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A
 
 ### Download
 
-The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/sndm/releases).
+The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/schiller-db/releases).
 
 ### Usage
 

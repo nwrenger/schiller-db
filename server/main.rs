@@ -48,7 +48,7 @@ fn rocket() -> Rocket<Build> {
 
     dotenv::from_filename("admin.env").ok();
 
-    let path = Path::new("./sndm.db");
+    let path = Path::new("./schiller-db.db");
     match Database::open(Cow::from(path)) {
         Ok(db) => db.0,
         Err(_) => {
@@ -59,8 +59,8 @@ fn rocket() -> Rocket<Build> {
             db::login::add(
                 &db,
                 NewLogin {
-                    user: env::var("SNDM_USER").unwrap(),
-                    password: env::var("SNDM_PASSWORD").unwrap(),
+                    user: env::var("SCHILLER_DB_USER").unwrap(),
+                    password: env::var("SCHILLER_DB_PASSWORD").unwrap(),
                     access_user: Permission::Write,
                     access_workless: Permission::Write,
                     access_criminal: Permission::Write,

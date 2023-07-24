@@ -8,7 +8,7 @@
 
 <nav class="nav navbar bg-secondary-subtle">
 	<div class="container-fluid">
-		<a href={$page.url.pathname} class="navbar-brand">SNDM</a>
+		<a href={$page.url.pathname} class="navbar-brand">SchillerStateDB</a>
 		{#if currentUser != null}
 			<NavigationProfile {onSelect} {currentUser} />
 		{/if}

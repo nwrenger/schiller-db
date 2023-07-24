@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-	<title>Login</title>
+	<title>SchillerStateDB - Login</title>
 	<meta name="description" content="Login Page" />
 </svelte:head>
 
