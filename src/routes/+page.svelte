@@ -311,7 +311,7 @@
 
 	function deselect() {
 		if (nestedList) {
-				nestedList.deselectAll();
+			nestedList.deselectAll();
 		} else if (searchList) {
 			searchList.deselectAll();
 		}
