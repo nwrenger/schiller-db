@@ -72,7 +72,7 @@
 				ty: 'stats',
 				name: statsData.name,
 				version: statsData.version,
-				developers: 'Programmer/Project Lead ' + devs[0] + ' und Assistant Programmer ' + devs[1],
+				developers: devs,
 				repo: statsData.repo,
 				description: statsData.description,
 				users: statsData.users

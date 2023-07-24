@@ -106,8 +106,22 @@
 					disabled={!editable}>Auswahl</button
 				>
 				<ul id="currently-select-dropdown" class="dropdown-menu">
-					<li><button id="yes-currently" class="dropdown-item" type="button">Ja</button></li>
-					<li><button id="no-currently" class="dropdown-item" type="button">Nein</button></li>
+					<li>
+						<button
+							id="yes-currently"
+							class="dropdown-item"
+							type="button"
+							on:click={() => (currently = true)}>Ja</button
+						>
+					</li>
+					<li>
+						<button
+							id="no-currently"
+							class="dropdown-item"
+							type="button"
+							on:click={() => (currently = false)}>Nein</button
+						>
+					</li>
 				</ul>
 				<input
 					id="currently-workless"
@@ -115,13 +129,13 @@
 					class="form-control"
 					placeholder="Auswahl"
 					aria-label="Auswahl"
-					readonly={!editable}
-					bind:value={currently}
+					readonly
+					value={currently ? 'Ja' : 'Nein'}
 				/>
 			</div>
 		</div>
 	</div>
-	<div id="only-on-currently-no" class="row" hidden>
+	<div id="only-on-currently-no" class="row" hidden={currently}>
 		<div class="col">
 			<label for="new-company" class="form-label">Neuer Betrieb</label>
 			<input
