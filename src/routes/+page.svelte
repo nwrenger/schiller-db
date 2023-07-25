@@ -10,6 +10,10 @@
 	import CriminalView from './CriminalView.svelte';
 	import PasswordView from './PasswordView.svelte';
 	import StatsView from './StatsView.svelte';
+	import Dialog from './Dialog.svelte';
+	import SearchList from './SearchList.svelte';
+	import SidebarSearch from './SidebarSearch.svelte';
+	import ChangeButtons from './ChangeButtons.svelte';
 
 	import type { User } from './UserView.svelte';
 	import type { Workless } from './WorklessView.svelte';
@@ -19,7 +23,11 @@
 	import type { Stats } from './StatsView.svelte';
 
 	/// Request Function
-	async function request(url: string, type: string, json: BodyInit | null | undefined) {
+	async function request(
+		url: string,
+		type: string,
+		json: BodyInit | null | undefined
+	): Promise<any> {
 		const response = await fetch(url, {
 			method: type,
 			headers: {
@@ -52,15 +60,15 @@
 	}
 
 	/// Modals
-	import Dialog from './Dialog.svelte';
-	import SearchList from './SearchList.svelte';
-	import SidebarSearch from './SidebarSearch.svelte';
-	import ChangeButtons from './ChangeButtons.svelte';
 	let newDialog: Dialog;
 
 	function error(error: string) {
-		newDialog.open(error);
+		newDialog.open('Fehler', error);
 		throw error;
+	}
+
+	function info(info: string) {
+		newDialog.open('Info', info);
 	}
 
 	/// Stats
@@ -317,11 +325,6 @@
 		}
 	}
 
-	function formatDate(date: string) {
-		const [year, month, day] = JSON.parse(date).split('-');
-		return `${day}.${month}.${year}`;
-	}
-
 	/// Other
 	async function getUser() {
 		if (
@@ -343,6 +346,7 @@
 </svelte:head>
 
 <section class="main">
+	<!-- Header -->
 	<Navigation
 		onSelect={(val) => {
 			if (val == 'password' || val == 'login') {
@@ -353,7 +357,6 @@
 		}}
 		currentUser={current_user}
 	/>
-
 	<!-- Sidebar -->
 	<div class="sidebar bg-dark">
 		<ChangeButtons {onHighlighted} {stats} />
@@ -364,6 +367,7 @@
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
 					{stats}
+					state={$sidebarState}
 				/>
 			{:else}
 				<SearchList
@@ -388,7 +392,7 @@
 			{fetchRoleSelectItems}
 		/>
 	</div>
-	<!-- Input Containers -->
+	<!-- View Containers -->
 	<div class="mid p-3 bg-body-secondary">
 		{#if $mainView && typeof $mainView == 'object' && $mainView.ty == 'user'}
 			<UserView user={$mainView} />
@@ -397,9 +401,9 @@
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
 			<CriminalView criminal={$mainView} {getUser} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}
-			<LoginView {stats} {search} />
+			<LoginView {request} {stats} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
-			<PasswordView {stats} />
+			<PasswordView {request} {error} {info} {stats} bind:auth {current_user} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}
 			<StatsView stats={$mainView} />
 		{/if}

@@ -127,8 +127,7 @@ fn rocket() -> Rocket<Build> {
         }
     }
 
-    let figment = rocket::Config::figment()
-        .merge(("limits.json", 32768));
+    let figment = rocket::Config::figment().merge(("limits.json", 32768));
 
     rocket::custom(figment)
         .register(

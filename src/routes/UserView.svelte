@@ -21,7 +21,7 @@
 	$: setUser(user);
 
 	function setUser(user: User | null) {
-		if (user) {
+		if (user && !isNew) {
 			forename = user.forename;
 			surname = user.surname;
 			account = user.account;

@@ -27,7 +27,7 @@
 
 			goto('/', { replaceState: true });
 		} else {
-			newDialog.open('Falsches Passwort!');
+			newDialog.open('Fehler', 'Falsche Anmeldedaten!');
 
 			const all_elements = document.getElementsByTagName('input');
 			for (const element of all_elements) {

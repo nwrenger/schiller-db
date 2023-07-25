@@ -169,7 +169,9 @@ pub async fn static_files(path: PathBuf) -> Option<NamedFile> {
 )]
 #[get("/api/stats")]
 pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::stats::fetch(&db))
 }
 
@@ -187,7 +189,9 @@ pub async fn stats(_auth: Auth<UserReadOnly>) -> Json<Result<Stats>> {
 )]
 #[get("/api/user/fetch/<id>")]
 pub async fn fetch_user(_auth: Auth<UserReadOnly>, id: &str) -> Json<Result<User>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::fetch(&db, id))
 }
 
@@ -207,7 +211,9 @@ pub async fn search_user(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<User>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::search(
         &db,
         UserSearch::new(name.unwrap_or_default(), role.unwrap_or("%")),
@@ -226,7 +232,9 @@ pub async fn search_user(
 )]
 #[get("/api/user/all_roles?<name>")]
 pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Result<Vec<String>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::all_roles(&db, name.unwrap_or("")))
 }
 
@@ -244,7 +252,9 @@ pub async fn all_roles(_auth: Auth<UserReadOnly>, name: Option<&str>) -> Json<Re
 #[post("/api/user", format = "json", data = "<user>")]
 pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()>> {
     warn!("POST /user with data {user:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::add(&db, &user))
 }
 
@@ -265,7 +275,9 @@ pub async fn add_user(auth: Auth<UserWrite>, user: Json<User>) -> Json<Result<()
 #[put("/api/user/<id>", format = "json", data = "<user>")]
 pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>, id: &str) -> Json<Result<()>> {
     warn!("PUT /user/{id} with data {user:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::update(&db, id, &user))
 }
 
@@ -284,7 +296,9 @@ pub async fn update_user(auth: Auth<UserWrite>, user: Json<User>, id: &str) -> J
 #[delete("/api/user/<id>")]
 pub async fn delete_user(auth: Auth<UserWrite>, id: &str) -> Json<Result<()>> {
     warn!("DELETE /user/{id}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::user::delete(&db, id))
 }
 
@@ -309,7 +323,9 @@ pub async fn fetch_workless(
     old_company: &str,
     date: &str,
 ) -> Json<Result<Workless>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
         Err(_) => {
@@ -336,7 +352,9 @@ pub async fn search_workless(
     date: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Workless>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::workless::search(
         &db,
         WorklessSearch::new(
@@ -365,7 +383,9 @@ pub async fn search_workless_roles(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Workless>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::workless::search_role(
         &db,
         name.unwrap_or(""),
@@ -386,7 +406,9 @@ pub async fn search_workless_roles(
 )]
 #[get("/api/workless/all_dates")]
 pub async fn all_dates(_auth: Auth<WorklessReadOnly>) -> Json<Result<Vec<String>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::workless::all_dates(&db))
 }
 
@@ -405,7 +427,9 @@ pub async fn all_roles_workless(
     date: Option<&str>,
     name: Option<&str>,
 ) -> Json<Result<Vec<String>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::workless::all_roles(
         &db,
         date.unwrap_or("%"),
@@ -427,7 +451,9 @@ pub async fn all_roles_workless(
 #[post("/api/workless", format = "json", data = "<workless>")]
 pub async fn add_workless(auth: Auth<WorklessWrite>, workless: Json<Workless>) -> Json<Result<()>> {
     warn!("POST /workless with data {workless:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::workless::add(&db, &workless))
 }
 
@@ -463,7 +489,9 @@ pub async fn update_workless(
         "PUT /workless/{previous_account}/{previous_old_company}/{previous_date} with data {workless:?}: {}",
         auth.user
     );
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     let previous_date = match NaiveDate::parse_from_str(previous_date, "%Y-%m-%d") {
         Ok(previous_date) => previous_date,
         Err(_) => {
@@ -501,7 +529,9 @@ pub async fn delete_workless(
     date: &str,
 ) -> Json<Result<()>> {
     warn!("DELETE /workless/{account}/{date}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     let date = match NaiveDate::parse_from_str(date, "%Y-%m-%d") {
         Ok(date) => date,
         Err(_) => {
@@ -530,7 +560,9 @@ pub async fn fetch_criminal(
     account: &str,
     kind: &str,
 ) -> Json<Result<Criminal>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::fetch(&db, account, kind))
 }
 
@@ -545,7 +577,9 @@ pub async fn fetch_criminal(
 )]
 #[get("/api/criminal/all_accounts")]
 pub async fn all_accounts(_auth: Auth<CriminalReadOnly>) -> Json<Result<Vec<String>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::all_accounts(&db))
 }
 
@@ -563,7 +597,9 @@ pub async fn all_roles_criminal(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
 ) -> Json<Result<Vec<String>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::all_roles(&db, name.unwrap_or("")))
 }
 
@@ -583,7 +619,9 @@ pub async fn search_criminal(
     kind: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::search(
         &db,
         CriminalSearch::new(name.unwrap_or_default(), kind.unwrap_or("%")),
@@ -607,7 +645,9 @@ pub async fn search_criminal_roles(
     role: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::search_role(
         &db,
         name.unwrap_or(""),
@@ -630,7 +670,9 @@ pub async fn search_criminal_roles(
 #[post("/api/criminal", format = "json", data = "<criminal>")]
 pub async fn add_criminal(auth: Auth<CriminalWrite>, criminal: Json<Criminal>) -> Json<Result<()>> {
     warn!("POST /criminal with data {criminal:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::add(&db, &criminal))
 }
 
@@ -664,7 +706,9 @@ pub async fn update_criminal(
         "PUT /criminal/{previous_account}/{previous_kind} with data {criminal:?}: {}",
         auth.user
     );
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::update(
         &db,
         previous_account,
@@ -693,7 +737,9 @@ pub async fn delete_criminal(
     kind: &str,
 ) -> Json<Result<()>> {
     warn!("DELETE /criminal/{account}/{kind}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::criminal::delete(&db, account, kind))
 }
 
@@ -711,7 +757,9 @@ pub async fn delete_criminal(
 )]
 #[get("/api/login/fetch/<user>")]
 pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Result<Permissions>> {
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::login::fetch_permission(&db, user))
 }
 
@@ -729,7 +777,9 @@ pub async fn fetch_permission(_auth: Auth<UserReadOnly>, user: &str) -> Json<Res
 #[post("/api/login", format = "json", data = "<login>")]
 pub async fn add_login(auth: Auth<UserWrite>, login: Json<NewLogin>) -> Json<Result<()>> {
     warn!("POST /login with data {login:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::login::add(&db, login.into_inner()))
 }
 
@@ -747,7 +797,9 @@ pub async fn add_login(auth: Auth<UserWrite>, login: Json<NewLogin>) -> Json<Res
 #[put("/api/login", format = "json", data = "<login>")]
 pub async fn update_login(auth: Auth<UserReadOnly>, login: Json<NewLogin>) -> Json<Result<()>> {
     warn!("PUT /login with data {login:?}: {}", auth.user);
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
 
     if db::login::fetch(&db, &login.user).is_err() {
         warn!("invalid user of login json");
@@ -783,12 +835,14 @@ pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>>
     warn!("DELETE /login/{user}: {}", auth.user);
     let user = user.trim();
 
-    if user == env::var("schiller-db_USER").unwrap() {
+    if user == env::var("SCHILLER_DB_USER").unwrap() {
         warn!("unable to delete admin '{user}'");
         return Json(Err(Error::InvalidUser));
     }
 
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
     Json(db::login::delete(&db, user))
 }
 
@@ -805,12 +859,14 @@ pub async fn delete_login(auth: Auth<UserWrite>, user: &str) -> Json<Result<()>>
 pub async fn delete_all_logins(auth: Auth<UserWrite>) -> Json<Result<()>> {
     warn!("DELETE /all_logins: {}", auth.user);
 
-    let db = Database::open(Cow::from(Path::new("./schiller-db.db"))).unwrap().0;
+    let db = Database::open(Cow::from(Path::new("./schiller-db.db")))
+        .unwrap()
+        .0;
 
     let users = db::login::all_logins(&db).unwrap();
 
     for user in &users {
-        if *user == env::var("schiller-db_USER").unwrap() {
+        if *user == env::var("SCHILLER_DB_USER").unwrap() {
             warn!("unable to delete admin '{}'", user);
         } else {
             db::login::delete(&db, user).unwrap();

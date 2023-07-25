@@ -4,13 +4,7 @@
 		toString(): string;
 	}
 
-	function isObject(obj: any): obj is { account: string } {
-		return obj && typeof obj.account === 'string';
-	}
-
-	function isCriminalNested(obj: any): obj is { ty: 'criminal'; kind: any } {
-		return obj && typeof obj.kind === 'string';
-	}
+	export var state: string | null;
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
 	export var onSelect: (parents: T[]) => boolean;
@@ -37,6 +31,19 @@
 		}
 	}
 
+	function isObject(obj: any): obj is { account: string } {
+		return obj && typeof obj.account === 'string';
+	}
+
+	function isCriminal(obj: any): obj is { ty: 'criminal'; kind: any } {
+		return obj && typeof obj.kind === 'string';
+	}
+
+	function formatDate(date: string) {
+		const [year, month, day] = date.split('-');
+		return `${day}.${month}.${year}`;
+	}
+
 	let active: T | null;
 	let items: Promise<T[]> = fetchItems([]);
 	let parents: T[] = [];
@@ -57,7 +64,10 @@
 			on:click={() => {
 				reset();
 				stats();
-			}}>Zurück - {parents.join(' - ')}</button
+			}}
+			>Zurück - {state === 'workless'
+				? formatDate(parents.join(' - '))
+				: parents.join(' - ')}</button
 		>
 	{/if}
 
@@ -75,9 +85,11 @@
 				}
 			}}
 			>{isObject(entry)
-				? isCriminalNested(entry)
+				? isCriminal(entry)
 					? entry.kind
 					: entry.account
+				: state === 'workless'
+				? formatDate(entry.toString())
 				: entry.toString()}</button
 		>
 	{:else}

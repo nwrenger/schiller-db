@@ -1,10 +1,10 @@
 <script lang="ts">
-	export let title: string = 'Fehler!';
-
+	let title: string;
 	let message: string;
 	let dialog: HTMLDialogElement;
 
-	export function open(msg: string) {
+	export function open(tit: string, msg: string) {
+		title = tit;
 		message = msg;
 		if (!dialog.attributes.getNamedItem('open')) {
 			dialog.showModal();
@@ -28,7 +28,7 @@
 	.custom-dialog {
 		padding: 0px;
 		height: fit-content;
-		width: 18rem;
+		width: 20rem;
 		border: none;
 	}
 	dialog::backdrop {

@@ -35,7 +35,7 @@
 	$: setWorkless(workless);
 
 	function setWorkless(workless: Workless | null) {
-		if (workless) {
+		if (workless && !isNew) {
 			account = workless.account;
 			old_company = workless.old_company;
 			date_of_dismiss = workless.date_of_dismiss;

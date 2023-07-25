@@ -45,7 +45,7 @@
 	$: setCriminal(criminal);
 
 	function setCriminal(criminal: Criminal | null) {
-		if (criminal) {
+		if (criminal && !isNew) {
 			account = criminal.account;
 			kind = criminal.kind;
 			accuser = criminal.accuser;
