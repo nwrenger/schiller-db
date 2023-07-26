@@ -21,7 +21,6 @@
 	import type { Login } from './LoginView.svelte';
 	import type { Password } from './PasswordView.svelte';
 	import type { Stats } from './StatsView.svelte';
-	import LoginForm from './login/LoginForm.svelte';
 
 	/// Request Function
 	async function request(
