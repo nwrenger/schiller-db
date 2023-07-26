@@ -13,6 +13,10 @@
 		items = fetchItems(params, role, date);
 	}
 
+	function isWorkless(obj: any): obj is { ty: 'workless'; currently: any } {
+		return obj && typeof obj.currently === 'boolean';
+	}
+
 	export function deselectAll() {
 		active = null;
 	}
@@ -55,7 +59,7 @@
 			on:click={() => {
 				active = entry;
 				onSelect(active);
-			}}>{entry.account}</button
+			}}>{entry.account}{isWorkless(entry) && entry.currently ? ' - Arbeitslos' : ''}</button
 		>
 	{:else}
 		<li class="list-group-item">Keine Einträge!</li>

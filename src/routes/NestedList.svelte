@@ -39,6 +39,10 @@
 		return obj && typeof obj.kind === 'string';
 	}
 
+	function isWorkless(obj: any): obj is { ty: 'workless'; currently: any } {
+		return obj && typeof obj.currently === 'boolean';
+	}
+
 	function formatDate(date: string) {
 		const [year, month, day] = date.split('-');
 		return `${day}.${month}.${year}`;
@@ -90,7 +94,7 @@
 					: entry.account
 				: state === 'workless'
 				? formatDate(entry.toString())
-				: entry.toString()}</button
+				: entry.toString()}{isWorkless(entry) && entry.currently ? ' - Arbeitslos' : ''}</button
 		>
 	{:else}
 		<li class="list-group-item">Keine Einträge!</li>
