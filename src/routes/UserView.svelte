@@ -12,13 +12,23 @@
 	export let user: User | null;
 	export let editable: boolean = false;
 	export let isNew: boolean = false;
+	export let onHighlighted: boolean;
+	export let searchRole: string | null;
+	export var back: () => Promise<void>;
+	export var request: (
+		url: string,
+		type: string,
+		json: BodyInit | null | undefined
+	) => Promise<any>;
+	export var reload: () => void;
 
 	let forename = '';
 	let surname = '';
 	let account = '';
 	let role = '';
 
-	$: setUser(user);
+	$: if (editable || isNew || !editable || !isNew) setUser(user);
+	$: if (searchRole) role = searchRole;
 
 	function setUser(user: User | null) {
 		if (user && !isNew) {
@@ -30,13 +40,35 @@
 			forename = '';
 			surname = '';
 			account = '';
-			role = '';
+			if (role) {
+				role = searchRole as string;
+			} else {
+				role = '';
+			}
 		}
 	}
 
-	function onChange() {
-		user = { ty: 'user', forename, surname, account, role };
-		console.log(`Change ${user}`);
+	let addResponse: Promise<any>;
+	async function add() {
+		await request('/api/user', 'POST', JSON.stringify({ forename, surname, account, role }));
+		await back();
+		reload();
+	}
+
+	let editResponse: Promise<any>;
+	async function edit() {
+		await request(
+			`/api/user/${user?.account}`,
+			'PUT',
+			JSON.stringify({ forename, surname, account, role })
+		);
+		await back();
+		reload();
+	}
+	export async function del() {
+		await request(`/api/user/${user?.account}`, 'DELETE', null);
+		await back();
+		reload();
 	}
 </script>
 
@@ -99,15 +131,17 @@
 		class="btn btn-outline-danger m-3"
 		type="button"
 		hidden={!(editable && isNew)}
-		on:click={onChange}
+		on:click={() => (addResponse = add())}
 	>
-		<span
-			id="user-add-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Hinzufügen
+		{#await addResponse}
+			<span
+				id="user-add-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Hinzufügen
 	</button>
 
 	<button
@@ -115,15 +149,17 @@
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!(editable && !isNew)}
-		on:click={onChange}
+		on:click={() => (editResponse = edit())}
 	>
-		<span
-			id="user-confirm-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Bestätigen
+		{#await editResponse}
+			<span
+				id="user-confirm-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Bestätigen
 	</button>
 
 	<button
@@ -131,9 +167,14 @@
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!editable}
-		on:click={() => {
-			editable = false;
-			setUser(user);
+		on:click={async () => {
+			if (!onHighlighted) {
+				await back();
+			} else {
+				setUser(user);
+				editable = false;
+				isNew = false;
+			}
 		}}
 	>
 		Abbrechen

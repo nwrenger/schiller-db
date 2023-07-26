@@ -16,6 +16,8 @@
 	export let workless: Workless | null;
 	export let editable: boolean = false;
 	export let isNew: boolean = false;
+	export let onHighlighted: boolean;
+	export let searchDate: string | null;
 	export var getUser: () => void;
 	export var search: (
 		params: string,
@@ -24,6 +26,13 @@
 		date: string | null,
 		limit: number | null
 	) => Promise<any[]>;
+	export var back: () => Promise<void>;
+	export var request: (
+		url: string,
+		type: string,
+		json: BodyInit | null | undefined
+	) => Promise<any>;
+	export var reload: () => void;
 
 	let account = '';
 	let old_company = '';
@@ -32,7 +41,8 @@
 	let new_company = '';
 	let total_time = '';
 
-	$: setWorkless(workless);
+	$: if (editable || isNew || !editable || !isNew) setWorkless(workless);
+	$: if (searchDate) date_of_dismiss = searchDate;
 
 	function setWorkless(workless: Workless | null) {
 		if (workless && !isNew) {
@@ -45,24 +55,46 @@
 		} else {
 			account = '';
 			old_company = '';
-			date_of_dismiss = '';
+			if (date_of_dismiss) {
+				date_of_dismiss = searchDate as string;
+			} else {
+				date_of_dismiss = '';
+			}
 			currently = false;
 			new_company = '';
 			total_time = '';
 		}
 	}
 
-	function onChange() {
-		workless = {
-			ty: 'workless',
-			account,
-			old_company,
-			date_of_dismiss,
-			currently,
-			new_company,
-			total_time
-		};
-		console.log(`Change ${workless}`);
+	let addResponse: Promise<any>;
+	async function add() {
+		await request(
+			'/api/workless',
+			'POST',
+			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
+		);
+		await back();
+		reload();
+	}
+
+	let editResponse: Promise<any>;
+	async function edit() {
+		await request(
+			`/api/workless/${workless?.account}/${workless?.old_company}/${workless?.date_of_dismiss}`,
+			'PUT',
+			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
+		);
+		await back();
+		reload();
+	}
+	export async function del() {
+		await request(
+			`/api/workless/${workless?.account}/${workless?.old_company}/${workless?.date_of_dismiss}`,
+			'DELETE',
+			null
+		);
+		await back();
+		reload();
 	}
 </script>
 
@@ -166,37 +198,48 @@
 		class="btn btn-outline-danger m-3"
 		type="button"
 		hidden={!(editable && isNew)}
-		on:click={onChange}
-		><span
-			id="workless-add-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Hinzufügen</button
+		on:click={() => (addResponse = add())}
+	>
+		{#await addResponse}
+			<span
+				id="workless-add-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Hinzufügen</button
 	>
 	<button
 		id="workless-confirm-button"
 		class="btn btn-outline-danger m-3"
 		type="button"
 		hidden={!(editable && !isNew)}
-		on:click={onChange}
-		><span
-			id="workless-confirm-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Bestätigen</button
+		on:click={() => (editResponse = edit())}
+	>
+		{#await editResponse}
+			<span
+				id="workless-confirm-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Bestätigen</button
 	>
 	<button
 		id="workless-abort-button"
 		class="btn btn-outline-danger m-3"
 		type="button"
 		hidden={!editable}
-		on:click={() => {
-			editable = false;
-			setWorkless(workless);
+		on:click={async () => {
+			if (!onHighlighted) {
+				await back();
+			} else {
+				setWorkless(workless);
+				editable = false;
+				isNew = false;
+			}
 		}}>Abbrechen</button
 	>
 	<button

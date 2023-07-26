@@ -8,7 +8,7 @@
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
 	export var onSelect: (parents: T[]) => boolean;
-	export var stats: () => void;
+	export var back: () => Promise<void>;
 
 	export function reload() {
 		items = fetchItems(parents);
@@ -59,18 +59,18 @@
 	</li>
 {:then data}
 	{#if parents.length > 0}
+		{data.length === 0 ? reset() : ''}
 		<button
 			class="list-group-item list-group-item-action list-group-item-danger"
-			on:click={() => {
+			on:click={async () => {
+				await back();
 				reset();
-				stats();
 			}}
 			>Zurück - {state === 'workless'
 				? formatDate(parents.join(' - '))
 				: parents.join(' - ')}</button
 		>
 	{/if}
-
 	{#each data as entry}
 		<button
 			class="list-group-item list-group-item-action"

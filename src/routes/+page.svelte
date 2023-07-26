@@ -21,6 +21,7 @@
 	import type { Login } from './LoginView.svelte';
 	import type { Password } from './PasswordView.svelte';
 	import type { Stats } from './StatsView.svelte';
+	import LoginForm from './login/LoginForm.svelte';
 
 	/// Request Function
 	async function request(
@@ -47,11 +48,17 @@
 	}
 
 	/// Storage
+	interface Permissions {
+		access_user: string;
+		access_workless: string;
+		access_criminal: string;
+	}
+
 	var auth = localStorage.getItem('auth');
 	const current_user = localStorage.getItem('current_user');
-	var permissions = localStorage.getItem('permissions');
+	var permissions: Permissions | string | null = localStorage.getItem('permissions');
 	if (permissions) {
-		permissions = JSON.parse(permissions);
+		permissions = JSON.parse(permissions) as Permissions;
 	}
 
 	if (!auth || !current_user || !permissions) {
@@ -71,8 +78,8 @@
 		newDialog.open('Info', info);
 	}
 
-	/// Stats
-	async function stats() {
+	/// Back = Default + Stats
+	async function back() {
 		if (!($mainView && typeof $mainView == 'object' && $mainView.ty == 'stats')) {
 			const statsData = await request('/api/stats', 'GET', null);
 			const devs = statsData.developer.split(':');
@@ -87,6 +94,8 @@
 				users: statsData.users
 			};
 		}
+		editable = false;
+		isNew = false;
 	}
 
 	/// NestedList
@@ -106,9 +115,11 @@
 		// console.log(`Fetch Parents: ${parents.at(-1)}`);
 		if (parents && Array.isArray(parents)) {
 			if ($sidebarState === 'user') {
-				searchRole = parents.at(-1)?.toString() as string;
+				searchRole = parents.at(-1) as string;
 			} else if ($sidebarState === 'workless') {
-				searchDate = parents.at(-1)?.toString() as string;
+				searchDate = parents.at(-1) as string;
+			} else if ($sidebarState === 'criminal') {
+				searchAccount = parents.at(-1) as string;
 			}
 		}
 		return await nestedListData(parents.at(-1) ?? null);
@@ -232,6 +243,7 @@
 	var searchParams: string = '';
 	var searchRole: string | null = null;
 	var searchDate: string | null = null;
+	var searchAccount: string | null = null;
 
 	async function fetchSearchListItems(
 		params: string,
@@ -285,7 +297,30 @@
 		return await selectData(params, date);
 	}
 	/// Change Buttons
-	var onHighlighted: boolean = false;
+	let onHighlighted: boolean = false;
+
+	let editable: boolean = false;
+	let isNew: boolean = false;
+	let userView: UserView;
+	let worklessView: WorklessView;
+	let criminalView: CriminalView;
+
+	$: if (
+		isNew &&
+		$mainView &&
+		typeof $mainView == 'object' &&
+		$sidebarState &&
+		$mainView.ty !== $sidebarState
+	) {
+		$mainView = {} as User | Workless | Criminal | Login | Password | Stats;
+		$mainView.ty = $sidebarState as
+			| 'login'
+			| 'password'
+			| 'user'
+			| 'workless'
+			| 'criminal'
+			| 'stats';
+	}
 
 	/// Sidebar List
 	type ListItem = User | Workless | Criminal | string;
@@ -293,7 +328,7 @@
 	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
 	let sidebarState: Writable<string | null> = writable('user');
 
-	$: console.log($mainView);
+	// $: console.log($mainView);
 
 	$: if ($mainView && typeof $mainView == 'object')
 		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
@@ -309,12 +344,12 @@
 	sidebarState.subscribe(() => {
 		searchParams = '';
 		searchRole = null;
+		back();
 		if (nestedList) {
 			nestedList.reset();
 		} else if (searchList) {
 			nested = true;
 		}
-		stats();
 	});
 
 	function deselect() {
@@ -322,6 +357,14 @@
 			nestedList.deselectAll();
 		} else if (searchList) {
 			searchList.deselectAll();
+		}
+	}
+
+	function reload() {
+		if (nestedList) {
+			nestedList.reload();
+		} else if (searchList) {
+			searchList.reload();
 		}
 	}
 
@@ -348,25 +391,40 @@
 <section class="main">
 	<!-- Header -->
 	<Navigation
-		onSelect={(val) => {
+		onSelect={async (val) => {
 			if (val == 'password' || val == 'login') {
 				$mainView = { ty: val };
 			} else {
-				stats();
+				await back();
 			}
 		}}
+		accessUser={typeof permissions == 'object' ? permissions?.access_user : null}
 		currentUser={current_user}
 	/>
 	<!-- Sidebar -->
 	<div class="sidebar bg-dark">
-		<ChangeButtons {onHighlighted} {stats} />
+		<ChangeButtons
+			del={() =>
+				userView ? userView.del() : worklessView ? worklessView.del() : criminalView.del()}
+			{onHighlighted}
+			{back}
+			access={typeof permissions == 'object'
+				? $sidebarState === 'user'
+					? permissions?.access_user
+					: $sidebarState === 'workless'
+					? permissions?.access_workless
+					: permissions?.access_criminal
+				: null}
+			bind:editable
+			bind:isNew
+		/>
 		<ul class="sidebar-list list-group list-group-flush" id="sidebar-list">
 			{#if nested}
 				<NestedList
 					bind:this={nestedList}
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
-					{stats}
+					{back}
 					state={$sidebarState}
 				/>
 			{:else}
@@ -374,10 +432,10 @@
 					bind:this={searchList}
 					fetchItems={fetchSearchListItems}
 					onSelect={onSearchListSelect}
-					{stats}
+					{back}
 					bind:params={searchParams}
 					bind:role={searchRole}
-					date={searchDate}
+					bind:date={searchDate}
 					bind:nested
 				/>
 			{/if}
@@ -385,25 +443,62 @@
 		<SidebarSearch
 			bind:params={searchParams}
 			bind:role={searchRole}
-			date={searchDate}
+			bind:date={searchDate}
 			bind:nested
 			{sidebarState}
-			{stats}
+			accessUser={typeof permissions == 'object' ? permissions?.access_user : null}
+			accessWorkless={typeof permissions == 'object' ? permissions?.access_workless : null}
+			accessCriminal={typeof permissions == 'object' ? permissions?.access_criminal : null}
+			{back}
 			{fetchRoleSelectItems}
 		/>
 	</div>
 	<!-- View Containers -->
 	<div class="mid p-3 bg-body-secondary">
 		{#if $mainView && typeof $mainView == 'object' && $mainView.ty == 'user'}
-			<UserView user={$mainView} />
+			<UserView
+				bind:this={userView}
+				user={$mainView}
+				bind:editable
+				bind:isNew
+				bind:onHighlighted
+				{back}
+				{request}
+				{reload}
+				{searchRole}
+			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
-			<WorklessView workless={$mainView} {getUser} {search} />
+			<WorklessView
+				bind:this={worklessView}
+				workless={$mainView}
+				{getUser}
+				{search}
+				bind:editable
+				bind:isNew
+				bind:onHighlighted
+				{back}
+				{request}
+				{reload}
+				{searchDate}
+			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
-			<CriminalView criminal={$mainView} {getUser} {search} />
+			<CriminalView
+				bind:this={criminalView}
+				criminal={$mainView}
+				{getUser}
+				{search}
+				bind:editable
+				bind:isNew
+				bind:onHighlighted
+				{back}
+				{request}
+				{reload}
+				{searchAccount}
+			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}
-			<LoginView {request} {stats} {search} />
+			<LoginView {request} {back} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
-			<PasswordView {request} {error} {info} {stats} bind:auth {current_user} />
+			<PasswordView {request} {error} {info} {back} bind:auth {current_user} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}
 			<StatsView stats={$mainView} />
 		{/if}

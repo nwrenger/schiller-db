@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 
 	export let currentUser: string;
+	export let accessUser: string | null;
 	export let onSelect: ((val: string) => void) | null;
 </script>
 
@@ -45,6 +46,7 @@
 					id="login-creator"
 					class="dropdown-item"
 					type="button"
+					disabled={accessUser === 'Write' ? false : true}
 					on:click={() => {
 						if (onSelect) onSelect('login');
 					}}>Logins Verwalten</button

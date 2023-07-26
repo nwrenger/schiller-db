@@ -3,7 +3,7 @@
 
 	export var fetchItems: (params: string, role: string | null, date: string | null) => Promise<T[]>;
 	export var onSelect: (entry: T | null) => void;
-	export var stats: () => void;
+	export var back: () => Promise<void>;
 	export var params: string;
 	export var role: string | null;
 	export var date: string | null;
@@ -41,11 +41,11 @@
 {:then data}
 	<button
 		class="list-group-item list-group-item-action list-group-item-danger"
-		on:click={() => {
+		on:click={async () => {
+			await back();
 			nested = true;
 			params = '';
 			role = null;
-			stats();
 		}}>Zurück {params || !role ? `- "${params}"` : ''}{role ? ` - ${role}` : ''}</button
 	>
 	{#each data as entry}

@@ -1,13 +1,16 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
 
-	export var params: string;
-	export var role: string | null;
-	export var date: string | null;
-	export var nested: boolean;
-	export var sidebarState: Writable<string | null>;
+	export let params: string;
+	export let role: string | null;
+	export let date: string | null;
+	export let nested: boolean;
+	export let sidebarState: Writable<string | null>;
+	export let accessUser: string | null = null;
+	export let accessWorkless: string | null = null;
+	export let accessCriminal: string | null = null;
 
-	export var stats: () => void;
+	export var back: () => Promise<void>;
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
@@ -51,8 +54,8 @@
 					class="form-select"
 					aria-label="Group Select"
 					bind:value={role}
-					on:click={() => {
-						stats();
+					on:click={async () => {
+						await back();
 						nested = false;
 					}}
 				>
@@ -80,8 +83,8 @@
 		placeholder="Suche"
 		id="search"
 		bind:value={params}
-		on:click={() => {
-			stats();
+		on:click={async () => {
+			await back();
 			nested = false;
 		}}
 	/>
@@ -105,6 +108,7 @@
 				id="user"
 				class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
+				disabled={accessUser === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('user');
 				}}>Bürger</button
@@ -115,6 +119,7 @@
 				id="workless"
 				class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
+				disabled={accessWorkless === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('workless');
 				}}>Arbeitslosenreg.</button
@@ -125,6 +130,7 @@
 				id="criminal"
 				class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
+				disabled={accessCriminal === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('criminal');
 				}}>Kriminalregister</button

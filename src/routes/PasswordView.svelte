@@ -7,7 +7,7 @@
 <script lang="ts">
 	export var auth: string | null;
 	export let current_user: string | null;
-	export var stats: () => void;
+	export var back: () => Promise<void>;
 	export var request: (
 		url: string,
 		type: string,
@@ -84,7 +84,7 @@
 			Ändern
 		</button>
 	</form>
-	<button class="btn btn-outline-danger m-2" type="button" on:click={() => stats()}
+	<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
 		>Schließen</button
 	>
 </div>

@@ -1,16 +1,25 @@
 <script lang="ts">
-	export var onHighlighted: boolean;
-	export var stats: () => void;
+	export let onHighlighted: boolean;
+	export let editable: boolean;
+	export let isNew: boolean;
+	export let access: string | null = null;
+	export var back: () => Promise<void>;
+	export var del: () => Promise<void>;
 </script>
 
 <div class="bg-dark-subtle">
 	<div class="btn-group p-2">
 		<button
 			id="add"
-			class="btn btn-outline-danger"
+			class="btn btn-outline-danger {editable && isNew ? 'active' : ''}"
 			type="button"
 			aria-expanded="false"
 			title="Hinzufügen"
+			disabled={access === 'Write' ? false : true}
+			on:click={() => {
+				editable = true;
+				isNew = true;
+			}}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -30,11 +39,16 @@
 	<div class="btn-group p-2">
 		<button
 			id="edit"
-			class="btn btn-outline-danger"
+			class="btn btn-outline-danger {editable && !isNew ? 'active' : ''}"
 			type="button"
 			aria-expanded="false"
 			title="Bearbeiten"
+			disabled={access === 'Write' ? false : true}
 			hidden={!onHighlighted}
+			on:click={() => {
+				editable = true;
+				isNew = false;
+			}}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +75,9 @@
 			type="button"
 			aria-expanded="false"
 			title="Entfernen"
+			disabled={access === 'Write' ? false : true}
 			hidden={!onHighlighted}
+			on:click={async () => await del()}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +104,7 @@
 			aria-expanded="false"
 			title="Schließen"
 			hidden={!onHighlighted}
-			on:click={() => stats()}
+			on:click={async () => await back()}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

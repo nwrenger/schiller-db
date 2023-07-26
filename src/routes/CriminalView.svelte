@@ -21,6 +21,8 @@
 	export let criminal: Criminal | null;
 	export let editable: boolean = false;
 	export let isNew: boolean = false;
+	export let onHighlighted: boolean;
+	export let searchAccount: string | null;
 	export var getUser: () => void;
 	export var search: (
 		params: string,
@@ -29,6 +31,13 @@
 		date: string | null,
 		limit: number | null
 	) => Promise<any[]>;
+	export var back: () => Promise<void>;
+	export var request: (
+		url: string,
+		type: string,
+		json: BodyInit | null | undefined
+	) => Promise<any>;
+	export var reload: () => void;
 
 	let account = '';
 	let kind = '';
@@ -42,7 +51,8 @@
 	let note = '';
 	let verdict = '';
 
-	$: setCriminal(criminal);
+	$: if (editable || isNew || !editable || !isNew) setCriminal(criminal);
+	$: if (searchAccount) account = searchAccount;
 
 	function setCriminal(criminal: Criminal | null) {
 		if (criminal && !isNew) {
@@ -58,7 +68,11 @@
 			note = criminal.note;
 			verdict = criminal.verdict;
 		} else {
-			account = '';
+			if (searchAccount) {
+				account = searchAccount as string;
+			} else {
+				account = '';
+			}
 			kind = '';
 			accuser = '';
 			police_consultant = '';
@@ -72,22 +86,55 @@
 		}
 	}
 
-	function onChange() {
-		criminal = {
-			ty: 'criminal',
-			account,
-			kind,
-			accuser,
-			police_consultant,
-			lawyer_culprit,
-			lawyer_accuser,
-			facts,
-			time_of_crime,
-			location_of_crime,
-			note,
-			verdict
-		};
-		console.log(`Change ${criminal}`);
+	let addResponse: Promise<any>;
+	async function add() {
+		await request(
+			'/api/criminal',
+			'POST',
+			JSON.stringify({
+				account,
+				kind,
+				accuser,
+				police_consultant,
+				lawyer_culprit,
+				lawyer_accuser,
+				facts,
+				time_of_crime,
+				location_of_crime,
+				note,
+				verdict
+			})
+		);
+		await back();
+		reload();
+	}
+
+	let editResponse: Promise<any>;
+	async function edit() {
+		await request(
+			`/api/criminal/${criminal?.account}/${criminal?.kind}`,
+			'PUT',
+			JSON.stringify({
+				account,
+				kind,
+				accuser,
+				police_consultant,
+				lawyer_culprit,
+				lawyer_accuser,
+				facts,
+				time_of_crime,
+				location_of_crime,
+				note,
+				verdict
+			})
+		);
+		await back();
+		reload();
+	}
+	export async function del() {
+		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, 'DELETE', null);
+		await back();
+		reload();
 	}
 </script>
 
@@ -184,13 +231,28 @@
 				>
 				<ul id="verdict-select-dropdown" class="dropdown-menu">
 					<li>
-						<button id="no-yet" class="dropdown-item" type="button">a.) Noch kein Verfahren</button>
+						<button
+							id="no-yet"
+							class="dropdown-item"
+							type="button"
+							on:click={() => (verdict = 'a.) Noch kein Verfahren')}>a.) Noch kein Verfahren</button
+						>
 					</li>
 					<li>
-						<button id="guilty" class="dropdown-item" type="button">b.) Schuldig</button>
+						<button
+							id="guilty"
+							class="dropdown-item"
+							type="button"
+							on:click={() => (verdict = 'b.) Schuldig')}>b.) Schuldig</button
+						>
 					</li>
 					<li>
-						<button id="innocent" class="dropdown-item" type="button">c.) Unschuldig</button>
+						<button
+							id="innocent"
+							class="dropdown-item"
+							type="button"
+							on:click={() => (verdict = 'c.) Unschuldig')}>c.) Unschuldig</button
+						>
 					</li>
 				</ul>
 				<input
@@ -210,37 +272,48 @@
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!(editable && isNew)}
-		on:click={onChange}
-		><span
-			id="criminal-add-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Hinzufügen</button
+		on:click={() => (addResponse = add())}
+	>
+		{#await addResponse}
+			<span
+				id="criminal-add-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Hinzufügen</button
 	>
 	<button
 		id="criminal-confirm-button"
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!(editable && !isNew)}
-		on:click={onChange}
-		><span
-			id="criminal-confirm-button-spinner"
-			class="spinner-border spinner-border-sm"
-			role="status"
-			aria-hidden="true"
-			hidden
-		/>Bestätigen</button
+		on:click={() => (editResponse = edit())}
+	>
+		{#await editResponse}
+			<span
+				id="criminal-confirm-button-spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			/>
+		{/await}
+		Bestätigen</button
 	>
 	<button
 		id="criminal-abort-button"
 		type="button"
 		class="btn btn-outline-danger m-3"
 		hidden={!editable}
-		on:click={() => {
-			editable = false;
-			setCriminal(criminal);
+		on:click={async () => {
+			if (!onHighlighted) {
+				await back();
+			} else {
+				setCriminal(criminal);
+				editable = false;
+				isNew = false;
+			}
 		}}>Abbrechen</button
 	>
 	<button

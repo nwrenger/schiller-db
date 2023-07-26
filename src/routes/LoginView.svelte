@@ -7,7 +7,7 @@
 <script lang="ts">
 	import Select from './Select.svelte';
 
-	export var stats: () => void;
+	export var back: () => Promise<void>;
 	export var search: (
 		params: string,
 		kind: string | null,
@@ -175,7 +175,7 @@
 			Alle Logins löschen
 		</button>
 	</div>
-	<button class="btn btn-outline-danger m-2" type="button" on:click={() => stats()}
+	<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
 		>Schließen</button
 	>
 </div>
