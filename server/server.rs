@@ -146,7 +146,7 @@ pub async fn index() -> Option<NamedFile> {
     NamedFile::open(path).await.ok()
 }
 
-#[get("/api/login")]
+#[get("/login")]
 pub async fn login() -> Option<NamedFile> {
     let path = Path::new("static").join("login.html");
     NamedFile::open(path).await.ok()
