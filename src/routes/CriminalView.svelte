@@ -137,7 +137,20 @@
 	}
 
 	async function onChange() {
-		criminal = {ty: "criminal", account, kind, accuser, police_consultant, lawyer_culprit, lawyer_accuser, facts, time_of_crime, location_of_crime, note, verdict};
+		criminal = {
+			ty: 'criminal',
+			account,
+			kind,
+			accuser,
+			police_consultant,
+			lawyer_culprit,
+			lawyer_accuser,
+			facts,
+			time_of_crime,
+			location_of_crime,
+			note,
+			verdict
+		};
 		console.log(criminal);
 		editable = false;
 		await onUpdate(criminal, isNew);

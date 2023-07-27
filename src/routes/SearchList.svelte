@@ -60,7 +60,7 @@
 				if (isObject(newItem) && newItem.account.includes(params)) {
 					list.push(newItem);
 					list.sort(sortby);
-					activeIndex = list.findIndex(entry => entry === newItem);
+					activeIndex = list.findIndex((entry) => entry === newItem);
 				} else {
 					await back();
 					return;

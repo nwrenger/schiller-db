@@ -71,7 +71,7 @@
 	}
 
 	async function onChange() {
-		user = {ty: "user", forename, surname, account, role};
+		user = { ty: 'user', forename, surname, account, role };
 		console.log(user);
 		editable = false;
 		await onUpdate(user, isNew);

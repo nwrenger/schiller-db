@@ -97,7 +97,15 @@
 	}
 
 	async function onChange() {
-		workless = {ty: "workless", account, old_company, date_of_dismiss, currently, new_company, total_time};
+		workless = {
+			ty: 'workless',
+			account,
+			old_company,
+			date_of_dismiss,
+			currently,
+			new_company,
+			total_time
+		};
 		console.log(workless);
 		editable = false;
 		await onUpdate(workless, isNew);

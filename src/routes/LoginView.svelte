@@ -88,7 +88,8 @@
 				</select>
 			</div>
 			<div class="col">
-				<label for="login-add-workless-permissions" class="form-label">Rechte für Arbeitslosenreg.</label
+				<label for="login-add-workless-permissions" class="form-label"
+					>Rechte für Arbeitslosenreg.</label
 				>
 				<select
 					id="login-add-workless-permissions"

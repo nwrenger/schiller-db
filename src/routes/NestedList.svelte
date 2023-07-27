@@ -105,7 +105,7 @@
 				} else {
 					list.push(newItem);
 					list.sort(sortby);
-					activeIndex = list.findIndex(entry => entry === newItem);
+					activeIndex = list.findIndex((entry) => entry === newItem);
 				}
 			} else {
 				list[activeIndex] = newItem;
