@@ -57,7 +57,7 @@
 		}
 		if (newItem) {
 			if (isNew) {
-				if (isObject(newItem) && newItem.account.includes(params)) {
+				if (isObject(newItem) && (newItem.account.includes(params) || newItem.forename.includes(params) || newItem.surname.includes(params))) {
 					list.push(newItem);
 					list.sort(sortby);
 					activeIndex = list.findIndex((entry) => entry === newItem);
