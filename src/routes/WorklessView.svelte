@@ -41,7 +41,7 @@
 	let new_company = '';
 	let total_time = '';
 
-	$: if (editable || isNew) setWorkless(workless);
+	$: if (editable || isNew || !editable || !isNew) setWorkless(workless);
 	$: if (searchDate) date_of_dismiss = searchDate;
 
 	function setWorkless(workless: Workless | null) {

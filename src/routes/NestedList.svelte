@@ -101,10 +101,11 @@
 					(isCriminal(newItem) && isCriminal(active) && newItem.account != active.account)
 				) {
 					await back();
+					return;
 				} else {
-					activeIndex += 1;
 					list.push(newItem);
 					list.sort(sortby);
+					activeIndex = list.findIndex(entry => entry === newItem);
 				}
 			} else {
 				list[activeIndex] = newItem;

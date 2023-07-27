@@ -57,12 +57,13 @@
 		}
 		if (newItem) {
 			if (isNew) {
-				if (isObject(newItem) && params === newItem.account) {
-					activeIndex += 1;
+				if (isObject(newItem) && newItem.account.includes(params)) {
 					list.push(newItem);
 					list.sort(sortby);
+					activeIndex = list.findIndex(entry => entry === newItem);
 				} else {
 					await back();
+					return;
 				}
 			} else {
 				list[activeIndex] = newItem;

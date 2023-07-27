@@ -14,6 +14,12 @@
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
+	$: if (params) {
+			back();
+			nested = false;
+		} else {
+			nested = true;
+		}
 </script>
 
 <div class="sidebar-search input-group pb-1 px-1">
@@ -54,10 +60,6 @@
 					class="form-select"
 					aria-label="Group Select"
 					bind:value={role}
-					on:click={async () => {
-						await back();
-						nested = false;
-					}}
 				>
 					{#await roleSelect}
 						<li class="list-group-item">
@@ -83,10 +85,6 @@
 		placeholder="Suche"
 		id="search"
 		bind:value={params}
-		on:click={async () => {
-			await back();
-			nested = false;
-		}}
 	/>
 	<button
 		id="select-button"

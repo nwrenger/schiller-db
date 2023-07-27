@@ -51,7 +51,7 @@
 	let note = '';
 	let verdict = '';
 
-	$: if (editable || isNew) setCriminal(criminal);
+	$: if (editable || isNew || !editable || !isNew) setCriminal(criminal);
 	$: if (searchAccount) account = searchAccount;
 
 	function setCriminal(criminal: Criminal | null) {
