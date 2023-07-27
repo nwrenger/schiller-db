@@ -457,13 +457,13 @@
 		{#if $mainView && typeof $mainView == 'object' && $mainView.ty == 'user'}
 			<UserView
 				bind:this={userView}
-				user={$mainView}
+				bind:user={$mainView}
 				bind:editable
 				bind:isNew
 				bind:onHighlighted
 				{back}
+				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
 				{request}
-				{reload}
 				{searchRole}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
@@ -476,8 +476,8 @@
 				bind:isNew
 				bind:onHighlighted
 				{back}
+				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
 				{request}
-				{reload}
 				{searchDate}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
@@ -490,8 +490,8 @@
 				bind:isNew
 				bind:onHighlighted
 				{back}
+				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
 				{request}
-				{reload}
 				{searchAccount}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}

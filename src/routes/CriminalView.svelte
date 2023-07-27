@@ -37,7 +37,7 @@
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var reload: () => void;
+	export var onUpdate: (newItem: Criminal | null, isNew: boolean) => Promise<void>;
 
 	let account = '';
 	let kind = '';
@@ -51,22 +51,24 @@
 	let note = '';
 	let verdict = '';
 
-	$: if (editable || isNew || !editable || !isNew) setCriminal(criminal);
+	$: if (editable || isNew) setCriminal(criminal);
 	$: if (searchAccount) account = searchAccount;
 
 	function setCriminal(criminal: Criminal | null) {
-		if (criminal && !isNew) {
-			account = criminal.account;
-			kind = criminal.kind;
-			accuser = criminal.accuser;
-			police_consultant = criminal.police_consultant;
-			lawyer_culprit = criminal.lawyer_culprit;
-			lawyer_accuser = criminal.lawyer_accuser;
-			facts = criminal.facts;
-			time_of_crime = criminal.time_of_crime;
-			location_of_crime = criminal.location_of_crime;
-			note = criminal.note;
-			verdict = criminal.verdict;
+		if (!isNew) {
+			if (criminal) {
+				account = criminal.account;
+				kind = criminal.kind;
+				accuser = criminal.accuser;
+				police_consultant = criminal.police_consultant;
+				lawyer_culprit = criminal.lawyer_culprit;
+				lawyer_accuser = criminal.lawyer_accuser;
+				facts = criminal.facts;
+				time_of_crime = criminal.time_of_crime;
+				location_of_crime = criminal.location_of_crime;
+				note = criminal.note;
+				verdict = criminal.verdict;
+			}
 		} else {
 			if (searchAccount) {
 				account = searchAccount as string;
@@ -105,8 +107,7 @@
 				verdict
 			})
 		);
-		await back();
-		reload();
+		await onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -128,13 +129,25 @@
 				verdict
 			})
 		);
-		await back();
-		reload();
+		await onChange();
 	}
 	export async function del() {
 		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, 'DELETE', null);
+		await onDel();
+	}
+
+	async function onChange() {
+		criminal = {ty: "criminal", account, kind, accuser, police_consultant, lawyer_culprit, lawyer_accuser, facts, time_of_crime, location_of_crime, note, verdict};
+		console.log(criminal);
+		editable = false;
+		await onUpdate(criminal, isNew);
+		isNew = false;
+	}
+
+	async function onDel() {
+		criminal = null;
+		await onUpdate(criminal, isNew);
 		await back();
-		reload();
 	}
 </script>
 

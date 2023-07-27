@@ -20,7 +20,7 @@
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var reload: () => void;
+	export var onUpdate: (newItem: User | null, isNew: boolean) => Promise<void>;
 
 	let forename = '';
 	let surname = '';
@@ -31,11 +31,13 @@
 	$: if (searchRole) role = searchRole;
 
 	function setUser(user: User | null) {
-		if (user && !isNew) {
-			forename = user.forename;
-			surname = user.surname;
-			account = user.account;
-			role = user.role;
+		if (!isNew) {
+			if (user) {
+				forename = user.forename;
+				surname = user.surname;
+				account = user.account;
+				role = user.role;
+			}
 		} else {
 			forename = '';
 			surname = '';
@@ -51,8 +53,7 @@
 	let addResponse: Promise<any>;
 	async function add() {
 		await request('/api/user', 'POST', JSON.stringify({ forename, surname, account, role }));
-		await back();
-		reload();
+		await onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -62,13 +63,25 @@
 			'PUT',
 			JSON.stringify({ forename, surname, account, role })
 		);
-		await back();
-		reload();
+		await onChange();
 	}
 	export async function del() {
 		await request(`/api/user/${user?.account}`, 'DELETE', null);
+		await onDel();
+	}
+
+	async function onChange() {
+		user = {ty: "user", forename, surname, account, role};
+		console.log(user);
+		editable = false;
+		await onUpdate(user, isNew);
+		isNew = false;
+	}
+
+	async function onDel() {
+		user = null;
+		await onUpdate(user, isNew);
 		await back();
-		reload();
 	}
 </script>
 

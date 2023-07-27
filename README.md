@@ -4,11 +4,11 @@ A repo with the server-side backend and the frontend of the Database Application
 
 ### Test Website
 
-A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo. Note that version 4.0.0 is currently not deployed there.
+A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo. Note that version 4.1.0 is currently not deployed there.
 
 ### Download
 
-The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/schiller-db/releases). Note that version 4.0.0 has currently no build, I am working on that.
+The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/schiller-db/releases). Note that version 4.1.0 has currently no build, I am working on that.
 
 ### Usage
 

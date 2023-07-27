@@ -4,7 +4,7 @@
 		toString(): string;
 	}
 
-	export var state: string | null;
+	export let state: string | null;
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
 	export var onSelect: (parents: T[]) => boolean;
@@ -35,11 +35,15 @@
 		return obj && typeof obj.account === 'string';
 	}
 
-	function isCriminal(obj: any): obj is { ty: 'criminal'; kind: any } {
+	function isUser(obj: any): obj is { ty: 'user'; role: any } {
+		return obj && typeof obj.role === 'string';
+	}
+
+	function isCriminal(obj: any): obj is { ty: 'criminal'; account: any; kind: any } {
 		return obj && typeof obj.kind === 'string';
 	}
 
-	function isWorkless(obj: any): obj is { ty: 'workless'; currently: any } {
+	function isWorkless(obj: any): obj is { ty: 'workless'; currently: any; date_of_dismiss: any } {
 		return obj && typeof obj.currently === 'boolean';
 	}
 
@@ -48,7 +52,79 @@
 		return `${day}.${month}.${year}`;
 	}
 
+	function sortby(a: T, b: T) {
+		let accountA = a;
+		let accountB = b;
+		if (isObject(a) && isObject(b)) {
+			accountA = a.account.toLowerCase() as unknown as T;
+			accountB = b.account.toLowerCase() as unknown as T;
+		}
+		if (accountA < accountB) {
+			return -1;
+		} else if (accountA > accountB) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+	export async function onUpdate(newItem: T | null, isNew: boolean) {
+		// console.log('On Update', newItem);
+		if (parents.length <= 0) {
+			await back();
+			reload();
+			return;
+		}
+		if (!isNew) {
+			if (
+				(isUser(newItem) && isUser(active) && newItem.role != active.role) ||
+				(isWorkless(newItem) &&
+					isWorkless(active) &&
+					newItem.date_of_dismiss != active.date_of_dismiss) ||
+				(isCriminal(newItem) && isCriminal(active) && newItem.account != active.account)
+			) {
+				await back();
+				if (activeIndex > -1) {
+					list.splice(activeIndex, 1);
+				}
+				items = list as unknown as Promise<T[]>;
+				return;
+			}
+		}
+		if (newItem) {
+			if (isNew) {
+				if (
+					(isUser(newItem) && isUser(active) && newItem.role != active.role) ||
+					(isWorkless(newItem) &&
+						isWorkless(active) &&
+						newItem.date_of_dismiss != active.date_of_dismiss) ||
+					(isCriminal(newItem) && isCriminal(active) && newItem.account != active.account)
+				) {
+					await back();
+				} else {
+					activeIndex += 1;
+					list.push(newItem);
+					list.sort(sortby);
+				}
+			} else {
+				list[activeIndex] = newItem;
+			}
+			active = newItem;
+		} else {
+			if (newItem === null) {
+				if (activeIndex > -1) {
+					list.splice(activeIndex, 1);
+				}
+			}
+		}
+		items = list as unknown as Promise<T[]>;
+	}
+
+	$: if (items instanceof Promise) items.then((val) => (list = val));
+
 	let active: T | null;
+	let activeIndex: number;
+	let list: T[];
 	let items: Promise<T[]> = fetchItems([]);
 	let parents: T[] = [];
 </script>
@@ -75,20 +151,21 @@
 				: parents.join(' - ')}</button
 		>
 	{/if}
-	{#each data as entry}
+	{#each data as entry, i}
 		<button
 			class="list-group-item list-group-item-action"
 			class:active={active === entry}
 			on:click={() => {
+				list = data;
 				active = entry;
-
+				activeIndex = i;
 				if (onSelect([...parents, active])) {
 					parents.push(active);
 					items = fetchItems(parents);
 					active = null;
 				}
 			}}
-			>{isObject(entry)
+			>{isObject(entry) && parents.length > 0
 				? isCriminal(entry)
 					? entry.kind
 					: entry.account

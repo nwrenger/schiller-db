@@ -32,7 +32,7 @@
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var reload: () => void;
+	export var onUpdate: (newItem: Workless | null, isNew: boolean) => Promise<void>;
 
 	let account = '';
 	let old_company = '';
@@ -41,17 +41,19 @@
 	let new_company = '';
 	let total_time = '';
 
-	$: if (editable || isNew || !editable || !isNew) setWorkless(workless);
+	$: if (editable || isNew) setWorkless(workless);
 	$: if (searchDate) date_of_dismiss = searchDate;
 
 	function setWorkless(workless: Workless | null) {
-		if (workless && !isNew) {
-			account = workless.account;
-			old_company = workless.old_company;
-			date_of_dismiss = workless.date_of_dismiss;
-			currently = workless.currently;
-			new_company = workless.new_company;
-			total_time = workless.total_time;
+		if (!isNew) {
+			if (workless) {
+				account = workless.account;
+				old_company = workless.old_company;
+				date_of_dismiss = workless.date_of_dismiss;
+				currently = workless.currently;
+				new_company = workless.new_company;
+				total_time = workless.total_time;
+			}
 		} else {
 			account = '';
 			old_company = '';
@@ -73,8 +75,7 @@
 			'POST',
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
-		await back();
-		reload();
+		await onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -84,8 +85,7 @@
 			'PUT',
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
-		await back();
-		reload();
+		await onChange();
 	}
 	export async function del() {
 		await request(
@@ -93,8 +93,21 @@
 			'DELETE',
 			null
 		);
+		await onDel();
+	}
+
+	async function onChange() {
+		workless = {ty: "workless", account, old_company, date_of_dismiss, currently, new_company, total_time};
+		console.log(workless);
+		editable = false;
+		await onUpdate(workless, isNew);
+		isNew = false;
+	}
+
+	async function onDel() {
+		workless = null;
+		await onUpdate(workless, isNew);
 		await back();
-		reload();
 	}
 </script>
 
