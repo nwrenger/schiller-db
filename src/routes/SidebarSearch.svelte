@@ -14,7 +14,7 @@
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
-	$: if (params) {
+	$: if (params || role) {
 		back();
 		nested = false;
 	} else {
