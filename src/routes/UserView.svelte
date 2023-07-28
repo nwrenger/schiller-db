@@ -72,7 +72,7 @@
 
 	function onChange() {
 		user = { ty: 'user', forename, surname, account, role };
-		console.log('Changed: ', user);
+		// console.log('Changed: ', user);
 		editable = false;
 		isNew = false;
 		reload();

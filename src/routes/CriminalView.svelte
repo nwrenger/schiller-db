@@ -151,7 +151,7 @@
 			note,
 			verdict
 		};
-		console.log('Changed: ', criminal);
+		// console.log('Changed: ', criminal);
 		editable = false;
 		isNew = false;
 		reload();

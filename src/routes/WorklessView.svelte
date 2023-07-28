@@ -106,7 +106,7 @@
 			new_company,
 			total_time
 		};
-		console.log('Changed: ', workless);
+		// console.log('Changed: ', workless);
 		editable = false;
 		isNew = false;
 		reload();

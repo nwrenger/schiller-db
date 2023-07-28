@@ -86,7 +86,7 @@
 					) && isUser(currentEntry)
 				)
 			) {
-				console.log('Cannot find entry: ', active, 'at: ', currentEntry);
+				// console.log('Cannot find entry: ', active, 'at: ', currentEntry);
 				await back();
 			}
 		}
