@@ -16,7 +16,7 @@ export default defineConfig({
 		copy({
 			targets: [
 				{
-					src: 'node_modules/bootstrap/dist/**/*',
+					src: 'node_modules/bootstrap/dist/*',
 					dest: 'static/bootstrap'
 				}
 			]
