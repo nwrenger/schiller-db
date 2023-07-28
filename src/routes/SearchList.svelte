@@ -47,7 +47,7 @@
 			active = item;
 		}
 	}
-	
+
 	async function selectItem(list: T[] | null) {
 		if (list && currentEntry && currentEntry !== active && isObject(currentEntry)) {
 			active =
