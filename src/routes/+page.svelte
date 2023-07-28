@@ -424,7 +424,11 @@
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
 					{back}
-					currentEntry={$mainView && typeof $mainView == 'object' && $mainView.ty == 'user' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal' ? $mainView : null}
+					currentEntry={($mainView && typeof $mainView == 'object' && $mainView.ty == 'user') ||
+					($mainView && typeof $mainView == 'object' && $mainView.ty == 'workless') ||
+					($mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal')
+						? $mainView
+						: null}
 					state={$sidebarState}
 				/>
 			{:else}
@@ -437,7 +441,11 @@
 					bind:role={searchRole}
 					bind:date={searchDate}
 					bind:nested
-					currentEntry={$mainView && typeof $mainView == 'object' && $mainView.ty == 'user' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal' ? $mainView : null}
+					currentEntry={($mainView && typeof $mainView == 'object' && $mainView.ty == 'user') ||
+					($mainView && typeof $mainView == 'object' && $mainView.ty == 'workless') ||
+					($mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal')
+						? $mainView
+						: null}
 				/>
 			{/if}
 		</ul>
@@ -504,7 +512,7 @@
 			<StatsView stats={$mainView} />
 		{/if}
 	</div>
-	<Dialog bind:this={newDialog} />
+	<Dialog bind:this={newDialog} fun={undefined} />
 </section>
 
 <style>

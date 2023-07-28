@@ -5,6 +5,7 @@
 </script>
 
 <script lang="ts">
+	import Dialog from './Dialog.svelte';
 	import Select from './Select.svelte';
 
 	export var back: () => Promise<void>;
@@ -21,12 +22,13 @@
 		json: BodyInit | null | undefined
 	) => Promise<any>;
 
-	var addUser: string = '';
-	var password: string = '';
-	var userPermissions: string = 'None';
-	var worklessPermissions: string = 'None';
-	var criminalPermissions: string = 'None';
-	var addResponse: Promise<any>;
+	let addUser: string = '';
+	let password: string = '';
+	let userPermissions: string = 'None';
+	let worklessPermissions: string = 'None';
+	let criminalPermissions: string = 'None';
+	let addResponse: Promise<any>;
+	let dialog: Dialog;
 
 	async function add() {
 		await request(
@@ -42,14 +44,12 @@
 		);
 	}
 
-	var deleteUser: string = '';
-	var delResponse: Promise<any>;
+	let deleteUser: string = '';
+	let delResponse: Promise<any>;
 
 	async function del() {
 		await request(`/api/login/${deleteUser}`, 'DELETE', null);
 	}
-
-	var delAllResponse: Promise<any>;
 
 	async function delAll() {
 		await request('/api/all_logins', 'DELETE', null);
@@ -57,6 +57,7 @@
 </script>
 
 <div id="login-container">
+	<Dialog bind:this={dialog} fun={delAll} />
 	<div>
 		<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
 		<div class="card-title row add-login">
@@ -163,16 +164,10 @@
 			id="delete-all-logins-button"
 			type="button"
 			class="btn btn-outline-danger m-3 delete-all-logins"
-			on:click={() => (delAllResponse = delAll())}
+			on:click={() => {
+				if (dialog) dialog.open('Warnung', 'Alle Logins löschen?');
+			}}
 		>
-			{#await delAllResponse}
-				<span
-					id="add-login-button-spinner"
-					class="spinner-border spinner-border-sm"
-					role="status"
-					aria-hidden="true"
-				/>
-			{/await}
 			Alle Logins löschen
 		</button>
 	</div>

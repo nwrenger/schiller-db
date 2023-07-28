@@ -1,13 +1,18 @@
 <script lang="ts">
+	import Dialog from './Dialog.svelte';
+
 	export let onHighlighted: boolean;
 	export let editable: boolean;
 	export let isNew: boolean;
 	export let access: string | null = null;
 	export var back: () => Promise<void>;
 	export var del: () => Promise<void>;
+
+	let dialog: Dialog;
 </script>
 
 <div class="bg-dark-subtle">
+	<Dialog bind:this={dialog} fun={del} />
 	<div class="btn-group p-2">
 		<button
 			id="add"
@@ -77,7 +82,9 @@
 			title="Entfernen"
 			disabled={access === 'Write' ? false : true}
 			hidden={!onHighlighted}
-			on:click={async () => await del()}
+			on:click={() => {
+				if (dialog) dialog.open('Warnung', 'Eintrag unwiederruflich löschen?');
+			}}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

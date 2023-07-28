@@ -51,7 +51,7 @@
 
 	async function selectItem(list: T[] | undefined, ident: string | null) {
 		if (list && ident) {
-			active = list.find(entry => isObject(entry) && entry.account === ident) || null;
+			active = list.find((entry) => isObject(entry) && entry.account === ident) || null;
 			if (active == null) {
 				console.log('Cannot find entry: ', active, 'at: ', ident);
 				await back();
@@ -89,14 +89,14 @@
 				? formatDate(parents.join(' - '))
 				: parents.join(' - ')}</button
 		>
-		{/if}
-		{#each data as entry}
+	{/if}
+	{#each data as entry}
 		<button
-		class="list-group-item list-group-item-action"
-		class:active={active === entry}
-		id={isObject(entry) ? entry.account : entry.toString()}
-		on:click={() => {
-			active = entry;
+			class="list-group-item list-group-item-action"
+			class:active={active === entry}
+			id={isObject(entry) ? entry.account : entry.toString()}
+			on:click={() => {
+				active = entry;
 				if (onSelect([...parents, active])) {
 					parents.push(active);
 					items = fetchItems(parents);

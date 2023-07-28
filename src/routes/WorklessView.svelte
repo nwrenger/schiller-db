@@ -116,7 +116,6 @@
 		workless = null;
 		await back();
 	}
-		
 </script>
 
 <div id="workless-container">
