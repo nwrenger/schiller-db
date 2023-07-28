@@ -612,10 +612,11 @@ pub async fn all_roles_criminal(
         ("authorization" = []),
     )
 )]
-#[get("/api/criminal/search?<name>&<kind>&<limit>")]
+#[get("/api/criminal/search?<name>&<account>&<kind>&<limit>")]
 pub async fn search_criminal(
     _auth: Auth<CriminalReadOnly>,
     name: Option<&str>,
+    account: Option<&str>,
     kind: Option<&str>,
     limit: Option<usize>,
 ) -> Json<Result<Vec<Criminal>>> {
@@ -624,7 +625,11 @@ pub async fn search_criminal(
         .0;
     Json(db::criminal::search(
         &db,
-        CriminalSearch::new(name.unwrap_or_default(), kind.unwrap_or("%")),
+        CriminalSearch::new(
+            name.unwrap_or_default(),
+            account.unwrap_or("%"),
+            kind.unwrap_or("%"),
+        ),
         limit.unwrap_or(200),
     ))
 }

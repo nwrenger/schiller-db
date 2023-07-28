@@ -156,11 +156,16 @@ pub fn search_role(db: &Database, name: &str, role: &str, limit: usize) -> Resul
 pub struct CriminalSearch<'a> {
     pub name: &'a str,
     pub kind: &'a str,
+    pub account: &'a str,
 }
 
 impl<'a> CriminalSearch<'a> {
-    pub fn new(name: &'a str, kind: &'a str) -> CriminalSearch<'a> {
-        Self { name, kind }
+    pub fn new(name: &'a str, account: &'a str, kind: &'a str) -> CriminalSearch<'a> {
+        Self {
+            name,
+            account,
+            kind,
+        }
     }
 }
 
@@ -181,16 +186,18 @@ pub fn search(db: &Database, params: CriminalSearch, limit: usize) -> Result<Vec
         verdict \
         \
         from criminal \
-        where account like ?1 \
-        and kind like ?2 \
+        where account like '%'||?1||'%' \
+        and account like ?2 \
+        and kind like ?3 \
         order by case \
             when account like ?1 || '%' then 0 \
             else 1 \
         end asc, account asc \
-        limit ?3",
+        limit ?4",
     )?;
     let rows = stmt.query(rusqlite::params![
         params.name.trim(),
+        params.account.trim(),
         params.kind.trim(),
         limit
     ])?;
@@ -308,7 +315,8 @@ mod tests {
         };
         criminal::add(&db, &criminal).unwrap();
 
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 200).unwrap();
+        let result =
+            criminal::search(&db, criminal::CriminalSearch::new("%", "%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], criminal);
 
@@ -322,12 +330,14 @@ mod tests {
             },
         )
         .unwrap();
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 200).unwrap();
+        let result =
+            criminal::search(&db, criminal::CriminalSearch::new("%", "%", "%"), 200).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].facts, "some".to_string());
 
         criminal::delete(&db, &criminal.account, &criminal.kind).unwrap();
-        let result = criminal::search(&db, criminal::CriminalSearch::new("%", "%"), 200).unwrap();
+        let result =
+            criminal::search(&db, criminal::CriminalSearch::new("%", "%", "%"), 200).unwrap();
         assert_eq!(result.len(), 0);
     }
 }

@@ -137,7 +137,7 @@
 				);
 			} else if ($sidebarState === 'criminal') {
 				data = await request(
-					`/api/criminal/search?name=${encodeURIComponent(nested)}`,
+					`/api/criminal/search?account=${encodeURIComponent(nested)}`,
 					'GET',
 					null
 				);
