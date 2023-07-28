@@ -107,7 +107,7 @@
 				verdict
 			})
 		);
-		await reset();
+		onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -133,7 +133,7 @@
 	}
 	export async function del() {
 		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, 'DELETE', null);
-		await reset();
+		await onDel();
 	}
 
 	function onChange() {
@@ -157,9 +157,10 @@
 		reload();
 	}
 
-	async function reset() {
+	async function onDel() {
 		criminal = null;
 		await back();
+		reload();
 	}
 </script>
 

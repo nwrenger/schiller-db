@@ -18,8 +18,22 @@
 		return obj && typeof obj.account === 'string';
 	}
 
-	function isWorkless(obj: any): obj is { ty: 'workless'; currently: any } {
+	function isUser(obj: any): obj is { ty: 'user'; account: string; forename: string } {
+		return obj && typeof obj.account === 'string' && typeof obj.forename === 'string';
+	}
+
+	function isWorkless(obj: any): obj is {
+		ty: 'workless';
+		account: any;
+		currently: any;
+		date_of_dismiss: any;
+		old_company: any;
+	} {
 		return obj && typeof obj.currently === 'boolean';
+	}
+
+	function isCriminal(obj: any): obj is { ty: 'criminal'; account: any; kind: any } {
+		return obj && typeof obj.kind === 'string';
 	}
 
 	export function deselectAll() {
@@ -40,22 +54,46 @@
 		}
 	}
 
-	async function selectItem(list: T[] | undefined, ident: string | null) {
+	async function selectItem(list: T[] | null, ident: object | null) {
 		if (list && ident) {
-			active = list.find((entry) => isObject(entry) && entry.account === ident) || null;
-			if (active == null) {
+			active =
+				list.find(
+					(entry) =>
+						(isUser(entry) && isUser(ident) && entry.account === ident.account) ||
+						(isWorkless(entry) &&
+							isWorkless(ident) &&
+							entry.account === ident.account &&
+							entry.date_of_dismiss === ident.date_of_dismiss &&
+							entry.old_company === ident.old_company) ||
+						(isCriminal(entry) &&
+							isCriminal(ident) &&
+							entry.account === ident.account &&
+							entry.kind === ident.kind)
+				) || null;
+			if (
+				active == null &&
+				!(
+					isObject(
+						list.find(
+							(entry) => isObject(entry) && isObject(ident) && entry.account === ident.account
+						)
+					) && isUser(ident)
+				)
+			) {
 				console.log('Cannot find entry: ', active, 'at: ', ident);
 				await back();
 			}
 		}
 	}
 
-	$: selectItem(list, currentEntry && isObject(currentEntry) ? currentEntry.account : null);
+	$: items.then(() =>
+		selectItem(list, currentEntry && isObject(currentEntry) ? currentEntry : null)
+	);
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;
-	let list: T[];
-	let items: Promise<T[]> | never[] = [];
+	let list: T[] | null;
+	let items: Promise<T[]>;
 	$: items = fetchItems(params, role, date);
 </script>
 

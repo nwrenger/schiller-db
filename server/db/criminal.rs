@@ -181,7 +181,7 @@ pub fn search(db: &Database, params: CriminalSearch, limit: usize) -> Result<Vec
         verdict \
         \
         from criminal \
-        where account like '%'||?1||'%' \
+        where account like ?1 \
         and kind like ?2 \
         order by case \
             when account like ?1 || '%' then 0 \

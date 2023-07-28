@@ -75,7 +75,7 @@
 			'POST',
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
-		await reset();
+		onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -93,7 +93,7 @@
 			'DELETE',
 			null
 		);
-		await reset();
+		await onDel();
 	}
 
 	function onChange() {
@@ -112,9 +112,10 @@
 		reload();
 	}
 
-	async function reset() {
+	async function onDel() {
 		workless = null;
 		await back();
+		reload();
 	}
 </script>
 

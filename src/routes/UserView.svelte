@@ -53,7 +53,7 @@
 	let addResponse: Promise<any>;
 	async function add() {
 		await request('/api/user', 'POST', JSON.stringify({ forename, surname, account, role }));
-		await reset();
+		onChange();
 	}
 
 	let editResponse: Promise<any>;
@@ -67,10 +67,10 @@
 	}
 	export async function del() {
 		await request(`/api/user/${user?.account}`, 'DELETE', null);
-		await reset();
+		await onDel();
 	}
 
-	async function onChange() {
+	function onChange() {
 		user = { ty: 'user', forename, surname, account, role };
 		console.log('Changed: ', user);
 		editable = false;
@@ -78,7 +78,7 @@
 		reload();
 	}
 
-	async function reset() {
+	async function onDel() {
 		user = null;
 		await back();
 		reload();

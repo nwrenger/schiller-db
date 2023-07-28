@@ -479,7 +479,7 @@
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
 			<WorklessView
 				bind:this={worklessView}
-				workless={$mainView}
+				bind:workless={$mainView}
 				{getUser}
 				{search}
 				bind:editable
@@ -493,7 +493,7 @@
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
 			<CriminalView
 				bind:this={criminalView}
-				criminal={$mainView}
+				bind:criminal={$mainView}
 				{getUser}
 				{search}
 				bind:editable
