@@ -24,6 +24,7 @@
 	export let onHighlighted: boolean;
 	export let searchAccount: string | null;
 	export var getUser: () => void;
+	export var reload: () => void;
 	export var search: (
 		params: string,
 		kind: string | null,
@@ -37,7 +38,6 @@
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var onUpdate: (newItem: Criminal | null, isNew: boolean) => Promise<void>;
 
 	let account = '';
 	let kind = '';
@@ -107,7 +107,7 @@
 				verdict
 			})
 		);
-		await onChange();
+		await reset();
 	}
 
 	let editResponse: Promise<any>;
@@ -129,14 +129,14 @@
 				verdict
 			})
 		);
-		await onChange();
+		onChange();
 	}
 	export async function del() {
 		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, 'DELETE', null);
-		await onDel();
+		await reset();
 	}
 
-	async function onChange() {
+	function onChange() {
 		criminal = {
 			ty: 'criminal',
 			account,
@@ -151,15 +151,14 @@
 			note,
 			verdict
 		};
-		console.log(criminal);
+		console.log('Changed: ', criminal);
 		editable = false;
-		await onUpdate(criminal, isNew);
 		isNew = false;
+		reload();
 	}
 
-	async function onDel() {
+	async function reset() {
 		criminal = null;
-		await onUpdate(criminal, isNew);
 		await back();
 	}
 </script>

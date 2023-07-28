@@ -27,12 +27,12 @@
 		limit: number | null
 	) => Promise<any[]>;
 	export var back: () => Promise<void>;
+	export var reload: () => void;
 	export var request: (
 		url: string,
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var onUpdate: (newItem: Workless | null, isNew: boolean) => Promise<void>;
 
 	let account = '';
 	let old_company = '';
@@ -75,7 +75,7 @@
 			'POST',
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
-		await onChange();
+		await reset();
 	}
 
 	let editResponse: Promise<any>;
@@ -85,7 +85,7 @@
 			'PUT',
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
-		await onChange();
+		onChange();
 	}
 	export async function del() {
 		await request(
@@ -93,10 +93,10 @@
 			'DELETE',
 			null
 		);
-		await onDel();
+		await reset();
 	}
 
-	async function onChange() {
+	function onChange() {
 		workless = {
 			ty: 'workless',
 			account,
@@ -106,17 +106,17 @@
 			new_company,
 			total_time
 		};
-		console.log(workless);
+		console.log('Changed: ', workless);
 		editable = false;
-		await onUpdate(workless, isNew);
 		isNew = false;
+		reload();
 	}
 
-	async function onDel() {
+	async function reset() {
 		workless = null;
-		await onUpdate(workless, isNew);
 		await back();
 	}
+		
 </script>
 
 <div id="workless-container">

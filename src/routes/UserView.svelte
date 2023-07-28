@@ -15,12 +15,12 @@
 	export let onHighlighted: boolean;
 	export let searchRole: string | null;
 	export var back: () => Promise<void>;
+	export var reload: () => void;
 	export var request: (
 		url: string,
 		type: string,
 		json: BodyInit | null | undefined
 	) => Promise<any>;
-	export var onUpdate: (newItem: User | null, isNew: boolean) => Promise<void>;
 
 	let forename = '';
 	let surname = '';
@@ -53,7 +53,7 @@
 	let addResponse: Promise<any>;
 	async function add() {
 		await request('/api/user', 'POST', JSON.stringify({ forename, surname, account, role }));
-		await onChange();
+		await reset();
 	}
 
 	let editResponse: Promise<any>;
@@ -63,25 +63,25 @@
 			'PUT',
 			JSON.stringify({ forename, surname, account, role })
 		);
-		await onChange();
+		onChange();
 	}
 	export async function del() {
 		await request(`/api/user/${user?.account}`, 'DELETE', null);
-		await onDel();
+		await reset();
 	}
 
 	async function onChange() {
 		user = { ty: 'user', forename, surname, account, role };
-		console.log(user);
+		console.log('Changed: ', user);
 		editable = false;
-		await onUpdate(user, isNew);
 		isNew = false;
+		reload();
 	}
 
-	async function onDel() {
+	async function reset() {
 		user = null;
-		await onUpdate(user, isNew);
 		await back();
+		reload();
 	}
 </script>
 

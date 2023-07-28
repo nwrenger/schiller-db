@@ -4,16 +4,17 @@
 	export var fetchItems: (params: string, role: string | null, date: string | null) => Promise<T[]>;
 	export var onSelect: (entry: T | null) => void;
 	export var back: () => Promise<void>;
-	export var params: string;
-	export var role: string | null;
-	export var date: string | null;
-	export var nested: boolean = false;
+	export let params: string;
+	export let role: string | null;
+	export let date: string | null;
+	export let nested: boolean = false;
+	export let currentEntry: T | null;
 
 	export function reload() {
 		items = fetchItems(params, role, date);
 	}
 
-	function isObject(obj: any): obj is { account: string } {
+	function isObject(obj: any): obj is { ty: any; account: string } {
 		return obj && typeof obj.account === 'string';
 	}
 
@@ -32,62 +33,27 @@
 			return false;
 		}
 	}
-	function sortby(a: T, b: T) {
-		let accountA = a;
-		let accountB = b;
-		if (isObject(a) && isObject(b)) {
-			accountA = a.account.toLowerCase() as unknown as T;
-			accountB = b.account.toLowerCase() as unknown as T;
-		}
-		if (accountA < accountB) {
-			return -1;
-		} else if (accountA > accountB) {
-			return 1;
-		} else {
-			return 0;
+
+	export function select(item: T | null) {
+		if (item) {
+			active = item;
 		}
 	}
 
-	export async function onUpdate(newItem: T | null, isNew: boolean) {
-		// console.log('On Update', newItem);
-		if (role || date) {
-			await back();
-			reload();
-			return;
-		}
-		if (newItem) {
-			if (isNew) {
-				if (
-					isObject(newItem) &&
-					(newItem.account.includes(params) ||
-						newItem.forename.includes(params) ||
-						newItem.surname.includes(params))
-				) {
-					list.push(newItem);
-					list.sort(sortby);
-					activeIndex = list.findIndex((entry) => entry === newItem);
-				} else {
-					await back();
-					return;
-				}
-			} else {
-				list[activeIndex] = newItem;
-			}
-			active = newItem;
-		} else {
-			if (newItem === null) {
-				if (activeIndex > -1) {
-					list.splice(activeIndex, 1);
-				}
+	async function selectItem(list: T[] | undefined, ident: string | null) {
+		if (list && ident) {
+			active = list.find(entry => isObject(entry) && entry.account === ident) || null;
+			if (active == null) {
+				console.log('Cannot find entry: ', active, 'at: ', ident);
+				await back();
 			}
 		}
-		items = list as unknown as Promise<T[]>;
 	}
 
+	$: selectItem(list, currentEntry && isObject(currentEntry) ? currentEntry.account : null);
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;
-	let activeIndex: number;
 	let list: T[];
 	let items: Promise<T[]> | never[] = [];
 	$: items = fetchItems(params, role, date);
@@ -111,14 +77,12 @@
 			role = null;
 		}}>Zurück {params || !role ? `- "${params}"` : ''}{role ? ` - ${role}` : ''}</button
 	>
-	{#each data as entry, i}
+	{#each data as entry}
 		<button
 			class="list-group-item list-group-item-action"
 			class:active={active === entry}
 			on:click={() => {
-				list = data;
 				active = entry;
-				activeIndex = i;
 				onSelect(active);
 			}}>{entry.account}{isWorkless(entry) && entry.currently ? ' - Arbeitslos' : ''}</button
 		>

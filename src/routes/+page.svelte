@@ -424,6 +424,7 @@
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
 					{back}
+					currentEntry={$mainView && typeof $mainView == 'object' && $mainView.ty == 'user' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal' ? $mainView : null}
 					state={$sidebarState}
 				/>
 			{:else}
@@ -436,6 +437,7 @@
 					bind:role={searchRole}
 					bind:date={searchDate}
 					bind:nested
+					currentEntry={$mainView && typeof $mainView == 'object' && $mainView.ty == 'user' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless' || $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal' ? $mainView : null}
 				/>
 			{/if}
 		</ul>
@@ -461,9 +463,9 @@
 				bind:editable
 				bind:isNew
 				bind:onHighlighted
-				{back}
-				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
 				{request}
+				{back}
+				{reload}
 				{searchRole}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
@@ -476,7 +478,7 @@
 				bind:isNew
 				bind:onHighlighted
 				{back}
-				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
+				{reload}
 				{request}
 				{searchDate}
 			/>
@@ -490,7 +492,7 @@
 				bind:isNew
 				bind:onHighlighted
 				{back}
-				onUpdate={nestedList ? nestedList.onUpdate : searchList.onUpdate}
+				{reload}
 				{request}
 				{searchAccount}
 			/>

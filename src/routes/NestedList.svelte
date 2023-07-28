@@ -5,6 +5,7 @@
 	}
 
 	export let state: string | null;
+	export let currentEntry: T | null;
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
 	export var onSelect: (parents: T[]) => boolean;
@@ -31,12 +32,8 @@
 		}
 	}
 
-	function isObject(obj: any): obj is { account: string } {
+	function isObject(obj: any): obj is { ty: any; account: string } {
 		return obj && typeof obj.account === 'string';
-	}
-
-	function isUser(obj: any): obj is { ty: 'user'; role: any } {
-		return obj && typeof obj.role === 'string';
 	}
 
 	function isCriminal(obj: any): obj is { ty: 'criminal'; account: any; kind: any } {
@@ -52,79 +49,20 @@
 		return `${day}.${month}.${year}`;
 	}
 
-	function sortby(a: T, b: T) {
-		let accountA = a;
-		let accountB = b;
-		if (isObject(a) && isObject(b)) {
-			accountA = a.account.toLowerCase() as unknown as T;
-			accountB = b.account.toLowerCase() as unknown as T;
-		}
-		if (accountA < accountB) {
-			return -1;
-		} else if (accountA > accountB) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-
-	export async function onUpdate(newItem: T | null, isNew: boolean) {
-		// console.log('On Update', newItem);
-		if (parents.length <= 0) {
-			await back();
-			reload();
-			return;
-		}
-		if (!isNew) {
-			if (
-				(isUser(newItem) && isUser(active) && newItem.role != active.role) ||
-				(isWorkless(newItem) &&
-					isWorkless(active) &&
-					newItem.date_of_dismiss != active.date_of_dismiss) ||
-				(isCriminal(newItem) && isCriminal(active) && newItem.account != active.account)
-			) {
+	async function selectItem(list: T[] | undefined, ident: string | null) {
+		if (list && ident) {
+			active = list.find(entry => isObject(entry) && entry.account === ident) || null;
+			if (active == null) {
+				console.log('Cannot find entry: ', active, 'at: ', ident);
 				await back();
-				if (activeIndex > -1) {
-					list.splice(activeIndex, 1);
-				}
-				items = list as unknown as Promise<T[]>;
-				return;
 			}
 		}
-		if (newItem) {
-			if (isNew) {
-				if (
-					(isUser(newItem) && isUser(active) && newItem.role != active.role) ||
-					(isWorkless(newItem) &&
-						isWorkless(active) &&
-						newItem.date_of_dismiss != active.date_of_dismiss) ||
-					(isCriminal(newItem) && isCriminal(active) && newItem.account != active.account)
-				) {
-					await back();
-					return;
-				} else {
-					list.push(newItem);
-					list.sort(sortby);
-					activeIndex = list.findIndex((entry) => entry === newItem);
-				}
-			} else {
-				list[activeIndex] = newItem;
-			}
-			active = newItem;
-		} else {
-			if (newItem === null) {
-				if (activeIndex > -1) {
-					list.splice(activeIndex, 1);
-				}
-			}
-		}
-		items = list as unknown as Promise<T[]>;
 	}
 
+	$: selectItem(list, currentEntry && isObject(currentEntry) ? currentEntry.account : null);
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;
-	let activeIndex: number;
 	let list: T[];
 	let items: Promise<T[]> = fetchItems([]);
 	let parents: T[] = [];
@@ -151,15 +89,14 @@
 				? formatDate(parents.join(' - '))
 				: parents.join(' - ')}</button
 		>
-	{/if}
-	{#each data as entry, i}
+		{/if}
+		{#each data as entry}
 		<button
-			class="list-group-item list-group-item-action"
-			class:active={active === entry}
-			on:click={() => {
-				list = data;
-				active = entry;
-				activeIndex = i;
+		class="list-group-item list-group-item-action"
+		class:active={active === entry}
+		id={isObject(entry) ? entry.account : entry.toString()}
+		on:click={() => {
+			active = entry;
 				if (onSelect([...parents, active])) {
 					parents.push(active);
 					items = fetchItems(parents);
