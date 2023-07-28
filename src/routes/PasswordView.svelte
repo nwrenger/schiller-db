@@ -47,7 +47,7 @@
 
 <div id="password-changer-container">
 	<form on:submit={() => (response = changePassword())}>
-		<label for="password-changer" class="form-label">Passwort ändern: </label>
+		<label for="password-changer" class="form-label"><h4>Passwort ändern</h4></label>
 		<div class="card-title row password-changer">
 			<div class="col">
 				<label for="new-password" class="form-label">Neues Passwort</label>
@@ -83,8 +83,8 @@
 			{/await}
 			Ändern
 		</button>
+		<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
+			>Schließen</button
+		>
 	</form>
-	<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
-		>Schließen</button
-	>
 </div>

@@ -59,7 +59,7 @@
 <div id="login-container">
 	<Dialog bind:this={dialog} fun={delAll} />
 	<div>
-		<label for="add-login" class="form-label">Einen Login hinzufügen: </label>
+		<h4>Logins hinzufügen</h4>
 		<div class="card-title row add-login">
 			<Select bind:value={addUser} {search} label={'Benutzer'} />
 			<div class="col">
@@ -137,7 +137,7 @@
 		</button>
 	</div>
 	<div>
-		<label for="delete-login" class="form-label">Einen Login entfernen:</label>
+		<h4>Logins entfernen</h4>
 		<div class="card-title row delete-login">
 			<Select bind:value={deleteUser} {search} label={'Benutzer'} />
 		</div>
@@ -159,16 +159,16 @@
 		</button>
 	</div>
 	<div>
-		<p style="margin: 0;">Alle Logins entfernen:</p>
+		<h4>Alle Logins entfernen</h4>
 		<button
 			id="delete-all-logins-button"
 			type="button"
 			class="btn btn-outline-danger m-3 delete-all-logins"
 			on:click={() => {
-				if (dialog) dialog.open('Warnung', 'Alle Logins löschen?');
+				if (dialog) dialog.open('Warnung', 'Alle Logins entfernen?');
 			}}
 		>
-			Alle Logins löschen
+			Alle Logins entfernen
 		</button>
 	</div>
 	<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
