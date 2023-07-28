@@ -327,7 +327,7 @@
 	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
 	let sidebarState: Writable<string | null> = writable('user');
 
-	$: console.log($mainView);
+	// $: console.log($mainView);
 
 	$: if ($mainView && typeof $mainView == 'object')
 		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
