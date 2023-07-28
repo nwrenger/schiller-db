@@ -68,6 +68,13 @@
 							entry.account === currentEntry.account &&
 							entry.kind === currentEntry.kind)
 				) || null;
+			const id = isObject(active) ? active.account : active?.toString();
+			if (id) {
+				const element = document.getElementById(id);
+				if (element) {
+					element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				}
+			}
 			if (
 				active == null &&
 				!(

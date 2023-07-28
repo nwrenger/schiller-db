@@ -47,7 +47,7 @@
 			active = item;
 		}
 	}
-
+	
 	async function selectItem(list: T[] | null) {
 		if (list && currentEntry && currentEntry !== active && isObject(currentEntry)) {
 			active =
@@ -64,6 +64,13 @@
 							entry.account === currentEntry.account &&
 							entry.kind === currentEntry.kind)
 				) || null;
+			const id = isObject(active) ? active.account : active?.toString();
+			if (id) {
+				const element = document.getElementById(id);
+				if (element) {
+					element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				}
+			}
 			if (
 				active == null &&
 				!(
@@ -118,6 +125,7 @@
 		<button
 			class="list-group-item list-group-item-action"
 			class:active={active === entry}
+			id={isObject(entry) ? entry.account : entry.toString()}
 			on:click={() => {
 				active = entry;
 				onSelect(active);
