@@ -14,7 +14,7 @@
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
-	$: if (params || role) {
+	$: if (params) {
 		back();
 		nested = false;
 	} else {
@@ -55,7 +55,16 @@
 		</li>
 		<form class="px-3 py-1" action="javascript:handleAdvanced()">
 			<div class="mb-2">
-				<select id="group-select" class="form-select" aria-label="Group Select" bind:value={role}>
+				<select
+					id="group-select"
+					class="form-select"
+					aria-label="Group Select"
+					bind:value={role}
+					on:click={() => {
+						back();
+						nested = false;
+					}}
+				>
 					{#await roleSelect}
 						<li class="list-group-item">
 							<div class="d-flex justify-content-center">
