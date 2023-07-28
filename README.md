@@ -17,9 +17,10 @@ Just run the binary/executable file provided in the release. Make sure it's in t
 ## Architecture
 
 This application follows the 3-tier principle.
-* **UI Layer:** Getting the Data from Server Calls.
-* **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
-* **Database Layer:** The SQLite database that stores the persistent data specific to a project.
+
+- **UI Layer:** Getting the Data from Server Calls.
+- **Application/Server Layer:** This is implemented using Rust and Rocket. Including a Swagger UI integration.
+- **Database Layer:** The SQLite database that stores the persistent data specific to a project.
 
 ### UI Layer
 
