@@ -6,6 +6,7 @@
 
 	export let state: string | null;
 	export let currentEntry: T | null;
+	export let onHighlighted: boolean;
 
 	export var fetchItems: (parents: T[]) => Promise<T[]>;
 	export var onSelect: (parents: T[]) => boolean;
@@ -22,14 +23,6 @@
 
 	export function deselectAll() {
 		active = null;
-	}
-
-	export function isSelected() {
-		if (active) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	function isObject(obj: any): obj is { ty: any; account: string } {
@@ -59,41 +52,46 @@
 		return `${day}.${month}.${year}`;
 	}
 
-	async function selectItem(list: T[] | null, ident: object | null) {
-		if (list && ident) {
+	async function selectItem(list: T[] | null) {
+		if (list && currentEntry && currentEntry !== active && isObject(currentEntry)) {
 			active =
 				list.find(
 					(entry) =>
-						(isUser(entry) && isUser(ident) && entry.account === ident.account) ||
+						(isUser(entry) && isUser(currentEntry) && entry.account === currentEntry.account) ||
 						(isWorkless(entry) &&
-							isWorkless(ident) &&
-							entry.account === ident.account &&
-							entry.date_of_dismiss === ident.date_of_dismiss &&
-							entry.old_company === ident.old_company) ||
+							isWorkless(currentEntry) &&
+							entry.account === currentEntry.account &&
+							entry.date_of_dismiss === currentEntry.date_of_dismiss &&
+							entry.old_company === currentEntry.old_company) ||
 						(isCriminal(entry) &&
-							isCriminal(ident) &&
-							entry.account === ident.account &&
-							entry.kind === ident.kind)
+							isCriminal(currentEntry) &&
+							entry.account === currentEntry.account &&
+							entry.kind === currentEntry.kind)
 				) || null;
 			if (
 				active == null &&
 				!(
 					isObject(
 						list.find(
-							(entry) => isObject(entry) && isObject(ident) && entry.account === ident.account
+							(entry) =>
+								isObject(entry) && isObject(currentEntry) && entry.account === currentEntry.account
 						)
-					) && isUser(ident)
+					) && isUser(currentEntry)
 				)
 			) {
-				console.log('Cannot find entry: ', active, 'at: ', ident);
+				console.log('Cannot find entry: ', active, 'at: ', currentEntry);
 				await back();
 			}
 		}
 	}
 
-	$: items.then(() =>
-		selectItem(list, currentEntry && isObject(currentEntry) ? currentEntry : null)
-	);
+	$: if (active) {
+		onHighlighted = true;
+	} else {
+		onHighlighted = false;
+	}
+
+	$: items.then(() => selectItem(list));
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;

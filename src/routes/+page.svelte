@@ -327,18 +327,11 @@
 	let mainView: Writable<ListItem | Login | Password | Stats | null> = writable(null);
 	let sidebarState: Writable<string | null> = writable('user');
 
-	// $: console.log($mainView);
+	$: console.log($mainView);
 
 	$: if ($mainView && typeof $mainView == 'object')
 		if ($mainView.ty == 'stats' || $mainView.ty == 'login' || $mainView.ty == 'password')
 			deselect();
-
-	$: if ($mainView && typeof $mainView == 'object')
-		if ((nestedList && nestedList.isSelected()) || (searchList && searchList.isSelected())) {
-			onHighlighted = true;
-		} else {
-			onHighlighted = false;
-		}
 
 	sidebarState.subscribe(() => {
 		searchParams = '';
@@ -424,6 +417,7 @@
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
 					{back}
+					bind:onHighlighted
 					currentEntry={($mainView && typeof $mainView == 'object' && $mainView.ty == 'user') ||
 					($mainView && typeof $mainView == 'object' && $mainView.ty == 'workless') ||
 					($mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal')
@@ -438,6 +432,7 @@
 					onSelect={onSearchListSelect}
 					{back}
 					bind:params={searchParams}
+					bind:onHighlighted
 					bind:role={searchRole}
 					bind:date={searchDate}
 					bind:nested
@@ -470,7 +465,7 @@
 				bind:user={$mainView}
 				bind:editable
 				bind:isNew
-				bind:onHighlighted
+				{onHighlighted}
 				{request}
 				{back}
 				{reload}
@@ -484,7 +479,7 @@
 				{search}
 				bind:editable
 				bind:isNew
-				bind:onHighlighted
+				{onHighlighted}
 				{back}
 				{reload}
 				{request}
@@ -498,7 +493,7 @@
 				{search}
 				bind:editable
 				bind:isNew
-				bind:onHighlighted
+				{onHighlighted}
 				{back}
 				{reload}
 				{request}
