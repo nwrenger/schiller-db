@@ -542,7 +542,7 @@
 				'mid' auto / auto;
 		}
 		.mid {
-			overflow-y: clip;
+			overflow-y: visible;
 		}
 	}
 </style>
