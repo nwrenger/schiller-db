@@ -453,7 +453,6 @@
 			accessUser={typeof permissions == 'object' ? permissions?.access_user : null}
 			accessWorkless={typeof permissions == 'object' ? permissions?.access_workless : null}
 			accessCriminal={typeof permissions == 'object' ? permissions?.access_criminal : null}
-			{back}
 			{fetchRoleSelectItems}
 		/>
 	</div>
@@ -519,15 +518,6 @@
 		height: 100%;
 	}
 
-	@media only screen and (max-width: 768px) {
-		.main {
-			grid-template:
-				'nav' 60px
-				'sidebar' 250px
-				'mid' auto / auto;
-		}
-	}
-
 	.sidebar {
 		grid-area: sidebar;
 		display: flex;
@@ -541,5 +531,18 @@
 
 	.mid {
 		grid-area: mid;
+		overflow-y: scroll;
+	}
+
+	@media only screen and (max-width: 768px) {
+		.main {
+			grid-template:
+				'nav' 60px
+				'sidebar' 250px
+				'mid' auto / auto;
+		}
+		.mid {
+			overflow-y: visible;
+		}
 	}
 </style>
