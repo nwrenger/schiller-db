@@ -22,7 +22,7 @@
 			{#if fun}
 				<button
 					type="button"
-					class="btn btn-secondary mt-3 ok"
+					class="btn btn-danger mt-3 ok"
 					on:click={async () => {
 						if (fun) response = fun();
 						response.then(() => dialog.close());
@@ -36,12 +36,16 @@
 							aria-hidden="true"
 						/>
 					{/await}
-					Ok!</button
+					Ja</button
+				>
+				<button type="button" class="btn btn-secondary mt-3" on:click={() => dialog.close()}
+					>Abbrechen</button
+				>
+			{:else}
+				<button type="button" class="btn btn-secondary mt-3" on:click={() => dialog.close()}
+					>Schließen</button
 				>
 			{/if}
-			<button type="button" class="btn btn-secondary mt-3" on:click={() => dialog.close()}
-				>Schließen</button
-			>
 		</div>
 	</div>
 </dialog>

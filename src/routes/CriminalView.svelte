@@ -248,7 +248,7 @@
 			<div class="input-group mb-3 verdict-select">
 				<button
 					id="verdict-select-button"
-					class="btn btn-outline-danger dropdown-toggle"
+					class="btn btn-outline-secondary dropdown-toggle"
 					type="button"
 					data-bs-toggle="dropdown"
 					aria-expanded="false"
@@ -296,7 +296,7 @@
 	<button
 		id="criminal-add-button"
 		type="button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		hidden={!(editable && isNew)}
 		on:click={() => (addResponse = add())}
 	>
@@ -313,7 +313,7 @@
 	<button
 		id="criminal-confirm-button"
 		type="button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		hidden={!(editable && !isNew)}
 		on:click={() => (editResponse = edit())}
 	>
@@ -330,7 +330,7 @@
 	<button
 		id="criminal-abort-button"
 		type="button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-secondary m-3"
 		hidden={!editable}
 		on:click={async () => {
 			if (!onHighlighted) {
@@ -344,7 +344,7 @@
 	>
 	<button
 		type="button"
-		class="btn btn-outline-danger m-3 get-user"
+		class="btn btn-outline-secondary m-3 get-user"
 		style="max-width: 160px;"
 		hidden={editable}
 		on:click={() => getUser()}>Bürger abrufen</button

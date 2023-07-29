@@ -72,7 +72,7 @@
 				/>
 			</div>
 		</div>
-		<button id="change-password-button" type="submit" class="btn btn-outline-danger m-3">
+		<button id="change-password-button" type="submit" class="btn btn-outline-primary m-3">
 			{#await response}
 				<span
 					id="change-password-button-spinner"
@@ -83,7 +83,7 @@
 			{/await}
 			Ändern
 		</button>
-		<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
+		<button class="btn btn-outline-secondary m-2" type="button" on:click={async () => await back()}
 			>Schließen</button
 		>
 	</form>

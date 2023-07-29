@@ -151,7 +151,7 @@
 			<div class="input-group mb-3 currently-select">
 				<button
 					id="currently-select-button"
-					class="btn btn-outline-danger dropdown-toggle"
+					class="btn btn-outline-secondary dropdown-toggle"
 					type="button"
 					data-bs-toggle="dropdown"
 					aria-expanded="false"
@@ -216,7 +216,7 @@
 	</div>
 	<button
 		id="workless-add-button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		type="button"
 		hidden={!(editable && isNew)}
 		on:click={() => (addResponse = add())}
@@ -233,7 +233,7 @@
 	>
 	<button
 		id="workless-confirm-button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		type="button"
 		hidden={!(editable && !isNew)}
 		on:click={() => (editResponse = edit())}
@@ -250,7 +250,7 @@
 	>
 	<button
 		id="workless-abort-button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-secondary m-3"
 		type="button"
 		hidden={!editable}
 		on:click={async () => {
@@ -265,7 +265,7 @@
 	>
 	<button
 		type="button"
-		class="btn btn-outline-danger m-3 justify-content-center get-workless"
+		class="btn btn-outline-secondary m-3 justify-content-center get-workless"
 		on:click={() => getUser()}
 		style="max-width: 160px;"
 		hidden={editable}>Bürger abrufen</button

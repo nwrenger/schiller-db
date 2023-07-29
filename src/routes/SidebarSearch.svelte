@@ -10,12 +10,10 @@
 	export let accessWorkless: string | null = null;
 	export let accessCriminal: string | null = null;
 
-	export var back: () => Promise<void>;
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
 	$: if (params) {
-		back();
 		nested = false;
 	} else {
 		nested = true;
@@ -61,7 +59,6 @@
 					aria-label="Group Select"
 					bind:value={role}
 					on:click={() => {
-						back();
 						nested = false;
 					}}
 				>

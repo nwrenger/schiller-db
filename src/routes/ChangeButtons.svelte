@@ -16,7 +16,7 @@
 	<div class="btn-group p-2">
 		<button
 			id="add"
-			class="btn btn-outline-danger {editable && isNew ? 'active' : ''}"
+			class="btn btn-outline-primary {editable && isNew ? 'active' : ''}"
 			type="button"
 			aria-expanded="false"
 			title="Hinzufügen"
@@ -44,7 +44,7 @@
 	<div class="btn-group p-2">
 		<button
 			id="edit"
-			class="btn btn-outline-danger {editable && !isNew ? 'active' : ''}"
+			class="btn btn-outline-primary {editable && !isNew ? 'active' : ''}"
 			type="button"
 			aria-expanded="false"
 			title="Bearbeiten"
@@ -106,7 +106,7 @@
 	<div class="btn-group p-2">
 		<button
 			id="cancel"
-			class="btn btn-outline-danger"
+			class="btn btn-outline-secondary"
 			type="button"
 			aria-expanded="false"
 			title="Schließen"

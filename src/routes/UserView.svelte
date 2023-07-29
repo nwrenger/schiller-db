@@ -141,7 +141,7 @@
 
 	<button
 		id="user-add-button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		type="button"
 		hidden={!(editable && isNew)}
 		on:click={() => (addResponse = add())}
@@ -160,7 +160,7 @@
 	<button
 		id="user-confirm-button"
 		type="button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-primary m-3"
 		hidden={!(editable && !isNew)}
 		on:click={() => (editResponse = edit())}
 	>
@@ -178,7 +178,7 @@
 	<button
 		id="user-abort-button"
 		type="button"
-		class="btn btn-outline-danger m-3"
+		class="btn btn-outline-secondary m-3"
 		hidden={!editable}
 		on:click={async () => {
 			if (!onHighlighted) {

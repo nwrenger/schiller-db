@@ -9,7 +9,7 @@
 <div class="d-flex">
 	<div class="btn-group dropdown">
 		<button
-			class="btn btn-outline-danger dropdown-toggle hide-arrow"
+			class="btn btn-outline-secondary dropdown-toggle hide-arrow"
 			type="button"
 			title="Profil"
 			data-bs-toggle="dropdown"

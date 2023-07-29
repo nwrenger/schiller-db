@@ -122,7 +122,7 @@
 		<button
 			id="add-login-button"
 			type="button"
-			class="btn btn-outline-danger m-3"
+			class="btn btn-outline-primary m-3"
 			on:click={() => (addResponse = add())}
 		>
 			{#await addResponse}
@@ -171,7 +171,7 @@
 			Alle Logins entfernen
 		</button>
 	</div>
-	<button class="btn btn-outline-danger m-2" type="button" on:click={async () => await back()}
+	<button class="btn btn-outline-secondary m-2" type="button" on:click={async () => await back()}
 		>Schließen</button
 	>
 </div>

@@ -19,7 +19,7 @@
 	<div class="input-group mb-3 select">
 		<button
 			id="select-button"
-			class="btn btn-outline-danger dropdown-toggle hide-arrow"
+			class="btn btn-outline-secondary dropdown-toggle hide-arrow"
 			type="button"
 			data-bs-toggle="dropdown"
 			aria-expanded="false"
