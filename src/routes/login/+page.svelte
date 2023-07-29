@@ -54,7 +54,7 @@
 			</div>
 		</div>
 	</div>
-	<Dialog bind:this={newDialog} />
+	<Dialog bind:this={newDialog} fun={undefined} />
 </section>
 
 <style>
