@@ -255,7 +255,7 @@
 					title="Auswählen"
 					disabled={!editable}>Urteil</button
 				>
-				<ul id="verdict-select-dropdown" class="dropdown-menu">
+				<ul id="verdict-select-dropdown" class="dropdown-menu" hidden={!editable}>
 					<li>
 						<button
 							id="no-yet"

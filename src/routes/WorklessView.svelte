@@ -158,7 +158,7 @@
 					title="Auswahl"
 					disabled={!editable}>Auswahl</button
 				>
-				<ul id="currently-select-dropdown" class="dropdown-menu">
+				<ul id="currently-select-dropdown" class="dropdown-menu" hidden={!editable}>
 					<li>
 						<button
 							id="yes-currently"
