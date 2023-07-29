@@ -42,7 +42,7 @@
 				/>
 			</svg>
 		</button>
-		<ul id="select-dropdown" class="dropdown-menu">
+		<ul id="select-dropdown" class="dropdown-menu" hidden={!editable}>
 			{#await items}
 				<li class="dropdown-item">
 					<div class="d-flex justify-content-center">
