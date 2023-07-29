@@ -119,8 +119,17 @@
 			nested = true;
 			params = '';
 			role = null;
-		}}>Zurück {params || !role ? `- "${params}"` : ''}{role ? ` - ${role}` : ''}</button
+		}}
 	>
+		<div class="d-flex w-100 justify-content-between">
+			<h5 class="mb-0">Zurück</h5>
+			<small
+				>{params || !role ? `"${params}"` : ''}{role && params ? ' - ' : ''}{role
+					? role
+					: ''}</small
+			>
+		</div>
+	</button>
 	{#each data as entry}
 		<button
 			class="list-group-item list-group-item-action"

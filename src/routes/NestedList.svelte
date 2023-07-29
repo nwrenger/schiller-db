@@ -124,10 +124,13 @@
 				await back();
 				reset();
 			}}
-			>Zurück - {state === 'workless'
-				? formatDate(parents.join(' - '))
-				: parents.join(' - ')}</button
 		>
+			<div class="d-flex w-100 justify-content-between">
+				<h5 class="mb-0">Zurück</h5>
+				<small>{state === 'workless' ? formatDate(parents.join(' - ')) : parents.join(' - ')}</small
+				>
+			</div>
+		</button>
 	{/if}
 	{#each data as entry}
 		<button
