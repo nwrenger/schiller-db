@@ -69,10 +69,6 @@
 						<option value={null}>Alle</option>
 						{#each data as entry}
 							<option value={entry} selected={entry === role ? true : false}>{entry}</option>
-						{:else}
-							{#if role}
-								<option value={role} selected>{role}</option>
-							{/if}
 						{/each}
 					{/await}
 				</select>
