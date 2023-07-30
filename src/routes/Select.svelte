@@ -59,8 +59,6 @@
 							value = entry.account;
 						}}>{entry.account}</button
 					>
-				{:else}
-					<button class="dropdown-item" disabled>Keine Einträge!</button>
 				{/each}
 			{/await}
 		</ul>
