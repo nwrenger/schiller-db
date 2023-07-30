@@ -6,6 +6,8 @@ use std::{borrow::Cow, path::Path};
 
 use db::project::{fetch_logins, fetch_user_data, Database, Error, Result};
 
+use clap::Parser;
+
 use log::{warn, Level, LevelFilter};
 use rocket::serde::json::Json;
 use rocket::{catch, catchers, response::Responder, routes, Build, Request, Response, Rocket};
@@ -18,6 +20,13 @@ use utoipa_swagger_ui::SwaggerUi;
 use std::fs::OpenOptions;
 
 use crate::db::login::{NewLogin, Permission};
+
+#[derive(Parser)]
+#[command(author, version, about)]
+struct Args {
+    #[arg(short, long, default_value_t = 80)]
+    port: usize,
+}
 
 #[rocket::launch]
 fn rocket() -> Rocket<Build> {
@@ -127,7 +136,10 @@ fn rocket() -> Rocket<Build> {
         }
     }
 
-    let figment = rocket::Config::figment().merge(("limits.json", 32768));
+    let Args { port } = Args::parse();
+    let figment = rocket::Config::figment()
+        .merge(("limits.json", 32768))
+        .merge(("port", port));
 
     rocket::custom(figment)
         .register(
