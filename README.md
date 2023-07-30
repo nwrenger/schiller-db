@@ -4,15 +4,15 @@ A repo with the server-side backend and the frontend of the Database Application
 
 ### Test Website
 
-A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo. Note that version 4.1.0 is currently not deployed there.
+A Test Website can be found under [nils.wrenger.net](http://nils.wrenger.net). A test Login with no changing Permissions is User: alisa.timms with Password: 1. Have fun with testing. Report Bugs using the Issues on this Github repo.
 
 ### Download
 
-The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/schiller-db/releases). Note that version 4.1.0 has currently no build, I am working on that.
+The latest builds can be downloaded from the [releases page](https://github.com/nwrenger/schiller-db/releases).
 
 ### Usage
 
-Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data file (benutzer.txt) and admin.env file otherwise it won't start. Run it with sudo/admin permission (because of server port being http://0.0.0.0:80). The path for the Swagger-UI is http://0.0.0.0/swagger-ui/ / http://localhost/swagger-ui/. In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other Users and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
+Just run the binary/executable file provided in the release. Make sure it's in the same Directory as the dummy data files (benutzer.txt, logins.txt) and admin.env file otherwise it won't start. The Server Address and Port is defaulted to 0.0.0.0:80, you can change them with the flags -p (port) and -a (address). Run it with enough permissions (when using it with the default config, you have to run it as admin/sudo). In addition, using the admin.env file you can define your admin, which can't be deleted. This admin can add other Users and their permissions. Without those permissions you are unauthorized and can't interact with the Server/Database.
 
 ## Architecture
 
