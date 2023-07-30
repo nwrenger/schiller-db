@@ -1,4 +1,5 @@
 #/bin/bash
+rm -r ./static/_app/ ./static/bootstrap/ ./static/index.html ./static/login.html
 set -e
 npm run build
 cargo build -r

@@ -1,4 +1,5 @@
 #/bin/bash
+rm -r ./static/_app/ ./static/bootstrap/ ./static/index.html ./static/login.html
 npm run build
 cargo build -r
 cp target/release/schiller-db ./
