@@ -53,7 +53,7 @@
 					class="form-select"
 					aria-label="Group Select"
 					bind:value={role}
-					on:click={() => {
+					on:change={() => {
 						if (role) nested = false;
 					}}
 				>

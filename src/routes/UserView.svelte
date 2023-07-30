@@ -28,7 +28,6 @@
 	let role = '';
 
 	$: if (editable || isNew || !editable || !isNew) setUser(user);
-	$: if (searchRole) role = searchRole;
 
 	function setUser(user: User | null) {
 		if (!isNew) {
@@ -42,11 +41,7 @@
 			forename = '';
 			surname = '';
 			account = '';
-			if (role) {
-				role = searchRole as string;
-			} else {
-				role = '';
-			}
+			role = searchRole as string;
 		}
 	}
 

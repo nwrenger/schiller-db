@@ -118,15 +118,19 @@
 	{#if parents.length > 0}
 		{data.length === 0 ? reset() : ''}
 		<button
-			class="list-group-item list-group-item-action list-group-item-danger"
+			class="list-group-item list-group-item-action list-group-item-danger d-flex align-items-center"
 			on:click={() => {
 				reset();
 			}}
 		>
-			<div class="d-flex w-100 justify-content-between">
+			<div class="me-auto d-flex align-items-center">
 				<h5 class="mb-0">Zurück</h5>
-				<small>{state === 'workless' ? formatDate(parents.join(' - ')) : parents.join(' - ')}</small
+			</div>
+			<div class="d-flex align-items-center">
+				<small class="me-2"
+					>{state === 'workless' ? formatDate(parents.join(' - ')) : parents.join(' - ')}</small
 				>
+				<span class="tag tag-primary">{data.length}</span>
 			</div>
 		</button>
 	{/if}
