@@ -58,12 +58,6 @@
 							entry.account === currentEntry.account &&
 							entry.kind === currentEntry.kind)
 				) || null;
-			// dont ask why..
-			if (active) {
-				onHighlighted = true;
-			} else {
-				onHighlighted = false;
-			}
 			const id = isObject(active) ? active.account : active?.toString();
 			if (id) {
 				const element = document.getElementById(id);
@@ -88,12 +82,12 @@
 		}
 	}
 
+	$: selectItem(list);
 	$: if (active) {
 		onHighlighted = true;
 	} else {
 		onHighlighted = false;
 	}
-	$: selectItem(list);
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;
