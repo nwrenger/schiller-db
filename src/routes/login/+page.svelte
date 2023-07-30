@@ -23,7 +23,7 @@
 			//get with getItem and clear at logout completely with clear
 			window.localStorage.setItem('auth', auth);
 			window.localStorage.setItem('current_user', username);
-			window.localStorage.setItem('permissions', JSON.stringify(data['Ok']));
+			window.localStorage.setItem('permission', JSON.stringify(data['Ok']));
 
 			goto('/', { replaceState: true });
 		} else {
@@ -44,7 +44,7 @@
 
 <section>
 	<div class="main">
-		<Navigation currentUser={null} onSelect={null} />
+		<Navigation currentUser={null} onSelect={null} permission={null} />
 
 		<div class="container">
 			<div class="row p-2 h-75 align-items-center justify-content-center">

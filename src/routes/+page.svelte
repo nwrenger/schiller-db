@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+	export interface Permission {
+		access_user: string;
+		access_workless: string;
+		access_criminal: string;
+	}
+</script>
+
 <script lang="ts">
 	/// Imports
 	import { writable, type Writable } from 'svelte/store';
@@ -47,20 +55,14 @@
 	}
 
 	/// Storage
-	interface Permissions {
-		access_user: string;
-		access_workless: string;
-		access_criminal: string;
-	}
-
 	var auth = localStorage.getItem('auth');
 	const current_user = localStorage.getItem('current_user');
-	var permissions: Permissions | string | null = localStorage.getItem('permissions');
-	if (permissions) {
-		permissions = JSON.parse(permissions) as Permissions;
+	var permission: Permission | string | null = localStorage.getItem('permission');
+	if (permission) {
+		permission = JSON.parse(permission) as Permission;
 	}
 
-	if (!auth || !current_user || !permissions) {
+	if (!auth || !current_user || !permission) {
 		goto('/login', { replaceState: true });
 		error('InvalidLocalKeys');
 	}
@@ -336,7 +338,13 @@
 	sidebarState.subscribe(() => {
 		searchParams = '';
 		searchRole = null;
-		back();
+		if (
+			($mainView &&
+				typeof $mainView == 'object' &&
+				($mainView.ty === 'user' || $mainView.ty === 'workless' || $mainView.ty === 'criminal')) ||
+			$mainView === null
+		)
+			back();
 		if (nestedList) {
 			nestedList.reset();
 		} else if (searchList) {
@@ -390,7 +398,7 @@
 				await back();
 			}
 		}}
-		accessUser={typeof permissions == 'object' ? permissions?.access_user : null}
+		permission={typeof permission == 'string' ? null : permission}
 		currentUser={current_user}
 	/>
 	<!-- Sidebar -->
@@ -400,12 +408,12 @@
 				userView ? userView.del() : worklessView ? worklessView.del() : criminalView.del()}
 			{onHighlighted}
 			{back}
-			access={typeof permissions == 'object'
+			permission={typeof permission == 'object'
 				? $sidebarState === 'user'
-					? permissions?.access_user
+					? permission?.access_user
 					: $sidebarState === 'workless'
-					? permissions?.access_workless
-					: permissions?.access_criminal
+					? permission?.access_workless
+					: permission?.access_criminal
 				: null}
 			bind:editable
 			bind:isNew
@@ -418,9 +426,9 @@
 					onSelect={onNestedListSelect}
 					{back}
 					bind:onHighlighted
-					currentEntry={($mainView && typeof $mainView == 'object' && $mainView.ty == 'user') ||
-					($mainView && typeof $mainView == 'object' && $mainView.ty == 'workless') ||
-					($mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal')
+					currentEntry={$mainView &&
+					typeof $mainView == 'object' &&
+					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
 						? $mainView
 						: null}
 					state={$sidebarState}
@@ -436,9 +444,9 @@
 					bind:role={searchRole}
 					bind:date={searchDate}
 					bind:nested
-					currentEntry={($mainView && typeof $mainView == 'object' && $mainView.ty == 'user') ||
-					($mainView && typeof $mainView == 'object' && $mainView.ty == 'workless') ||
-					($mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal')
+					currentEntry={$mainView &&
+					typeof $mainView == 'object' &&
+					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
 						? $mainView
 						: null}
 				/>
@@ -450,9 +458,7 @@
 			bind:date={searchDate}
 			bind:nested
 			{sidebarState}
-			accessUser={typeof permissions == 'object' ? permissions?.access_user : null}
-			accessWorkless={typeof permissions == 'object' ? permissions?.access_workless : null}
-			accessCriminal={typeof permissions == 'object' ? permissions?.access_criminal : null}
+			permission={typeof permission == 'string' ? null : permission}
 			{fetchRoleSelectItems}
 		/>
 	</div>

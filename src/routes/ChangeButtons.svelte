@@ -4,7 +4,7 @@
 	export let onHighlighted: boolean;
 	export let editable: boolean;
 	export let isNew: boolean;
-	export let access: string | null = null;
+	export let permission: string | null | undefined;
 	export var back: () => Promise<void>;
 	export var del: () => Promise<void>;
 
@@ -20,7 +20,7 @@
 			type="button"
 			aria-expanded="false"
 			title="Hinzufügen"
-			disabled={access === 'Write' ? false : true}
+			disabled={permission === 'Write' ? false : true}
 			on:click={() => {
 				editable = true;
 				isNew = true;
@@ -48,7 +48,7 @@
 			type="button"
 			aria-expanded="false"
 			title="Bearbeiten"
-			disabled={access === 'Write' ? false : true}
+			disabled={permission === 'Write' ? false : true}
 			hidden={!onHighlighted}
 			on:click={() => {
 				editable = true;
@@ -80,7 +80,7 @@
 			type="button"
 			aria-expanded="false"
 			title="Entfernen"
-			disabled={access === 'Write' ? false : true}
+			disabled={permission === 'Write' ? false : true}
 			hidden={!onHighlighted}
 			on:click={() => {
 				if (dialog) dialog.open('Warnung', 'Eintrag unwiederruflich löschen?');

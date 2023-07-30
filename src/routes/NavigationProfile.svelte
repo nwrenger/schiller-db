@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import type { Permission } from './+page.svelte';
 
 	export let currentUser: string;
-	export let accessUser: string | null;
+	export let permission: Permission | null;
 	export let onSelect: ((val: string) => void) | null;
 </script>
 
@@ -46,7 +47,7 @@
 					id="login-creator"
 					class="dropdown-item"
 					type="button"
-					disabled={accessUser === 'Write' ? false : true}
+					disabled={permission?.access_user === 'Write' ? false : true}
 					on:click={() => {
 						if (onSelect) onSelect('login');
 					}}>Logins Verwalten</button

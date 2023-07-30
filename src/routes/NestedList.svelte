@@ -53,7 +53,7 @@
 	}
 
 	async function selectItem(list: T[] | null) {
-		if (list && currentEntry && currentEntry !== active && isObject(currentEntry)) {
+		if (list && currentEntry && currentEntry !== active) {
 			active =
 				list.find(
 					(entry) =>
@@ -68,6 +68,12 @@
 							entry.account === currentEntry.account &&
 							entry.kind === currentEntry.kind)
 				) || null;
+			// dont ask why..
+			if (active) {
+				onHighlighted = true;
+			} else {
+				onHighlighted = false;
+			}
 			const id = isObject(active) ? active.account : active?.toString();
 			if (id) {
 				const element = document.getElementById(id);
@@ -97,8 +103,7 @@
 	} else {
 		onHighlighted = false;
 	}
-
-	$: items.then(() => selectItem(list));
+	$: selectItem(list);
 	$: if (items instanceof Promise) items.then((val) => (list = val));
 
 	let active: T | null;
@@ -120,8 +125,7 @@
 		{data.length === 0 ? reset() : ''}
 		<button
 			class="list-group-item list-group-item-action list-group-item-danger"
-			on:click={async () => {
-				await back();
+			on:click={() => {
 				reset();
 			}}
 		>

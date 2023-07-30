@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import NavigationProfile from './NavigationProfile.svelte';
+	import type { Permission } from './+page.svelte';
 
 	export let currentUser: string | null = null;
-	export let accessUser: string | null = null;
+	export let permission: Permission | null;
 	export let onSelect: ((val: string) => void) | null;
 </script>
 
@@ -11,7 +12,7 @@
 	<div class="container-fluid">
 		<a href={$page.url.pathname} data-sveltekit-reload class="navbar-brand">SchillerDB</a>
 		{#if currentUser != null}
-			<NavigationProfile {onSelect} {currentUser} {accessUser} />
+			<NavigationProfile {onSelect} {currentUser} {permission} />
 		{/if}
 	</div>
 </nav>

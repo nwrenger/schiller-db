@@ -1,23 +1,18 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
+	import type { Permission } from './+page.svelte';
 
 	export let params: string;
 	export let role: string | null;
 	export let date: string | null;
 	export let nested: boolean;
 	export let sidebarState: Writable<string | null>;
-	export let accessUser: string | null = null;
-	export let accessWorkless: string | null = null;
-	export let accessCriminal: string | null = null;
+	export let permission: Permission | null;
 
 	export var fetchRoleSelectItems: (params: string, date: string | null) => Promise<[]>;
 
 	var roleSelect: Promise<any[]> | never[] = [];
-	$: if (params || role) {
-		nested = false;
-	} else {
-		nested = true;
-	}
+	$: if (params) nested = false;
 </script>
 
 <div class="sidebar-search input-group pb-1 px-1">
@@ -53,7 +48,15 @@
 		</li>
 		<form class="px-3 py-1" action="javascript:handleAdvanced()">
 			<div class="mb-2">
-				<select id="group-select" class="form-select" aria-label="Group Select" bind:value={role}>
+				<select
+					id="group-select"
+					class="form-select"
+					aria-label="Group Select"
+					bind:value={role}
+					on:click={() => {
+						if (role) nested = false;
+					}}
+				>
 					{#await roleSelect}
 						<li class="list-group-item">
 							<div class="d-flex justify-content-center">
@@ -97,7 +100,7 @@
 				id="user"
 				class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
-				disabled={accessUser === 'None' ? true : false}
+				disabled={permission?.access_user === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('user');
 				}}>Bürger</button
@@ -108,7 +111,7 @@
 				id="workless"
 				class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
-				disabled={accessWorkless === 'None' ? true : false}
+				disabled={permission?.access_workless === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('workless');
 				}}>Arbeitslosenreg.</button
@@ -119,7 +122,7 @@
 				id="criminal"
 				class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
 				type="button"
-				disabled={accessCriminal === 'None' ? true : false}
+				disabled={permission?.access_criminal === 'None' ? true : false}
 				on:click={() => {
 					sidebarState.set('criminal');
 				}}>Kriminalregister</button
