@@ -1,8 +1,8 @@
 #/bin/bash
 rm -r ./static/_app/ ./static/bootstrap/ ./static/index.html ./static/login.html
 npm run build
-cargo build -r
-cp target/release/schiller-db ./
+cross build -r --target x86_64-unknown-linux-gnu
+cp target/release/x86_64-unknown-linux-gnu/schiller-db ./
 zip -r exp/schiller-db_lin.zip schiller-db admin.env benutzer.txt logins.txt static/
 rm schiller-db
 cargo build -r --target x86_64-pc-windows-gnu
