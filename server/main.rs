@@ -27,7 +27,7 @@ struct Args {
     #[arg(short, long, default_value_t = 80)]
     port: usize,
     #[arg(short, long, default_value_t = String::from("0.0.0.0"))]
-    ip: String,
+    address: String,
 }
 
 #[rocket::launch]
@@ -138,10 +138,10 @@ fn rocket() -> Rocket<Build> {
         }
     }
 
-    let Args { port, ip } = Args::parse();
+    let Args { port, address } = Args::parse();
     let figment = rocket::Config::figment()
         .merge(("limits.json", 32768))
-        .merge(("ip", ip))
+        .merge(("address", address))
         .merge(("port", port));
 
     rocket::custom(figment)
