@@ -4,10 +4,9 @@ import copy from 'rollup-plugin-copy';
 
 export default defineConfig({
 	server: {
-		port: 5001,
 		proxy: {
 			"/api": {
-				target: "http://localhost:8000"
+				target: "http://127.0.0.1:8000"
 			}
 		}
 	},
