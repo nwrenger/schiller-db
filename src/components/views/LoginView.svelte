@@ -5,8 +5,8 @@
 </script>
 
 <script lang="ts">
-	import Dialog from './Dialog.svelte';
-	import Select from './Select.svelte';
+	import Dialog from '../basic/Dialog.svelte';
+	import Select from '../buttons/Select.svelte';
 
 	export var back: () => Promise<void>;
 	export var search: (

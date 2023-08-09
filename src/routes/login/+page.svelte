@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Navigation from '../Navigation.svelte';
-	import Dialog from '../Dialog.svelte';
+	import Navigation from '../../components/basic/Navigation.svelte'
+	import Dialog from '../../components/basic/Dialog.svelte';
 	import { goto } from '$app/navigation';
 	import LoginForm from './LoginForm.svelte';
 

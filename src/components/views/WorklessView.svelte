@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	import Select from './Select.svelte';
+	import Select from '../buttons/Select.svelte';
 
 	export let workless: Workless | null;
 	export let editable: boolean = false;

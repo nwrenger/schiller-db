@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { User } from './UserView.svelte';
+	import type { User } from '../views/UserView.svelte';
 	export var value = '';
 	export var label = '';
 	export let editable: boolean = true;

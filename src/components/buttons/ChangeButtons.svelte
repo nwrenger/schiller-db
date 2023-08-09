@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Dialog from './Dialog.svelte';
+	import Dialog from '../basic/Dialog.svelte';
 
 	export let onHighlighted: boolean;
 	export let editable: boolean;

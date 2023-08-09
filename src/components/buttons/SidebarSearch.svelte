@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
-	import type { Permission } from './+page.svelte';
+	import type { Permission } from '../../routes/+page.svelte';
 
 	export let params: string;
 	export let role: string | null;

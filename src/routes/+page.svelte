@@ -10,25 +10,25 @@
 	/// Imports
 	import { writable, type Writable } from 'svelte/store';
 	import { goto } from '$app/navigation';
-	import Navigation from './Navigation.svelte';
-	import NestedList from './NestedList.svelte';
-	import UserView from './UserView.svelte';
-	import WorklessView from './WorklessView.svelte';
-	import LoginView from './LoginView.svelte';
-	import CriminalView from './CriminalView.svelte';
-	import PasswordView from './PasswordView.svelte';
-	import StatsView from './StatsView.svelte';
-	import Dialog from './Dialog.svelte';
-	import SearchList from './SearchList.svelte';
-	import SidebarSearch from './SidebarSearch.svelte';
-	import ChangeButtons from './ChangeButtons.svelte';
+	import Navigation from '../components/basic/Navigation.svelte';
+	import NestedList from '../components/list/NestedList.svelte';
+	import UserView from '../components/views/UserView.svelte';
+	import WorklessView from '../components/views/WorklessView.svelte';
+	import LoginView from '../components/views/LoginView.svelte';
+	import CriminalView from '../components/views/CriminalView.svelte';
+	import PasswordView from '../components/views/PasswordView.svelte';
+	import StatsView from '../components/views/StatsView.svelte';
+	import Dialog from '../components/basic/Dialog.svelte';
+	import SearchList from '../components/list/SearchList.svelte';
+	import SidebarSearch from '../components/buttons/SidebarSearch.svelte';
+	import ChangeButtons from '../components/buttons/ChangeButtons.svelte';
 
-	import type { User } from './UserView.svelte';
-	import type { Workless } from './WorklessView.svelte';
-	import type { Criminal } from './CriminalView.svelte';
-	import type { Login } from './LoginView.svelte';
-	import type { Password } from './PasswordView.svelte';
-	import type { Stats } from './StatsView.svelte';
+	import type { User } from '../components/views/UserView.svelte';
+	import type { Workless } from '../components/views/WorklessView.svelte';
+	import type { Criminal } from '../components/views/CriminalView.svelte';
+	import type { Login } from '../components/views/LoginView.svelte';
+	import type { Password } from '../components/views/PasswordView.svelte';
+	import type { Stats } from '../components/views/StatsView.svelte';
 
 	/// Request Function
 	async function request(
