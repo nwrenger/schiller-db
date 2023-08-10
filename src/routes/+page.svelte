@@ -404,51 +404,51 @@
 	<!-- Sidebar -->
 	<div class="sidebar bg-dark">
 		<ChangeButtons
+			bind:editable
+			bind:isNew
 			del={() =>
 				userView ? userView.del() : worklessView ? worklessView.del() : criminalView.del()}
 			{onHighlighted}
-			{back}
 			permission={typeof permission == 'object'
 				? $sidebarState === 'user'
-					? permission?.access_user
-					: $sidebarState === 'workless'
-					? permission?.access_workless
-					: permission?.access_criminal
+				? permission?.access_user
+				: $sidebarState === 'workless'
+				? permission?.access_workless
+				: permission?.access_criminal
 				: null}
-			bind:editable
-			bind:isNew
+			{back}
 		/>
 		<ul class="sidebar-list list-group list-group-flush" id="sidebar-list">
 			{#if nested}
 				<NestedList
 					bind:this={nestedList}
+					bind:onHighlighted
 					fetchItems={fetchNestedListItems}
 					onSelect={onNestedListSelect}
-					{back}
-					bind:onHighlighted
 					currentEntry={$mainView &&
 					typeof $mainView == 'object' &&
 					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
-						? $mainView
-						: null}
+					? $mainView
+					: null}
 					state={$sidebarState}
+					{back}
 				/>
 			{:else}
 				<SearchList
 					bind:this={searchList}
-					fetchItems={fetchSearchListItems}
-					onSelect={onSearchListSelect}
-					{back}
 					bind:params={searchParams}
 					bind:onHighlighted
 					bind:role={searchRole}
 					bind:date={searchDate}
 					bind:nested
+					fetchItems={fetchSearchListItems}
+					onSelect={onSearchListSelect}
 					currentEntry={$mainView &&
 					typeof $mainView == 'object' &&
 					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
-						? $mainView
-						: null}
+					? $mainView
+					: null}
+					{back}
 				/>
 			{/if}
 		</ul>
@@ -471,43 +471,43 @@
 				bind:editable
 				bind:isNew
 				{onHighlighted}
+				{searchRole}
 				{request}
 				{back}
 				{reload}
-				{searchRole}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'workless'}
 			<WorklessView
 				bind:this={worklessView}
 				bind:workless={$mainView}
-				{getUser}
-				{search}
 				bind:editable
 				bind:isNew
 				{onHighlighted}
+				{searchDate}
+				{search}
+				{getUser}
 				{back}
 				{reload}
 				{request}
-				{searchDate}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'criminal'}
 			<CriminalView
 				bind:this={criminalView}
 				bind:criminal={$mainView}
-				{getUser}
-				{search}
 				bind:editable
 				bind:isNew
 				{onHighlighted}
+				{searchAccount}
+				{getUser}
+				{search}
 				{back}
 				{reload}
 				{request}
-				{searchAccount}
 			/>
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'login'}
 			<LoginView {request} {back} {search} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'password'}
-			<PasswordView {request} {error} {info} {back} bind:auth {current_user} />
+			<PasswordView bind:auth {current_user} {request} {error} {info} {back} />
 		{:else if $mainView && typeof $mainView == 'object' && $mainView.ty == 'stats'}
 			<StatsView stats={$mainView} />
 		{/if}
