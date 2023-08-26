@@ -411,10 +411,10 @@
 			{onHighlighted}
 			permission={typeof permission == 'object'
 				? $sidebarState === 'user'
-				? permission?.access_user
-				: $sidebarState === 'workless'
-				? permission?.access_workless
-				: permission?.access_criminal
+					? permission?.access_user
+					: $sidebarState === 'workless'
+					? permission?.access_workless
+					: permission?.access_criminal
 				: null}
 			{back}
 		/>
@@ -428,8 +428,8 @@
 					currentEntry={$mainView &&
 					typeof $mainView == 'object' &&
 					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
-					? $mainView
-					: null}
+						? $mainView
+						: null}
 					state={$sidebarState}
 					{back}
 				/>
@@ -446,8 +446,8 @@
 					currentEntry={$mainView &&
 					typeof $mainView == 'object' &&
 					($mainView.ty == 'user' || $mainView.ty == 'workless' || $mainView.ty == 'criminal')
-					? $mainView
-					: null}
+						? $mainView
+						: null}
 					{back}
 				/>
 			{/if}

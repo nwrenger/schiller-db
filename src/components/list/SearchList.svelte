@@ -143,7 +143,7 @@
 		<li class="list-group-item">Keine Einträge!</li>
 	{/each}
 {:catch error}
-	<li class="list-group-item">Error: {error}</li>		
+	<li class="list-group-item">Error: {error}</li>
 {/await}
 
 <style>

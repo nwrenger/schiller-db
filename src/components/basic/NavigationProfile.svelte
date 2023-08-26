@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { Permission } from './+page.svelte';
+	import type { Permission } from '../../routes/+page.svelte';
 
 	export let currentUser: string;
 	export let permission: Permission | null;
