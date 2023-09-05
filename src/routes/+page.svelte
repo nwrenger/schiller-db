@@ -393,6 +393,7 @@
 	<Navigation
 		onSelect={async (val) => {
 			if (val == "password" || val == "login") {
+				isNew = false;
 				$mainView = { ty: val };
 			} else {
 				await back();
