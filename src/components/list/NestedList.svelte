@@ -88,6 +88,7 @@
 				)
 			) {
 				// console.log('Cannot find entry: ', active, 'at: ', currentEntry);
+				if (isNew) currentEntry = null;
 				if (!isNew) await back();
 			}
 		}

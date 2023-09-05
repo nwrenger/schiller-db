@@ -83,6 +83,7 @@
 		}
 	}
 
+	$: if (!nested) currentEntry = null;
 	$: selectItem(list);
 	$: if (active) {
 		onHighlighted = true;
