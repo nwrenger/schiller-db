@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export interface Password {
-		ty: 'password';
+		ty: "password";
 	}
 </script>
 
@@ -24,23 +24,23 @@
 	async function changePassword() {
 		if (newPassword == wdhPassword) {
 			await request(
-				'/api/login',
-				'PUT',
+				"/api/login",
+				"PUT",
 				JSON.stringify({
 					user: current_user,
 					password: newPassword,
-					access_user: 'None',
-					access_workless: 'None',
-					access_criminal: 'None'
+					access_user: "None",
+					access_workless: "None",
+					access_criminal: "None"
 				})
 			);
-			auth = btoa(current_user + ':' + newPassword);
-			window.localStorage.setItem('auth', auth);
-			valid = '';
-			info('Passwort Änderung war Erfolgreich!');
+			auth = btoa(current_user + ":" + newPassword);
+			window.localStorage.setItem("auth", auth);
+			valid = "";
+			info("Passwort Änderung war Erfolgreich!");
 		} else {
-			valid = 'is-invalid';
-			error('Falsche Passwort Wiederholung!');
+			valid = "is-invalid";
+			error("Falsche Passwort Wiederholung!");
 		}
 	}
 </script>

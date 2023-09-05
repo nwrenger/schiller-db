@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import NavigationProfile from './NavigationProfile.svelte';
-	import type { Permission } from '../../routes/+page.svelte';
+	import { page } from "$app/stores";
+	import NavigationProfile from "./NavigationProfile.svelte";
+	import type { Permission } from "../../routes/+page.svelte";
 
 	export let currentUser: string | null = null;
 	export let permission: Permission | null;

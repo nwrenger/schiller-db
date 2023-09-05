@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
 	export interface Login {
-		ty: 'login';
+		ty: "login";
 	}
 </script>
 
 <script lang="ts">
-	import Dialog from '../basic/Dialog.svelte';
-	import Select from '../buttons/Select.svelte';
+	import Dialog from "../basic/Dialog.svelte";
+	import Select from "../buttons/Select.svelte";
 
 	export var back: () => Promise<void>;
 	export var search: (
@@ -22,18 +22,18 @@
 		json: BodyInit | null | undefined
 	) => Promise<any>;
 
-	let addUser: string = '';
-	let password: string = '';
-	let userPermissions: string = 'None';
-	let worklessPermissions: string = 'None';
-	let criminalPermissions: string = 'None';
+	let addUser: string = "";
+	let password: string = "";
+	let userPermissions: string = "None";
+	let worklessPermissions: string = "None";
+	let criminalPermissions: string = "None";
 	let addResponse: Promise<any>;
 	let dialog: Dialog;
 
 	async function add() {
 		await request(
-			'/api/login',
-			'POST',
+			"/api/login",
+			"POST",
 			JSON.stringify({
 				user: addUser,
 				password: password,
@@ -44,15 +44,15 @@
 		);
 	}
 
-	let deleteUser: string = '';
+	let deleteUser: string = "";
 	let delResponse: Promise<any>;
 
 	async function del() {
-		await request(`/api/login/${deleteUser}`, 'DELETE', null);
+		await request(`/api/login/${deleteUser}`, "DELETE", null);
 	}
 
 	async function delAll() {
-		await request('/api/all_logins', 'DELETE', null);
+		await request("/api/all_logins", "DELETE", null);
 	}
 </script>
 
@@ -61,7 +61,7 @@
 	<div>
 		<h4>Logins hinzufügen</h4>
 		<div class="card-title row add-login">
-			<Select bind:value={addUser} {search} label={'Benutzer'} />
+			<Select bind:value={addUser} {search} label={"Benutzer"} />
 			<div class="col">
 				<label for="login-add-password" class="form-label">Passwort</label>
 				<input
@@ -139,7 +139,7 @@
 	<div>
 		<h4>Logins entfernen</h4>
 		<div class="card-title row delete-login">
-			<Select bind:value={deleteUser} {search} label={'Benutzer'} />
+			<Select bind:value={deleteUser} {search} label={"Benutzer"} />
 		</div>
 		<button
 			id="delete-login-button"
@@ -165,7 +165,7 @@
 			type="button"
 			class="btn btn-outline-danger m-3 delete-all-logins"
 			on:click={() => {
-				if (dialog) dialog.open('Warnung', 'Alle Logins entfernen?');
+				if (dialog) dialog.open("Warnung", "Alle Logins entfernen?");
 			}}
 		>
 			Alle Logins entfernen

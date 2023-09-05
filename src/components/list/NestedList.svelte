@@ -5,6 +5,7 @@
 	}
 
 	export let state: string | null;
+	export let isNew: boolean;
 	export let currentEntry: T | null;
 	export let onHighlighted: boolean;
 
@@ -26,29 +27,29 @@
 	}
 
 	function isObject(obj: any): obj is { ty: any; account: string } {
-		return obj && typeof obj.account === 'string';
+		return obj && typeof obj.account === "string";
 	}
 
-	function isUser(obj: any): obj is { ty: 'user'; account: string; forename: string } {
-		return obj && typeof obj.account === 'string' && typeof obj.forename === 'string';
+	function isUser(obj: any): obj is { ty: "user"; account: string; forename: string } {
+		return obj && typeof obj.account === "string" && typeof obj.forename === "string";
 	}
 
 	function isWorkless(obj: any): obj is {
-		ty: 'workless';
+		ty: "workless";
 		account: any;
 		currently: any;
 		date_of_dismiss: any;
 		old_company: any;
 	} {
-		return obj && typeof obj.currently === 'boolean';
+		return obj && typeof obj.currently === "boolean";
 	}
 
-	function isCriminal(obj: any): obj is { ty: 'criminal'; account: any; kind: any } {
-		return obj && typeof obj.kind === 'string';
+	function isCriminal(obj: any): obj is { ty: "criminal"; account: any; kind: any } {
+		return obj && typeof obj.kind === "string";
 	}
 
 	function formatDate(date: string) {
-		const [year, month, day] = date.split('-');
+		const [year, month, day] = date.split("-");
 		return `${day}.${month}.${year}`;
 	}
 
@@ -72,7 +73,7 @@
 			if (id) {
 				const element = document.getElementById(id);
 				if (element) {
-					element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+					element.scrollIntoView({ behavior: "smooth", block: "nearest" });
 				}
 			}
 			if (
@@ -87,7 +88,7 @@
 				)
 			) {
 				// console.log('Cannot find entry: ', active, 'at: ', currentEntry);
-				await back();
+				if (!isNew) await back();
 			}
 		}
 	}
@@ -116,7 +117,7 @@
 	</li>
 {:then data}
 	{#if parents.length > 0}
-		{data.length === 0 ? reset() : ''}
+		{data.length === 0 ? reset() : ""}
 		<button
 			class="list-group-item list-group-item-action list-group-item-danger d-flex align-items-center"
 			on:click={() => {
@@ -128,7 +129,7 @@
 			</div>
 			<div class="d-flex align-items-center">
 				<small class="me-2"
-					>{state === 'workless' ? formatDate(parents.join(' - ')) : parents.join(' - ')}</small
+					>{state === "workless" ? formatDate(parents.join(" - ")) : parents.join(" - ")}</small
 				>
 				<span class="tag tag-primary">{data.length}</span>
 			</div>
@@ -151,9 +152,9 @@
 				? isCriminal(entry)
 					? entry.kind
 					: entry.account
-				: state === 'workless'
+				: state === "workless"
 				? formatDate(entry.toString())
-				: entry.toString()}{isWorkless(entry) && entry.currently ? ' - Arbeitslos' : ''}</button
+				: entry.toString()}{isWorkless(entry) && entry.currently ? " - Arbeitslos" : ""}</button
 		>
 	{:else}
 		<li class="list-group-item">Keine Einträge!</li>

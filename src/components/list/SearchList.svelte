@@ -1,41 +1,42 @@
 <script lang="ts">
 	type T = $$Generic<toString>;
 
-	export var fetchItems: (params: string, role: string | null, date: string | null) => Promise<T[]>;
-	export var onSelect: (entry: T | null) => void;
-	export var back: () => Promise<void>;
-
 	export let params: string;
+	export let isNew: boolean;
 	export let role: string | null;
 	export let date: string | null;
 	export let nested: boolean = false;
 	export let currentEntry: T | null;
 	export let onHighlighted: boolean;
 
+	export var fetchItems: (params: string, role: string | null, date: string | null) => Promise<T[]>;
+	export var onSelect: (entry: T | null) => void;
+	export var back: () => Promise<void>;
+
 	export function reload() {
 		items = fetchItems(params, role, date);
 	}
 
 	function isObject(obj: any): obj is { ty: any; account: string } {
-		return obj && typeof obj.account === 'string';
+		return obj && typeof obj.account === "string";
 	}
 
-	function isUser(obj: any): obj is { ty: 'user'; account: string; forename: string } {
-		return obj && typeof obj.account === 'string' && typeof obj.forename === 'string';
+	function isUser(obj: any): obj is { ty: "user"; account: string; forename: string } {
+		return obj && typeof obj.account === "string" && typeof obj.forename === "string";
 	}
 
 	function isWorkless(obj: any): obj is {
-		ty: 'workless';
+		ty: "workless";
 		account: any;
 		currently: any;
 		date_of_dismiss: any;
 		old_company: any;
 	} {
-		return obj && typeof obj.currently === 'boolean';
+		return obj && typeof obj.currently === "boolean";
 	}
 
-	function isCriminal(obj: any): obj is { ty: 'criminal'; account: any; kind: any } {
-		return obj && typeof obj.kind === 'string';
+	function isCriminal(obj: any): obj is { ty: "criminal"; account: any; kind: any } {
+		return obj && typeof obj.kind === "string";
 	}
 
 	export function deselectAll() {
@@ -62,7 +63,7 @@
 			if (id) {
 				const element = document.getElementById(id);
 				if (element) {
-					element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+					element.scrollIntoView({ behavior: "smooth", block: "nearest" });
 				}
 			}
 			if (
@@ -77,7 +78,7 @@
 				)
 			) {
 				// console.log('Cannot find entry: ', active, 'at: ', currentEntry);
-				await back();
+				if (!isNew) await back();
 			}
 		}
 	}
@@ -113,7 +114,7 @@
 		class="list-group-item list-group-item-action list-group-item-danger d-flex align-items-center"
 		on:click={() => {
 			nested = true;
-			params = '';
+			params = "";
 			role = null;
 		}}
 	>
@@ -122,9 +123,9 @@
 		</div>
 		<div class="d-flex align-items-center">
 			<small class="me-2"
-				>{params || !role ? `"${params}"` : ''}{role && params ? ' - ' : ''}{role
+				>{params || !role ? `"${params}"` : ""}{role && params ? " - " : ""}{role
 					? role
-					: ''}</small
+					: ""}</small
 			>
 			<span class="tag tag-primary">{data.length}</span>
 		</div>
@@ -137,7 +138,7 @@
 			on:click={() => {
 				active = entry;
 				onSelect(active);
-			}}>{entry.account}{isWorkless(entry) && entry.currently ? ' - Arbeitslos' : ''}</button
+			}}>{entry.account}{isWorkless(entry) && entry.currently ? " - Arbeitslos" : ""}</button
 		>
 	{:else}
 		<li class="list-group-item">Keine Einträge!</li>

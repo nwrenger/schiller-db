@@ -1,8 +1,8 @@
 <script lang="ts">
 	export let handleLogin: (username: string, password: string) => void;
 
-	let username = '';
-	let password = '';
+	let username = "";
+	let password = "";
 </script>
 
 <div class="card">

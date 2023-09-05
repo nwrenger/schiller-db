@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import type { Permission } from '../../routes/+page.svelte';
+	import { goto } from "$app/navigation";
+	import type { Permission } from "../../routes/+page.svelte";
 
 	export let currentUser: string;
 	export let permission: Permission | null;
@@ -38,7 +38,7 @@
 					class="dropdown-item"
 					type="button"
 					on:click={() => {
-						if (onSelect) onSelect('password');
+						if (onSelect) onSelect("password");
 					}}>Passwort ändern</button
 				>
 			</li>
@@ -47,9 +47,9 @@
 					id="login-creator"
 					class="dropdown-item"
 					type="button"
-					disabled={permission?.access_user === 'Write' ? false : true}
+					disabled={permission?.access_user === "Write" ? false : true}
 					on:click={() => {
-						if (onSelect) onSelect('login');
+						if (onSelect) onSelect("login");
 					}}>Logins Verwalten</button
 				>
 			</li>
@@ -59,7 +59,7 @@
 					type="button"
 					on:click={() => {
 						localStorage.clear();
-						goto('/login', { replaceState: true });
+						goto("/login", { replaceState: true });
 					}}>Ausloggen</button
 				>
 			</li>

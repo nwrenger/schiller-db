@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export interface Stats {
-		ty: 'stats';
+		ty: "stats";
 		name: string;
 		version: string;
 		developers: string;

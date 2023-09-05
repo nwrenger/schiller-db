@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { User } from '../views/UserView.svelte';
-	export var value = '';
-	export var label = '';
+	import type { User } from "../views/UserView.svelte";
+	export var value = "";
+	export var label = "";
 	export let editable: boolean = true;
 	export var search: (
 		params: string,
@@ -26,7 +26,7 @@
 			title="Auswählen"
 			disabled={!editable}
 			on:click={() => {
-				items = search(value, 'user', null, null, 10);
+				items = search(value, "user", null, null, 10);
 			}}
 		>
 			<svg

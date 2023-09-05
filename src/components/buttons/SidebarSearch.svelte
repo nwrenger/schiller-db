@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import type { Permission } from '../../routes/+page.svelte';
+	import type { Writable } from "svelte/store";
+	import type { Permission } from "../../routes/+page.svelte";
 
 	export let params: string;
 	export let role: string | null;
@@ -83,9 +83,9 @@
 		title="Kategorie"
 		data-bs-toggle="dropdown"
 		aria-expanded="false"
-		>{$sidebarState === 'user' ? 'Bürger' : ''}{$sidebarState === 'workless'
-			? 'Arbeitslosenreg.'
-			: ''}{$sidebarState === 'criminal' ? 'Kriminalregister' : ''}</button
+		>{$sidebarState === "user" ? "Bürger" : ""}{$sidebarState === "workless"
+			? "Arbeitslosenreg."
+			: ""}{$sidebarState === "criminal" ? "Kriminalregister" : ""}</button
 	>
 	<ul class="dropdown-menu dropdown-menu-end">
 		<li>
@@ -94,33 +94,33 @@
 		<li>
 			<button
 				id="user"
-				class={$sidebarState === 'user' ? 'dropdown-item active' : 'dropdown-item'}
+				class={$sidebarState === "user" ? "dropdown-item active" : "dropdown-item"}
 				type="button"
-				disabled={permission?.access_user === 'None' ? true : false}
+				disabled={permission?.access_user === "None" ? true : false}
 				on:click={() => {
-					sidebarState.set('user');
+					sidebarState.set("user");
 				}}>Bürger</button
 			>
 		</li>
 		<li>
 			<button
 				id="workless"
-				class={$sidebarState === 'workless' ? 'dropdown-item active' : 'dropdown-item'}
+				class={$sidebarState === "workless" ? "dropdown-item active" : "dropdown-item"}
 				type="button"
-				disabled={permission?.access_workless === 'None' ? true : false}
+				disabled={permission?.access_workless === "None" ? true : false}
 				on:click={() => {
-					sidebarState.set('workless');
+					sidebarState.set("workless");
 				}}>Arbeitslosenreg.</button
 			>
 		</li>
 		<li>
 			<button
 				id="criminal"
-				class={$sidebarState === 'criminal' ? 'dropdown-item active' : 'dropdown-item'}
+				class={$sidebarState === "criminal" ? "dropdown-item active" : "dropdown-item"}
 				type="button"
-				disabled={permission?.access_criminal === 'None' ? true : false}
+				disabled={permission?.access_criminal === "None" ? true : false}
 				on:click={() => {
-					sidebarState.set('criminal');
+					sidebarState.set("criminal");
 				}}>Kriminalregister</button
 			>
 		</li>

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export interface Criminal {
-		ty: 'criminal';
+		ty: "criminal";
 		account: string;
 		kind: string;
 		accuser: string;
@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import Select from '../buttons/Select.svelte';
+	import Select from "../buttons/Select.svelte";
 
 	export let criminal: Criminal | null;
 	export let editable: boolean = false;
@@ -39,20 +39,20 @@
 		json: BodyInit | null | undefined
 	) => Promise<any>;
 
-	let account = '';
-	let kind = '';
-	let accuser = '';
-	let police_consultant = '';
-	let lawyer_culprit = '';
-	let lawyer_accuser = '';
-	let facts = '';
-	let time_of_crime = '';
-	let location_of_crime = '';
-	let note = '';
-	let verdict = '';
+	let account = "";
+	let kind = "";
+	let accuser = "";
+	let police_consultant = "";
+	let lawyer_culprit = "";
+	let lawyer_accuser = "";
+	let facts = "";
+	let time_of_crime = "";
+	let location_of_crime = "";
+	let note = "";
+	let verdict = "";
 
 	$: if (editable || isNew || !editable || !isNew) setCriminal(criminal);
-	$: if (!account) account = '';
+	$: account = searchAccount as string;
 
 	function setCriminal(criminal: Criminal | null) {
 		if (!isNew) {
@@ -71,24 +71,24 @@
 			}
 		} else {
 			account = searchAccount as string;
-			kind = '';
-			accuser = '';
-			police_consultant = '';
-			lawyer_culprit = '';
-			lawyer_accuser = '';
-			facts = '';
-			time_of_crime = '';
-			location_of_crime = '';
-			note = '';
-			verdict = '';
+			kind = "";
+			accuser = "";
+			police_consultant = "";
+			lawyer_culprit = "";
+			lawyer_accuser = "";
+			facts = "";
+			time_of_crime = "";
+			location_of_crime = "";
+			note = "";
+			verdict = "";
 		}
 	}
 
 	let addResponse: Promise<any>;
 	async function add() {
 		await request(
-			'/api/criminal',
-			'POST',
+			"/api/criminal",
+			"POST",
 			JSON.stringify({
 				account,
 				kind,
@@ -110,7 +110,7 @@
 	async function edit() {
 		await request(
 			`/api/criminal/${criminal?.account}/${criminal?.kind}`,
-			'PUT',
+			"PUT",
 			JSON.stringify({
 				account,
 				kind,
@@ -128,13 +128,13 @@
 		onChange();
 	}
 	export async function del() {
-		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, 'DELETE', null);
+		await request(`/api/criminal/${criminal?.account}/${criminal?.kind}`, "DELETE", null);
 		await onDel();
 	}
 
 	function onChange() {
 		criminal = {
-			ty: 'criminal',
+			ty: "criminal",
 			account,
 			kind,
 			accuser,
@@ -162,7 +162,7 @@
 
 <div id="criminal-container">
 	<div class="card-title row">
-		<Select bind:value={account} {editable} {search} label={'Beschuldigter'} />
+		<Select bind:value={account} {editable} {search} label={"Beschuldigter"} />
 		<div class="col">
 			<label for="kind" class="form-label">Art</label>
 			<input
@@ -177,12 +177,12 @@
 		</div>
 	</div>
 	<div class="row">
-		<Select bind:value={accuser} {editable} {search} label={'Anzeiger'} />
-		<Select bind:value={police_consultant} {editable} {search} label={'Sachberater Polizei'} />
+		<Select bind:value={accuser} {editable} {search} label={"Anzeiger"} />
+		<Select bind:value={police_consultant} {editable} {search} label={"Sachberater Polizei"} />
 	</div>
 	<div class="row">
-		<Select bind:value={lawyer_culprit} {editable} {search} label={'Anwalt des Beschuldigten'} />
-		<Select bind:value={lawyer_accuser} {editable} {search} label={'Anwalt des Anzeigers'} />
+		<Select bind:value={lawyer_culprit} {editable} {search} label={"Anwalt des Beschuldigten"} />
+		<Select bind:value={lawyer_accuser} {editable} {search} label={"Anwalt des Anzeigers"} />
 	</div>
 	<div class="row">
 		<div class="col">
@@ -257,7 +257,7 @@
 							id="no-yet"
 							class="dropdown-item"
 							type="button"
-							on:click={() => (verdict = 'a.) Noch kein Verfahren')}>a.) Noch kein Verfahren</button
+							on:click={() => (verdict = "a.) Noch kein Verfahren")}>a.) Noch kein Verfahren</button
 						>
 					</li>
 					<li>
@@ -265,7 +265,7 @@
 							id="guilty"
 							class="dropdown-item"
 							type="button"
-							on:click={() => (verdict = 'b.) Schuldig')}>b.) Schuldig</button
+							on:click={() => (verdict = "b.) Schuldig")}>b.) Schuldig</button
 						>
 					</li>
 					<li>
@@ -273,7 +273,7 @@
 							id="innocent"
 							class="dropdown-item"
 							type="button"
-							on:click={() => (verdict = 'c.) Unschuldig')}>c.) Unschuldig</button
+							on:click={() => (verdict = "c.) Unschuldig")}>c.) Unschuldig</button
 						>
 					</li>
 				</ul>

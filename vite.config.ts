@@ -1,6 +1,6 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
-import copy from 'rollup-plugin-copy';
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vite";
+import copy from "rollup-plugin-copy";
 
 export default defineConfig({
 	server: {
@@ -15,8 +15,8 @@ export default defineConfig({
 		copy({
 			targets: [
 				{
-					src: 'node_modules/bootstrap/dist/*',
-					dest: 'static/bootstrap'
+					src: "node_modules/bootstrap/dist/*",
+					dest: "static/bootstrap"
 				}
 			]
 		})

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export interface User {
-		ty: 'user';
+		ty: "user";
 		forename: string;
 		surname: string;
 		account: string;
@@ -22,12 +22,13 @@
 		json: BodyInit | null | undefined
 	) => Promise<any>;
 
-	let forename = '';
-	let surname = '';
-	let account = '';
-	let role = '';
+	let forename = "";
+	let surname = "";
+	let account = "";
+	let role = "";
 
 	$: if (editable || isNew || !editable || !isNew) setUser(user);
+	$: role = searchRole as string;
 
 	function setUser(user: User | null) {
 		if (!isNew) {
@@ -38,16 +39,16 @@
 				role = user.role;
 			}
 		} else {
-			forename = '';
-			surname = '';
-			account = '';
+			forename = "";
+			surname = "";
+			account = "";
 			role = searchRole as string;
 		}
 	}
 
 	let addResponse: Promise<any>;
 	async function add() {
-		await request('/api/user', 'POST', JSON.stringify({ forename, surname, account, role }));
+		await request("/api/user", "POST", JSON.stringify({ forename, surname, account, role }));
 		onChange();
 	}
 
@@ -55,18 +56,18 @@
 	async function edit() {
 		await request(
 			`/api/user/${user?.account}`,
-			'PUT',
+			"PUT",
 			JSON.stringify({ forename, surname, account, role })
 		);
 		onChange();
 	}
 	export async function del() {
-		await request(`/api/user/${user?.account}`, 'DELETE', null);
+		await request(`/api/user/${user?.account}`, "DELETE", null);
 		await onDel();
 	}
 
 	function onChange() {
-		user = { ty: 'user', forename, surname, account, role };
+		user = { ty: "user", forename, surname, account, role };
 		// console.log('Changed: ', user);
 		editable = false;
 		isNew = false;

@@ -8,7 +8,7 @@
 	export function open(tit: string, msg: string) {
 		title = tit;
 		message = msg;
-		if (!dialog.attributes.getNamedItem('open')) {
+		if (!dialog.attributes.getNamedItem("open")) {
 			dialog.showModal();
 		}
 	}

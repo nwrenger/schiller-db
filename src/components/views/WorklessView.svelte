@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export interface Workless {
-		ty: 'workless';
+		ty: "workless";
 		account: string;
 		old_company: string;
 		date_of_dismiss: string;
@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	import Select from '../buttons/Select.svelte';
+	import Select from "../buttons/Select.svelte";
 
 	export let workless: Workless | null;
 	export let editable: boolean = false;
@@ -34,14 +34,15 @@
 		json: BodyInit | null | undefined
 	) => Promise<any>;
 
-	let account = '';
-	let old_company = '';
-	let date_of_dismiss = '';
+	let account = "";
+	let old_company = "";
+	let date_of_dismiss = "";
 	let currently = false;
-	let new_company = '';
-	let total_time = '';
+	let new_company = "";
+	let total_time = "";
 
 	$: if (editable || isNew || !editable || !isNew) setWorkless(workless);
+	$: date_of_dismiss = searchDate as string;
 
 	function setWorkless(workless: Workless | null) {
 		if (!isNew) {
@@ -54,20 +55,20 @@
 				total_time = workless.total_time;
 			}
 		} else {
-			account = '';
-			old_company = '';
+			account = "";
+			old_company = "";
 			date_of_dismiss = searchDate as string;
 			currently = false;
-			new_company = '';
-			total_time = '';
+			new_company = "";
+			total_time = "";
 		}
 	}
 
 	let addResponse: Promise<any>;
 	async function add() {
 		await request(
-			'/api/workless',
-			'POST',
+			"/api/workless",
+			"POST",
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
 		onChange();
@@ -77,7 +78,7 @@
 	async function edit() {
 		await request(
 			`/api/workless/${workless?.account}/${workless?.old_company}/${workless?.date_of_dismiss}`,
-			'PUT',
+			"PUT",
 			JSON.stringify({ account, old_company, date_of_dismiss, currently, new_company, total_time })
 		);
 		onChange();
@@ -85,7 +86,7 @@
 	export async function del() {
 		await request(
 			`/api/workless/${workless?.account}/${workless?.old_company}/${workless?.date_of_dismiss}`,
-			'DELETE',
+			"DELETE",
 			null
 		);
 		await onDel();
@@ -93,7 +94,7 @@
 
 	function onChange() {
 		workless = {
-			ty: 'workless',
+			ty: "workless",
 			account,
 			old_company,
 			date_of_dismiss,
@@ -116,7 +117,7 @@
 
 <div id="workless-container">
 	<div class="card-title row">
-		<Select bind:value={account} {editable} {search} label={'Account'} />
+		<Select bind:value={account} {editable} {search} label={"Account"} />
 		<div class="col">
 			<label for="old-company" class="form-label">Vorheriger Betrieb</label>
 			<input
@@ -178,7 +179,7 @@
 					placeholder="Auswahl"
 					aria-label="Auswahl"
 					readonly
-					value={currently ? 'Ja' : 'Nein'}
+					value={currently ? "Ja" : "Nein"}
 				/>
 			</div>
 		</div>

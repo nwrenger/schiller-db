@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Dialog from '../basic/Dialog.svelte';
+	import Dialog from "../basic/Dialog.svelte";
 
 	export let onHighlighted: boolean;
 	export let editable: boolean;
@@ -20,7 +20,7 @@
 			type="button"
 			aria-expanded="false"
 			title="Hinzufügen"
-			disabled={permission === 'Write' ? false : true}
+			disabled={permission === "Write" ? false : true}
 			on:click={() => {
 				editable = true;
 				isNew = true;
@@ -48,7 +48,7 @@
 			type="button"
 			aria-expanded="false"
 			title="Bearbeiten"
-			disabled={permission === 'Write' ? false : true}
+			disabled={permission === "Write" ? false : true}
 			hidden={!onHighlighted}
 			on:click={() => {
 				editable = true;
@@ -80,10 +80,10 @@
 			type="button"
 			aria-expanded="false"
 			title="Entfernen"
-			disabled={permission === 'Write' ? false : true}
+			disabled={permission === "Write" ? false : true}
 			hidden={!onHighlighted}
 			on:click={() => {
-				if (dialog) dialog.open('Warnung', 'Eintrag unwiederruflich löschen?');
+				if (dialog) dialog.open("Warnung", "Eintrag unwiederruflich löschen?");
 			}}
 		>
 			<svg
