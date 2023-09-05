@@ -344,7 +344,7 @@
 				($mainView.ty === "user" || $mainView.ty === "workless" || $mainView.ty === "criminal")) ||
 			$mainView === null
 		)
-		if (!isNew) back();
+			if (!isNew) back();
 		if (nestedList) {
 			nestedList.reset();
 		} else if (searchList) {
