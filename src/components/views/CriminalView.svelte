@@ -52,7 +52,7 @@
 	let verdict = "";
 
 	$: if (editable || isNew || !editable || !isNew) setCriminal(criminal);
-	$: account = searchAccount as string;
+	$: if (isNew) account = searchAccount as string;
 
 	function setCriminal(criminal: Criminal | null) {
 		if (!isNew) {

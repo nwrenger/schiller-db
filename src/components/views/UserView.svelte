@@ -28,7 +28,7 @@
 	let role = "";
 
 	$: if (editable || isNew || !editable || !isNew) setUser(user);
-	$: role = searchRole as string;
+	$: if (isNew) role = searchRole as string;
 
 	function setUser(user: User | null) {
 		if (!isNew) {

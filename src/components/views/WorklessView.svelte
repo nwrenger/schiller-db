@@ -42,7 +42,7 @@
 	let total_time = "";
 
 	$: if (editable || isNew || !editable || !isNew) setWorkless(workless);
-	$: date_of_dismiss = searchDate as string;
+	$: if (isNew) date_of_dismiss = searchDate as string;
 
 	function setWorkless(workless: Workless | null) {
 		if (!isNew) {
