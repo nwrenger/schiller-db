@@ -1,6 +1,6 @@
 #/bin/bash
 rm -r ./build
-npm run build
+bun run build
 cargo build -r
 cp target/release/schiller-db ./
 zip -r exp/schiller-db_lin.zip schiller-db admin.env benutzer.txt logins.txt build/
