@@ -1,4 +1,5 @@
-/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */ /* Import only what you need from Bootstrap */
+/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+/* Import only what you need from Bootstrap */
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
@@ -14,5 +15,13 @@
 @import "bootstrap/scss/list-group";
 @import "bootstrap/scss/close";
 @import "bootstrap/scss/spinners";
+
 @import "bootstrap/scss/helpers";
 @import "bootstrap/scss/utilities/api";
+
+// custom class for center icons
+.bi {
+	display: inline-block;
+	vertical-align: -0.125em;
+	fill: currentcolor;
+}

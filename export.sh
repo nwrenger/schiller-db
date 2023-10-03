@@ -1,8 +1,8 @@
 #/bin/bash
 rm -r ./build
 bun run build
-cross build -r --target x86_64-unknown-linux-gnu
-cp target/x86_64-unknown-linux-gnu/release/schiller-db ./
+cargo build -r
+cp target/release/schiller-db ./
 zip -r exp/schiller-db_lin.zip schiller-db admin.env benutzer.txt logins.txt build/
 rm schiller-db
 cargo build -r --target x86_64-pc-windows-gnu
