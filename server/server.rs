@@ -93,34 +93,34 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
             .and_then(|v| String::from_utf8(v).ok())
         else {
             warn!("missing auth {header:?} from {:?}", request.client_ip());
-            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+            return Outcome::Error((Status::Unauthorized, Error::Unauthorized));
         };
         let Some((user, password)) = user_pass.split_once(':') else {
             warn!(
                 "wrong auth header '{user_pass}' from {:?}",
                 request.client_ip()
             );
-            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+            return Outcome::Error((Status::Unauthorized, Error::Unauthorized));
         };
 
         // lookup in database
 
         let Ok((db, _)) = Database::open(Cow::from(Path::new("./schiller-db.db"))) else {
             warn!("could not open Database");
-            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+            return Outcome::Error((Status::Unauthorized, Error::Unauthorized));
         };
         let Ok(login) = db::login::fetch(&db, user) else {
             warn!(
                 "missing auth credentials '{user}:{password}' from {:?}",
                 request.client_ip()
             );
-            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+            return Outcome::Error((Status::Unauthorized, Error::Unauthorized));
         };
 
         // checking password
 
         if !login.check_password(password) {
-            return Outcome::Failure((Status::Unauthorized, Error::Unauthorized));
+            return Outcome::Error((Status::Unauthorized, Error::Unauthorized));
         }
 
         // checking permissions
@@ -135,7 +135,7 @@ impl<'r, P: Access> FromRequest<'r> for Auth<P> {
                 "missing auth permissions '{user}:{password}' from {:?}",
                 request.client_ip()
             );
-            Outcome::Failure((Status::Unauthorized, Error::Unauthorized))
+            Outcome::Error((Status::Unauthorized, Error::Unauthorized))
         }
     }
 }
