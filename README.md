@@ -20,7 +20,7 @@ This application follows the 3-tier principle.
 
 ### UI Layer
 
-Developed by me and a few others (look to contributions). You can see a current state of the development, by visiting a [Test Website](#test-website).
+Developed by me and a few others (look to contributions). You can see a current state of the development by running it, look therefore into [Downloads](#Download).
 
 It's developed by using intern Server Calls, Svelte and Bootstrap (for the UI). I finally finished the refactoring of the old plain JS version to this new and improved Svelte version. It's now way better structured and easier to develop new stuff. And Svelte generally is a big upgrade compared to old plain JS, it's a really good WebDev Framework.
 
